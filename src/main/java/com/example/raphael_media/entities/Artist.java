@@ -13,22 +13,17 @@ public class Artist {
     @Column(name = "artist_name",length = 50, nullable = false)
     private String artistName;
 
-    /*@OneToMany(mappedBy = "artist")
-    private List<Album> albums;*/
+    @OneToMany(mappedBy = "artist")
+    private List<Album> albums;
 
     @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "artist")
     private List<Music> musicsList;
 
     //JoinTable i Video-entiteten
-   /* @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "artist")
-    @JoinTable (
-            name = "artist_video",
-            joinColumns = @JoinColumn(name = "artist_id"),
-            inverseJoinColumns = @JoinColumn(name = "video_id")
-    )
+   /* @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "album")
     private List<Video> videoList;*/
 
-    @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "artist")
+    @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "album")
     private List<Podcast> podcastList;
 
     public Artist() {
@@ -51,13 +46,13 @@ public class Artist {
         this.artistName = artistName;
     }
 
-   /* public List<Album> getAlbums() {
+    public List<Album> getAlbums() {
         return albums;
     }
 
     public void setAlbums(List<Album> albums) {
         this.albums = albums;
-    }*/
+    }
 
     public List<Music> getMusicsList() {
         return musicsList;
