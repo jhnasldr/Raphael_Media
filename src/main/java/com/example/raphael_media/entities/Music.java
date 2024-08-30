@@ -1,46 +1,97 @@
 package com.example.raphael_media.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 @Entity
-public class Music implements Media{
+public class Music {
 
     @Id
     @GeneratedValue
     private Integer id;
+    @Column(length = 30, nullable = false)
+    private String title;
+    @Column(length = 50, nullable = false)
+    private String URL = "https://rapharlstudio/music";
 
-    @Override
-    public String title() {
-        return null;
+    @Column(length = 15,nullable = false)
+    private LocalDate releaseDate;
+
+/*
+    @ManyToMany
+    @JoinTable(
+            name = "music_artist",
+            joinColumns = @JoinColumn(name = "music_id" ),
+            inverseJoinColumns = @JoinColumn(name = "artist_id" ))
+    private List<Artist> listOfArtists;
+
+        @ManyToMany
+    @JoinTable(
+            name = "music_artist",
+            joinColumns = @JoinColumn(name = "music_id" ),
+            inverseJoinColumns = @JoinColumn(name = "album_id" ))
+    private List<Album> listOfArtists;
+
+        @ManyToMany
+    @JoinTable(
+            name = "music_artist",
+            joinColumns = @JoinColumn(name = "music_id" ),
+            inverseJoinColumns = @JoinColumn(name = "genre_id" ))
+    private List<Genre> listOfArtists;
+
+
+ */
+
+    public Music(String title) {
+        this.title = title;
     }
 
-    @Override
-    public String URL() {
-        return null;
+    public Music() {
     }
 
-    @Override
-    public LocalDateTime releaseDate() {
-        return null;
+    public String getTitle() {
+        return title;
     }
 
-    @Override
-    public List<Artist> listOfArtists() {
-        return null;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    @Override
-    public List<Album> listOfAlbums() {
-        return null;
+    public String getURL() {
+        return URL;
     }
 
-    @Override
-    public List<Genre> listOfGenres() {
-        return null;
+    public void setURL(String URL) {
+        this.URL = URL;
     }
+
+    public LocalDate getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+/*
+    public List<Artist> getListOfArtists() {
+        return listOfArtists;
+    }
+
+    public void setListOfArtists(List<Genre> listOfArtists) {
+        this.listOfArtists = listOfArtists;
+    }
+
+    public void setListOfArtists(List<Album> listOfArtists) {
+        this.listOfArtists = listOfArtists;
+    }
+
+    public void setListOfArtists(List<Artist> listOfArtists) {
+        this.listOfArtists = listOfArtists;
+    }
+
+ */
 }
