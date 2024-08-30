@@ -19,6 +19,7 @@ public class Artist {
     @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "artist")
     private List<Music> musicsList;
 
+    //JoinTable i Video-entiteten
    /* @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "artist")
     @JoinTable (
             name = "artist_video",
