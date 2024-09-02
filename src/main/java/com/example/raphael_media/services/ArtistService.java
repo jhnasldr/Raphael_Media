@@ -11,7 +11,7 @@ import java.util.List;
 public class ArtistService implements ArtistServiceInterface {
 
     @Autowired
-    private ArtistRepository artistRepository;
+    public ArtistRepository artistRepository;
 
     @Override
     public List<Album> getAllAlbumsByArtistId(int artistId) {
