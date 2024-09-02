@@ -1,5 +1,7 @@
 package com.example.raphael_media.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -23,6 +25,7 @@ public class Video {
             name = "video_artist",
             joinColumns = @JoinColumn(name = "video_id" ),
             inverseJoinColumns = @JoinColumn(name = "artist_id" ))
+    @JsonIgnore
     private List<Artist> listOfArtists;
 
     @ManyToMany
@@ -30,10 +33,12 @@ public class Video {
             name = "video_albums",
             joinColumns = @JoinColumn(name = "video_id" ),
             inverseJoinColumns = @JoinColumn(name = "album_id" ))
+    @JsonIgnore
     private List<Album> listOfAlbums;
 
     @Column(name = "List_Of_Genre",length = 100)
     @OneToMany (mappedBy = "genre",cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Genre> listOfGenre;
 
     public Video(String title) {

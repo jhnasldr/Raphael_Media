@@ -1,7 +1,6 @@
 package com.example.raphael_media.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,19 +14,21 @@ public class Artist {
     @Column(name = "artist_name",length = 50, nullable = false)
     private String artistName;
 
-    @JsonIgnoreProperties("albums")
-    @JsonIgnore
-    @OneToMany(mappedBy = "artist")
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Album> albums;
 
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "listOfArtists")
+    @JsonIgnore
     private List<Music> musicsList;
 
     //JoinTable i Video-entiteten
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "listOfArtists")
+    @JsonIgnore
     private List<Video> videoList;
 
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "listOfArtists")
+    @JsonIgnore
     private List<Podcast> podcastList;
 
     public Artist() {
