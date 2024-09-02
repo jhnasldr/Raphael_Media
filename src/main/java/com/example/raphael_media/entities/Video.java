@@ -1,11 +1,9 @@
 package com.example.raphael_media.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Video {
@@ -20,14 +18,14 @@ public class Video {
     @Column(length = 15,nullable = false)
     private LocalDate releaseDate;
 
-/*
+
     @ManyToMany
     @JoinTable(
             name = "video_artist",
             joinColumns = @JoinColumn(name = "video_id" ),
             inverseJoinColumns = @JoinColumn(name = "artist_id" ))
     private List<Artist> listOfArtists;
-
+/*
     @ManyToMany
     @JoinTable(
             name = "video_artist",
@@ -42,8 +40,7 @@ public class Video {
             inverseJoinColumns = @JoinColumn(name = "genre_id" ))
     private List<Genre> listOfArtists;
 
-
- */
+    */
 
     public Video(String title) {
         this.title = title;
