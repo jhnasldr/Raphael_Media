@@ -1,5 +1,8 @@
 package com.example.raphael_media.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -14,16 +17,20 @@ public class Album {
     private String albumName;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "artist_id", nullable = false)
     private Artist artist;
 
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "listOfAlbums")
+    @JsonIgnore
     private List<Music> musicList;
 
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "listOfAlbums")
+    @JsonIgnore
     private List<Video> videoList;
 
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "listOfAlbums")
+    @JsonIgnore
     private List<Podcast> podcastList;
 
     public Album() {

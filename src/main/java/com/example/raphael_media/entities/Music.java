@@ -1,5 +1,7 @@
 package com.example.raphael_media.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -24,6 +26,7 @@ public class Music {
             name = "music_artists",
             joinColumns = @JoinColumn(name = "music_id" ),
             inverseJoinColumns = @JoinColumn(name = "artist_id" ))
+    @JsonIgnore
     private List<Artist> listOfArtists;
 
     @ManyToMany
@@ -31,10 +34,12 @@ public class Music {
             name = "music_albums",
             joinColumns = @JoinColumn(name = "music_id" ),
             inverseJoinColumns = @JoinColumn(name = "album_id" ))
+    @JsonIgnore
     private List<Album> listOfAlbums;
 
     @Column(name = "List_Of_Genre",length = 100)
     @OneToMany (mappedBy = "genre",cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Genre> listOfGenre;
 
 
