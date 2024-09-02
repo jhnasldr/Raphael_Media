@@ -8,24 +8,24 @@ import java.util.List;
 @Entity
 public class Video {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(length = 30, nullable = false)
+    @Column(length = 30)
     private String title;
-    @Column(length = 50, nullable = false)
-    private String URL = "https://rapharlstudio/video";
+    @Column(length = 50)
+    private String URL;
 
-    @Column(length = 15,nullable = false)
+    @Column(length = 15)
     private LocalDate releaseDate;
 
-
+/*
     @ManyToMany
     @JoinTable(
             name = "video_artist",
             joinColumns = @JoinColumn(name = "video_id" ),
             inverseJoinColumns = @JoinColumn(name = "artist_id" ))
     private List<Artist> listOfArtists;
-/*
+
     @ManyToMany
     @JoinTable(
             name = "video_artist",
