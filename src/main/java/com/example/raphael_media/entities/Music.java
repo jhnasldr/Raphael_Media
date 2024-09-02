@@ -3,7 +3,6 @@ package com.example.raphael_media.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -21,7 +20,7 @@ public class Music {
     @Column(length = 15,nullable = false)
     private LocalDate releaseDate;
 
-/*
+
     @ManyToMany
     @JoinTable(
             name = "music_artist",
@@ -29,22 +28,22 @@ public class Music {
             inverseJoinColumns = @JoinColumn(name = "artist_id" ))
     private List<Artist> listOfArtists;
 
-        @ManyToMany
+       @ManyToMany
     @JoinTable(
             name = "music_artist",
             joinColumns = @JoinColumn(name = "music_id" ),
             inverseJoinColumns = @JoinColumn(name = "album_id" ))
-    private List<Album> listOfArtists;
-
+    private List<Album> listOfAlbums;
+/*
         @ManyToMany
     @JoinTable(
             name = "music_artist",
             joinColumns = @JoinColumn(name = "music_id" ),
             inverseJoinColumns = @JoinColumn(name = "genre_id" ))
-    private List<Genre> listOfArtists;
+    private List<Genre> listOfArtists;*/
 
 
- */
+
 
     public Music(String title) {
         this.title = title;
@@ -76,22 +75,23 @@ public class Music {
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
     }
-/*
+
     public List<Artist> getListOfArtists() {
         return listOfArtists;
     }
 
-    public void setListOfArtists(List<Genre> listOfArtists) {
+   /* public void setListOfArtists(List<Genre> listOfArtists) {
         this.listOfArtists = listOfArtists;
     }
+    */
 
-    public void setListOfArtists(List<Album> listOfArtists) {
-        this.listOfArtists = listOfArtists;
+    public List<Album> getListOfAlbums() {
+        return listOfAlbums;
     }
 
     public void setListOfArtists(List<Artist> listOfArtists) {
         this.listOfArtists = listOfArtists;
     }
 
- */
+
 }
