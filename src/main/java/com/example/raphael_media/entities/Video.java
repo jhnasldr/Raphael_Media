@@ -18,7 +18,6 @@ public class Video {
     @Column(length = 15)
     private LocalDate releaseDate;
 
-/*
     @ManyToMany
     @JoinTable(
             name = "video_artist",
@@ -28,19 +27,14 @@ public class Video {
 
     @ManyToMany
     @JoinTable(
-            name = "video_artist",
+            name = "video_albums",
             joinColumns = @JoinColumn(name = "video_id" ),
             inverseJoinColumns = @JoinColumn(name = "album_id" ))
-    private List<Album> listOfArtists;
+    private List<Album> listOfAlbums;
 
-    @ManyToMany
-    @JoinTable(
-            name = "video_artist",
-            joinColumns = @JoinColumn(name = "video_id" ),
-            inverseJoinColumns = @JoinColumn(name = "genre_id" ))
-    private List<Genre> listOfArtists;
-
-    */
+    @Column(name = "List_Of_Genre",length = 100)
+    @OneToMany (mappedBy = "genre",cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private List<Genre> listOfGenre;
 
     public Video(String title) {
         this.title = title;
@@ -72,22 +66,28 @@ public class Video {
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
     }
-/*
+
     public List<Artist> getListOfArtists() {
         return listOfArtists;
-    }
-
-    public void setListOfArtists(List<Genre> listOfArtists) {
-        this.listOfArtists = listOfArtists;
-    }
-
-    public void setListOfArtists(List<Album> listOfArtists) {
-        this.listOfArtists = listOfArtists;
     }
 
     public void setListOfArtists(List<Artist> listOfArtists) {
         this.listOfArtists = listOfArtists;
     }
 
- */
+    public List<Album> getListOfAlbums() {
+        return listOfAlbums;
+    }
+
+    public void setListOfAlbums(List<Album> listOfAlbums) {
+        this.listOfAlbums = listOfAlbums;
+    }
+
+    public List<Genre> getListOfGenre() {
+        return listOfGenre;
+    }
+
+    public void setListOfGenre(List<Genre> listOfGenre) {
+        this.listOfGenre = listOfGenre;
+    }
 }

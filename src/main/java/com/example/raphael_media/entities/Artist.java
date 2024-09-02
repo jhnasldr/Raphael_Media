@@ -16,14 +16,14 @@ public class Artist {
     @OneToMany(mappedBy = "artist")
     private List<Album> albums;
 
-    @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "artist")
+    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "listOfArtists")
     private List<Music> musicsList;
 
     //JoinTable i Video-entiteten
-   /* @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "album")
-    private List<Video> videoList;*/
+    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "listOfArtists")
+    private List<Video> videoList;
 
-    @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "album")
+    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "listOfArtists")
     private List<Podcast> podcastList;
 
     public Artist() {
@@ -62,13 +62,13 @@ public class Artist {
         this.musicsList = musicsList;
     }
 
-   /* public List<Video> getVideoList() {
+    public List<Video> getVideoList() {
         return videoList;
     }
 
     public void setVideoList(List<Video> videoList) {
         this.videoList = videoList;
-    }*/
+    }
 
     public List<Podcast> getPodcastList() {
         return podcastList;
@@ -77,4 +77,5 @@ public class Artist {
     public void setPodcastList(List<Podcast> podcastList) {
         this.podcastList = podcastList;
     }
+
 }

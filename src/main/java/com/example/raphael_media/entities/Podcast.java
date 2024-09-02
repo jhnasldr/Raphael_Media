@@ -1,9 +1,6 @@
 package com.example.raphael_media.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,17 +10,16 @@ import java.util.List;
 public class Podcast{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(length = 30, nullable = false)
     private String title;
     @Column(length = 50, nullable = false)
-    private String URL = "https://rapharlstudio/podcast";
+    private String URL;
 
     @Column(length = 15,nullable = false)
     private LocalDate releaseDate;
 
-/*
     @ManyToMany
     @JoinTable(
             name = "podcast_artist",
@@ -31,22 +27,16 @@ public class Podcast{
             inverseJoinColumns = @JoinColumn(name = "artist_id" ))
     private List<Artist> listOfArtists;
 
-        @ManyToMany
+    @ManyToMany
     @JoinTable(
-            name = "podcast_artist",
+            name = "podcast_albums",
             joinColumns = @JoinColumn(name = "podcast_id" ),
             inverseJoinColumns = @JoinColumn(name = "album_id" ))
-    private List<Album> listOfArtists;
+    private List<Album> listOfAlbums;
 
-        @ManyToMany
-    @JoinTable(
-            name = "podcast_artist",
-            joinColumns = @JoinColumn(name = "podcast_id" ),
-            inverseJoinColumns = @JoinColumn(name = "genre_id" ))
-    private List<Genre> listOfArtists;
-
-
- */
+    @Column(name = "List_Of_Genre",length = 100)
+    @OneToMany (mappedBy = "genre",cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private List<Genre> listOfGenre;
 
     public Podcast(String title) {
         this.title = title;
@@ -78,23 +68,28 @@ public class Podcast{
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
     }
-/*
+
     public List<Artist> getListOfArtists() {
         return listOfArtists;
-    }
-
-    public void setListOfArtists(List<Genre> listOfArtists) {
-        this.listOfArtists = listOfArtists;
-    }
-
-    public void setListOfArtists(List<Album> listOfArtists) {
-        this.listOfArtists = listOfArtists;
     }
 
     public void setListOfArtists(List<Artist> listOfArtists) {
         this.listOfArtists = listOfArtists;
     }
 
- */
+    public List<Album> getListOfAlbums() {
+        return listOfAlbums;
+    }
 
+    public void setListOfAlbums(List<Album> listOfAlbums) {
+        this.listOfAlbums = listOfAlbums;
+    }
+
+    public List<Genre> getListOfGenre() {
+        return listOfGenre;
+    }
+
+    public void setListOfGenre(List<Genre> listOfGenre) {
+        this.listOfGenre = listOfGenre;
+    }
 }

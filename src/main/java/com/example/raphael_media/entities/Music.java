@@ -10,38 +10,32 @@ import java.util.List;
 public class Music {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(length = 30, nullable = false)
     private String title;
     @Column(length = 50, nullable = false)
-    private String URL = "https://rapharlstudio/music";
-
+    private String URL;
     @Column(length = 15,nullable = false)
     private LocalDate releaseDate;
 
-
     @ManyToMany
     @JoinTable(
-            name = "music_artist",
+            name = "music_artists",
             joinColumns = @JoinColumn(name = "music_id" ),
             inverseJoinColumns = @JoinColumn(name = "artist_id" ))
     private List<Artist> listOfArtists;
 
-       @ManyToMany
+    @ManyToMany
     @JoinTable(
-            name = "music_artist",
+            name = "music_albums",
             joinColumns = @JoinColumn(name = "music_id" ),
             inverseJoinColumns = @JoinColumn(name = "album_id" ))
     private List<Album> listOfAlbums;
-/*
-        @ManyToMany
-    @JoinTable(
-            name = "music_artist",
-            joinColumns = @JoinColumn(name = "music_id" ),
-            inverseJoinColumns = @JoinColumn(name = "genre_id" ))
-    private List<Genre> listOfArtists;*/
 
+    @Column(name = "List_Of_Genre",length = 100)
+    @OneToMany (mappedBy = "genre",cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private List<Genre> listOfGenre;
 
 
 
@@ -80,18 +74,23 @@ public class Music {
         return listOfArtists;
     }
 
-   /* public void setListOfArtists(List<Genre> listOfArtists) {
+    public void setListOfArtists(List<Artist> listOfArtists) {
         this.listOfArtists = listOfArtists;
     }
-    */
 
     public List<Album> getListOfAlbums() {
         return listOfAlbums;
     }
 
-    public void setListOfArtists(List<Artist> listOfArtists) {
-        this.listOfArtists = listOfArtists;
+    public void setListOfAlbums(List<Album> listOfAlbums) {
+        this.listOfAlbums = listOfAlbums;
     }
 
+    public List<Genre> getListOfGenre() {
+        return listOfGenre;
+    }
 
+    public void setListOfGenre(List<Genre> listOfGenre) {
+        this.listOfGenre = listOfGenre;
+    }
 }
