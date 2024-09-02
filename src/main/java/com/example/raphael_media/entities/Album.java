@@ -17,13 +17,13 @@ public class Album {
     @JoinColumn(name = "artist_id", nullable = false)
     private Artist artist;
 
-    @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "album")
+    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "listOfAlbums")
     private List<Music> musicList;
 
-    /*@ManyToMany(cascade = CascadeType.MERGE, mappedBy = "album")
-    private List<Video> videoList;*/
+    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "listOfAlbums")
+    private List<Video> videoList;
 
-    @ManyToMany(cascade = CascadeType.MERGE, mappedBy = "album")
+    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "listOfAlbums")
     private List<Podcast> podcastList;
 
     public Album() {
@@ -62,13 +62,13 @@ public class Album {
         this.musicList = musicsList;
     }
 
-    /*public List<Video> getVideoList() {
+    public List<Video> getVideoList() {
         return videoList;
     }
 
     public void setVideoList(List<Video> videoList) {
         this.videoList = videoList;
-    }*/
+    }
 
     public List<Podcast> getPodcastList() {
         return podcastList;
@@ -77,4 +77,5 @@ public class Album {
     public void setPodcastList(List<Podcast> podcastList) {
         this.podcastList = podcastList;
     }
+
 }
