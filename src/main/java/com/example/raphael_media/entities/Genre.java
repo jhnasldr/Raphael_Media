@@ -8,20 +8,12 @@ public class Genre {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "Genre_namen", length = 50, nullable = false)
+    @Column(name = "genre_name", length = 50, nullable = false)
     private String genre;
 
     @ManyToOne
-    @JoinColumn(name = "music_id", nullable = false)
-    private Music music;
-
-    @ManyToOne
-    @JoinColumn(name = "podcast_id", nullable = false)
-    private Podcast podcast;
-
-    @ManyToOne
-    @JoinColumn(name = "video_id", nullable = false)
-    private Podcast video;
+    @JoinColumn(name = "media_id", nullable = false)
+    private Media media;
 
 
     public Genre(String genre) {

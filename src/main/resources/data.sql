@@ -1,10 +1,14 @@
-INSERT INTO video (title, url, release_date)
+INSERT INTO media (title, url, release_date, media_type)
+VALUES ('Introduction to Java', 'https://rapharlstudio/video/java-intro', '2023-01-10','music');
+insert into music(id) values (1);
+/*
+ INSERT INTO video (title, url, release_date)
 VALUES ('Introduction to Java', 'https://rapharlstudio/video/java-intro', '2023-01-10'),
        ('Advanced Spring Boot', 'https://rapharlstudio/video/spring-boot-advanced', '2023-08-15'),
        ('Understanding SQL', 'https://rapharlstudio/video/sql-basics', '2023-07-20');
 INSERT INTO music (title, url, release_date)
 VALUES ('Java Music', 'https://rapharlstudio/music/java-intro', '2020-05-13'),
-       ('Advanced Music', 'https://rapharlstudio/music/spring-boot-advanced', '2019-10-01'),
+      ('Advanced Music', 'https://rapharlstudio/music/spring-boot-advanced', '2019-10-01'),
        ('Music of SQL', 'https://rapharlstudio/music/sql-basics', '2022-01-30');
 INSERT INTO podcast (title, url, release_date)
 VALUES ('Java podcast', 'https://rapharlstudio/podcast/java-intro', '2024-01-01'),
@@ -64,3 +68,5 @@ VALUES (3,1),
 
 -- todo
 -- artist/artists
+   
+ */

@@ -18,6 +18,10 @@ public class Artist {
     @JsonManagedReference
     private List<Album> albums;
 
+    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "artists")
+    @JsonIgnore
+    private List<Media> mediaList;
+/*
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "listOfArtists")
     @JsonIgnore
     private List<Music> musicsList;
@@ -30,6 +34,8 @@ public class Artist {
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "listOfArtists")
     @JsonIgnore
     private List<Podcast> podcastList;
+
+ */
 
     public Artist() {
 
@@ -58,7 +64,7 @@ public class Artist {
     public void setAlbums(List<Album> albums) {
         this.albums = albums;
     }
-
+/*
     public List<Music> getMusicsList() {
         return musicsList;
     }
@@ -83,4 +89,6 @@ public class Artist {
         this.podcastList = podcastList;
     }
 
+
+ */
 }

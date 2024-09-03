@@ -1,7 +1,9 @@
 package com.example.raphael_media.controllers;
 
 import com.example.raphael_media.entities.Album;
+import com.example.raphael_media.entities.Music;
 import com.example.raphael_media.services.ArtistService;
+import com.example.raphael_media.services.MusicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,8 @@ public class ArtistController {
 
     @Autowired
     private ArtistService artistService;
+    @Autowired
+    private MusicService musicService;
 
     @GetMapping("/api/{artistId}/albums")
     public ResponseEntity<List<Album>> getAllAlbumsByArtist(@PathVariable int artistId) {
@@ -22,4 +26,5 @@ public class ArtistController {
         return ResponseEntity.ok(albums);
 
     }
+
 }
