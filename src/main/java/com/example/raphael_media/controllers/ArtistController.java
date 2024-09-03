@@ -1,9 +1,9 @@
 package com.example.raphael_media.controllers;
 
-import com.example.raphael_media.entities.Album;
-import com.example.raphael_media.entities.Music;
+import com.example.raphael_media.entities.*;
 import com.example.raphael_media.services.ArtistService;
 import com.example.raphael_media.services.MusicService;
+import jakarta.ws.rs.Path;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,14 +17,17 @@ public class ArtistController {
 
     @Autowired
     private ArtistService artistService;
-    @Autowired
-    private MusicService musicService;
 
     @GetMapping("/api/{artistId}/albums")
     public ResponseEntity<List<Album>> getAllAlbumsByArtist(@PathVariable int artistId) {
         List<Album> albums = artistService.getAllAlbumsByArtistId(artistId);
         return ResponseEntity.ok(albums);
+    }
 
+    @GetMapping("/api/{artistId}/mediaList")
+    public ResponseEntity<List<Media>> getAllMediaByArtist(@PathVariable int artistId) {
+        List<Media> mediaList = artistService.getAllMediaByArtistId(artistId);
+        return ResponseEntity.ok(mediaList);
     }
 
 }
