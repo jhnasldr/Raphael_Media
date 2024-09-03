@@ -13,6 +13,8 @@ public class Album {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int albumId;
 
+
+
     @Column(name = "album_name", length = 100, nullable = false)
     private String albumName;
 
@@ -20,7 +22,10 @@ public class Album {
     @JsonBackReference
     @JoinColumn(name = "artist_id", nullable = false)
     private Artist artist;
-
+    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "albums")
+    @JsonIgnore
+    private List<Media> mediaList;
+/*
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "listOfAlbums")
     @JsonIgnore
     private List<Music> musicList;
@@ -33,6 +38,8 @@ public class Album {
     @JsonIgnore
     private List<Podcast> podcastList;
 
+
+ */
     public Album() {
 
     }
@@ -60,7 +67,7 @@ public class Album {
     public void setArtist(Artist artist) {
         this.artist = artist;
     }
-
+/*
     public List<Music> getMusicList() {
         return musicList;
     }
@@ -84,5 +91,7 @@ public class Album {
     public void setPodcastList(List<Podcast> podcastList) {
         this.podcastList = podcastList;
     }
+
+ */
 
 }
