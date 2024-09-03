@@ -2,6 +2,7 @@ package com.example.raphael_media.services;
 
 import com.example.raphael_media.entities.Album;
 import com.example.raphael_media.entities.Artist;
+import com.example.raphael_media.entities.Media;
 import com.example.raphael_media.repositores.ArtistRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,13 +17,11 @@ import static org.mockito.Mockito.*;
 class ArtistServiceTest {
 
     ArtistService artistService;
-
     ArtistRepository mockedArtistRepository;
 
     @BeforeEach
     void setUp() {
         mockedArtistRepository = mock(ArtistRepository.class);
-
         artistService = new ArtistService();
         artistService.artistRepository = mockedArtistRepository;
     }
@@ -64,5 +63,35 @@ class ArtistServiceTest {
         album2.setAlbumName("Album 2");
 
         return new ArrayList<>(List.of(album1, album2));
+    }
+
+    @Test
+    void getMediaByArtistReturnsMediaListCorrectlyWhenArtistExists() {
+        int artistId = 1;
+        List<Media> mediaList = new ArrayList<>();
+        mediaList.add(new Media());
+        mediaList.add(new Media());
+
+        Artist artist = new Artist();
+        artist.setMediaList(mediaList);
+
+        when(mockedArtistRepository.findById(artistId)).thenReturn(Optional.of(artist));
+
+        List<Media> result = artistService.getAllMediaByArtistId(artistId);
+
+        assertEquals(mediaList.size(), result.size());
+        assertEquals(mediaList, result);
+    }
+
+    @Test
+    void getAllMediaByArtistThrowsExceptionWhenArtistNotFound() {
+        int artistId = 1;
+        when(mockedArtistRepository.findById(artistId)).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            artistService.getAllMediaByArtistId(artistId);
+        });
+
+        assertEquals("Artist with id " + artistId + " not found", exception.getMessage());
     }
 }

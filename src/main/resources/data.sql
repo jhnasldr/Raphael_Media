@@ -84,40 +84,40 @@ VALUES (20), (21), (22), (23), (24), (25), (32), (33);
 
 -- Koppla genrer till media
 INSERT INTO media_genres (media_id, genre_id)
-VALUES (1, 1),  -- Titanic (Drama)
-       (2, 2),  -- The Social Dilemma (Documentary)
-       (3, 3),  -- Planet Earth (Nature/Science)
-       (4, 4),  -- Bohemian Rhapsody (Rock)
-       (5, 5),  -- Thriller (Pop)
-       (6, 6),  -- Take Five (Jazz)
-       (7, 4),  -- Come Together (Rock)
-       (8, 7),  -- The History of Ancient Rome (History)
-       (9, 8),  -- True Crime Stories (True Crime)
-       (10, 9),  -- The Science of Sleep (Science)
-       (11, 1),  -- The Godfather (Drama)
-       (12, 1),  -- Forrest Gump (Drama)
-       (13, 2),  -- Blackfish (Documentary)
-       (14, 2),  -- 13th (Documentary)
-       (15, 4),  -- Stairway to Heaven (Rock)
-       (16, 5),  -- Like a Prayer (Pop)
-       (17, 5),  -- Bad Romance (Pop)
-       (18, 6),  -- Take the A Train (Jazz)
-       (19, 6),  -- So What (Jazz)
-       (20, 7),  -- World War II Documentary (History)
-       (21, 7),  -- The Rise and Fall of the Roman Empire (History)
-       (22, 8),  -- Making a Murderer (True Crime)
-       (23, 8),  -- Serial (True Crime)
-       (24, 9),  -- Cosmos: A Spacetime Odyssey (Science)
-       (25, 9),  -- The Elegant Universe (Science)
-       (26, 1),  -- Gladiator (Drama)
-       (27, 2),  -- The Last Dance (Documentary)
-       (28, 3),  -- Blue Planet II (Nature/Science)
-       (29, 4),  -- Under Pressure (Rock)
-       (30, 5),  -- Billie Jean (Pop)
-       (31, 6),  -- Freddie Freeloader (Jazz)
-       (32, 7),  -- Guns, Germs, and Steel (History)
-       (33, 8),  -- The Jinx (True Crime)
-       (34, 9);  -- Nova: Einstein’s Quantum Riddle (Science)
+VALUES (1, 1),
+       (2, 2),
+       (3, 3),
+       (4, 4),
+       (5, 5),
+       (6, 6),
+       (7, 4),
+       (8, 7),
+       (9, 8),
+       (10, 9),
+       (11, 1),
+       (12, 1),
+       (13, 2),
+       (14, 2),
+       (15, 4),
+       (16, 5),
+       (17, 5),
+       (18, 6),
+       (19, 6),
+       (20, 7),
+       (21, 7),
+       (22, 8),
+       (23, 8),
+       (24, 9),
+       (25, 9),
+       (26, 1),
+       (27, 2),
+       (28, 3),
+       (29, 4),
+       (30, 5),
+       (31, 6),
+       (32, 7),
+       (33, 8),
+       (34, 9);
 
 
 -- Koppla artister till media
