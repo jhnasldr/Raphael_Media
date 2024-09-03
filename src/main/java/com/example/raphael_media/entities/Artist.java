@@ -41,6 +41,14 @@ public class Artist {
 
     }
 
+    public List<Media> getMediaList() {
+        return mediaList;
+    }
+
+    public void setMediaList(List<Media> mediaList) {
+        this.mediaList = mediaList;
+    }
+
     public int getArtistId() {
         return artistId;
     }

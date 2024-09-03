@@ -13,8 +13,6 @@ public class Album {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int albumId;
 
-
-
     @Column(name = "album_name", length = 100, nullable = false)
     private String albumName;
 
@@ -22,6 +20,7 @@ public class Album {
     @JsonBackReference
     @JoinColumn(name = "artist_id", nullable = false)
     private Artist artist;
+
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "albums")
     @JsonIgnore
     private List<Media> mediaList;

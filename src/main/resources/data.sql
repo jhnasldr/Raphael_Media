@@ -1,72 +1,166 @@
-INSERT INTO media (title, url, release_date, media_type)
-VALUES ('Introduction to Java', 'https://rapharlstudio/video/java-intro', '2023-01-10','music');
-insert into music(id) values (1);
-/*
- INSERT INTO video (title, url, release_date)
-VALUES ('Introduction to Java', 'https://rapharlstudio/video/java-intro', '2023-01-10'),
-       ('Advanced Spring Boot', 'https://rapharlstudio/video/spring-boot-advanced', '2023-08-15'),
-       ('Understanding SQL', 'https://rapharlstudio/video/sql-basics', '2023-07-20');
-INSERT INTO music (title, url, release_date)
-VALUES ('Java Music', 'https://rapharlstudio/music/java-intro', '2020-05-13'),
-      ('Advanced Music', 'https://rapharlstudio/music/spring-boot-advanced', '2019-10-01'),
-       ('Music of SQL', 'https://rapharlstudio/music/sql-basics', '2022-01-30');
-INSERT INTO podcast (title, url, release_date)
-VALUES ('Java podcast', 'https://rapharlstudio/podcast/java-intro', '2024-01-01'),
-       ('Super Advanced podcast', 'https://rapharlstudio/podcast/spring-boot-advanced', '2012-03-10'),
-       ('podcast of SQL', 'https://rapharlstudio/podcast/sql-basics', '1992-01-20');
+-- Lägg till artister
+INSERT INTO artist (artist_name)
+VALUES ('Queen'),
+       ('Michael Jackson'),
+       ('Dave Brubeck'),
+       ('James Cameron'),
+       ('Jeff Orlowski'),
+       ('David Attenborough'),
+       ('Freddie Mercury'),
+       ('Paul McCartney'),
+       ('John Lennon'),
+       ('Miles Davis Quintet'),
+       ('Hans Zimmer & Lisa Gerrard');
 
-
-INSERT INTO Artist (artist_name)
-VALUES ('Justin Hall'),
-       ('Trevor Page'),
-       ('John Lennon');
-
-
---Todo lägga till genre till media
-
-
-
--- lägger till media till artister
-INSERT INTO video_artist(artist_id, video_id)
-VALUES (1, 1),
-       (1, 2),
-       (1, 3);
-
-
-INSERT INTO music_artists(artist_id, music_id)
-VALUES (3, 1),
-       (3, 2),
-       (3, 3);
-
-INSERT INTO podcast_artist(artist_id, podcast_id)
-VALUES (2, 1),
-       (2, 2),
-       (2, 3);
-
+-- Lägg till album
 INSERT INTO album (album_name, artist_id)
-VALUES ('First java album', 1),
-       ('Testing something new', 3),
-       ('Programming podcast', 2);
+VALUES ('A Night at the Opera', 1),
+       ('Thriller', 2),
+       ('Time Out', 3),
+       ('Abbey Road', 8),
+       ('Sketches of Spain', 9),
+       ('Gladiator Soundtrack', 10);
+
+-- Lägg till genrer
+INSERT INTO genre (genre_name)
+VALUES ('Drama'),
+       ('Documentary'),
+       ('Nature/Science'),
+       ('Rock'),
+       ('Pop'),
+       ('Jazz'),
+       ('History'),
+       ('True Crime'),
+       ('Science');
+
+-- Lägg till all media
+INSERT INTO media (title, url, release_date, media_type)
+VALUES ('Titanic', 'https://raphaelstudio/video/titanic', '1997-12-19','video'),
+       ('The Social Dilemma', 'https://raphaelstudio/video/social-dilemma', '2020-01-26','video'),
+       ('Planet Earth', 'https://raphaelstudio/video/planet-earth', '2006-03-05','video'),
+       ('The Godfather', 'https://raphaelstudio/video/the-godfather', '1972-03-24','video'),
+       ('Forrest Gump', 'https://raphaelstudio/video/forrest-gump', '1994-07-06','video'),
+       ('Blackfish', 'https://raphaelstudio/video/blackfish', '2013-07-01','video'),
+       ('13th', 'https://raphaelstudio/video/13th', '2016-10-07','video'),
+       ('World War II Documentary', 'https://raphaelstudio/video/ww2-documentary', '2001-05-15','video'),
+       ('The Rise and Fall of the Roman Empire', 'https://raphaelstudio/video/roman-empire', '2018-09-10','video'),
+       ('Cosmos: A Spacetime Odyssey', 'https://raphaelstudio/video/cosmos', '2014-03-12','video'),
+       ('Bohemian Rhapsody - Queen', 'https://raphaelstudio/music/bohemian-rhapsody', '1975-10-31', 'music'),
+       ('Thriller - Michael Jackson', 'https://raphaelstudio/music/thriller', '1982-11-30', 'music'),
+       ('Take Five - Dave Brubeck', 'https://raphaelstudio/music/take-five', '1959-09-21', 'music'),
+       ('Come Together - The Beatles', 'https://raphaelstudio/music/come-together', '1969-09-26', 'music'),
+       ('Stairway to Heaven - Led Zeppelin', 'https://raphaelstudio/music/stairway-to-heaven', '1971-11-08', 'music'),
+       ('Like a Prayer - Madonna', 'https://raphaelstudio/music/like-a-prayer', '1989-03-03', 'music'),
+       ('Bad Romance - Lady Gaga', 'https://raphaelstudio/music/bad-romance', '2009-10-26', 'music'),
+       ('Take the A Train - Duke Ellington', 'https://raphaelstudio/music/take-the-a-train', '1941-09-15', 'music'),
+       ('So What - Miles Davis', 'https://raphaelstudio/music/so-what', '1959-08-17', 'music'),
+       ('The History of Ancient Rome', 'https://raphaelstudio/podcast/history-rome', '2024-01-01', 'podcast'),
+       ('True Crime Stories', 'https://raphaelstudio/podcast/true-crime-stories', '2019-03-10', 'podcast'),
+       ('The Science of Sleep', 'https://raphaelstudio/podcast/science-of-sleep', '2021-05-15', 'podcast'),
+       ('Making a Murderer', 'https://raphaelstudio/podcast/making-a-murderer', '2015-12-18', 'podcast'),
+       ('Serial', 'https://raphaelstudio/podcast/serial', '2014-10-03', 'podcast'),
+       ('The Elegant Universe', 'https://raphaelstudio/podcast/elegant-universe', '2003-01-01', 'podcast'),
+       ('Gladiator', 'https://raphaelstudio/video/gladiator', '2000-05-05', 'video'),
+       ('The Last Dance', 'https://raphaelstudio/video/the-last-dance', '2020-04-19', 'video'),
+       ('Blue Planet II', 'https://raphaelstudio/video/blue-planet-ii', '2017-10-29', 'video'),
+       ('Under Pressure - Queen & David Bowie', 'https://raphaelstudio/music/under-pressure', '1981-10-26', 'music'),
+       ('Billie Jean - Michael Jackson', 'https://raphaelstudio/music/billie-jean', '1983-01-02', 'music'),
+       ('Freddie Freeloader - Miles Davis', 'https://raphaelstudio/music/freddie-freeloader', '1959-03-02', 'music'),
+       ('Guns, Germs, and Steel', 'https://raphaelstudio/podcast/guns-germs-steel', '2005-07-10', 'podcast'),
+       ('The Jinx: The Life and Deaths of Robert Durst', 'https://raphaelstudio/podcast/the-jinx', '2015-02-08', 'podcast'),
+       ('Nova: Einstein’s Quantum Riddle', 'https://raphaelstudio/video/einsteins-quantum-riddle', '2019-01-09', 'video');
+
+-- Lägg till videor med id
+INSERT INTO video(id)
+VALUES (1), (2), (3), (4), (5), (6), (7), (8), (9), (10), (26), (27), (28), (34);
+
+-- Lägg till musik med id
+INSERT INTO music(id)
+VALUES (11), (12), (13), (14), (15), (16), (17), (18), (19), (29), (30), (31);
+
+-- Lägg till podcasts med id
+INSERT INTO podcast(id)
+VALUES (20), (21), (22), (23), (24), (25), (32), (33);
+
+-- Koppla genrer till media
+INSERT INTO media_genres (media_id, genre_id)
+VALUES (1, 1),
+       (2, 2),
+       (3, 3),
+       (4, 4),
+       (5, 5),
+       (6, 6),
+       (7, 4),
+       (8, 7),
+       (9, 8),
+       (10, 9),
+       (11, 1),
+       (12, 1),
+       (13, 2),
+       (14, 2),
+       (15, 4),
+       (16, 5),
+       (17, 5),
+       (18, 6),
+       (19, 6),
+       (20, 7),
+       (21, 7),
+       (22, 8),
+       (23, 8),
+       (24, 9),
+       (25, 9),
+       (26, 1),
+       (27, 2),
+       (28, 3),
+       (29, 4),
+       (30, 5),
+       (31, 6),
+       (32, 7),
+       (33, 8),
+       (34, 9);
 
 
---lägg till media till album
-INSERT INTO video_albums(album_id, video_id)
-VALUES (1,1),
-       (1,2),
-       (1,3);
+-- Koppla artister till media
+INSERT INTO media_artists (media_id, artist_id)
+VALUES
+    -- Videor
+    (1, 4),
+    (2, 5),
+    (3, 6),
+    (4, 10),
+    (5, 5),
+    (6, 6),
+    (7, 10),
+    (26, 10),
+    (27, 5),
+    (28, 6),
+    (34, 10),
+    -- Musik
+    (11, 1),
+    (11, 7),
+    (12, 2),
+    (13, 3),
+    (14, 8),
+    (14, 9),
+    (15, 1),
+    (15, 7),
+    (16, 2),
+    (17, 9),
+    (29, 1),
+    (29, 7),
+    (30, 2),
+    (31, 9);
 
-INSERT INTO music_albums(album_id, music_id)
-VALUES (2,1),
-       (2,2),
-       (2,3);
-
-INSERT INTO podcast_albums(album_id, podcast_id)
-VALUES (3,1),
-       (3,2),
-       (3,3);
-
-
--- todo
--- artist/artists
-   
- */
+-- Koppla album till musik
+INSERT INTO media_albums (media_id, album_id)
+VALUES
+    (11, 1),
+    (12, 2),
+    (13, 3),
+    (14, 4),
+    (15, 1),
+    (16, 2),
+    (17, 3),
+    (29, 1),
+    (30, 2),
+    (31, 3);

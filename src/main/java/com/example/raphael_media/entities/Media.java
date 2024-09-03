@@ -9,6 +9,19 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Media {
+
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(length = 30, nullable = false)
+    private String mediaType;
+    @Column(length = 60, nullable = false)
+    private String title;
+    @Column(length = 75, nullable = false)
+    private String URL;
+    @Column(length = 15,nullable = false)
+    private LocalDate releaseDate;
+
     @ManyToMany
     @JoinTable(
             name = "media_artists",
@@ -25,22 +38,13 @@ public class Media {
     @JsonIgnore
     private List<Album> albums;
 
-    @Column(name = "List_Of_Genre",length = 100)
-    @OneToMany (mappedBy = "genre",cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @ManyToMany
+    @JoinTable(
+            name = "media_genres",
+            joinColumns = @JoinColumn(name = "media_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id"))
     @JsonIgnore
-    private List<Genre> listOfGenre;
-
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(length = 30, nullable = false)
-    private String mediaType;
-    @Column(length = 30, nullable = false)
-    private String title;
-    @Column(length = 50, nullable = false)
-    private String URL;
-    @Column(length = 15,nullable = false)
-    private LocalDate releaseDate;
+    private List<Genre> genres;
 
     public Media() {
     }
@@ -63,6 +67,14 @@ public class Media {
 
     public void setAlbums(List<Album> albums) {
         this.albums = albums;
+    }
+
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<Genre> genres) {
+        this.genres = genres;
     }
 
     public String getMediaType() {
