@@ -1,0 +1,114 @@
+version: '3.8'
+
+services:
+  raphael-server:
+    container_name: raphael-server
+    image: raphael-server:latest
+    build:
+      context: ./Raphael-Server
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    networks:
+      - mynetwork
+
+  raphael-gateway:
+    container_name: raphael-gateway
+    image: raphael-gateway:latest
+    build:
+      context: ./Raphael-Gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8585:8585"
+    networks:
+      - mynetwork
+    depends_on:
+      - raphael-server
+
+  edufy-service:
+    container_name: edufy-service
+    image: edufy-service:latest
+    build:
+      context: ./Edufy-Service
+      dockerfile: Dockerfile
+    ports:
+      - "6565:6565"
+    networks:
+      - mynetwork
+    depends_on:
+      - raphael-server
+      - raphael-gateway
+
+  media-service:
+    container_name: media-service
+    image: media-service:latest
+    build:
+      context: ./Media-Service
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqlmedia:3306/raphaelmedia
+      SPRING_DATASOURCE_USERNAME: alex
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "7070:7070"
+    networks:
+      - mynetwork
+    depends_on:
+      - raphael-server
+      - raphael-gateway
+      - mysqlcustomer
+
+  customer-service:
+    container_name: customer-service
+    image: customer-service:latest
+    build:
+      context: ./Customer-Service
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqlcustomer:3306/raphaelcustomer
+      SPRING_DATASOURCE_USERNAME: alex
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "6060:6060"
+    networks:
+      - mynetwork
+    depends_on:
+      - raphael-server
+      - raphael-gateway
+      - mysqlcustomer
+
+  mysqlcustomer:
+    container_name: mysqlcustomer
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: raphaelcustomer
+      MYSQL_USER: alex
+      MYSQL_PASSWORD: root
+    ports:
+      - "3308:3306"
+    networks:
+      - mynetwork
+    depends_on:
+      - raphael-server
+
+  mysqlmedia:
+    container_name: mysqlmedia
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rooot
+      MYSQL_DATABASE: raphaelmedia
+      MYSQL_USER: alex
+      MYSQL_PASSWORD: root
+    ports:
+      - "3307:3306"
+    networks:
+      - mynetwork
+    depends_on:
+      - raphael-server
+
+networks:
+  mynetwork:
+    driver: bridge
