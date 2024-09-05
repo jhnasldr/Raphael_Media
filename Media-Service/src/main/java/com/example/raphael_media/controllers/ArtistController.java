@@ -18,13 +18,13 @@ public class ArtistController {
     @Autowired
     private ArtistService artistService;
 
-    @GetMapping("/api/{artistId}/albums")
+    @GetMapping("/api/media/{artistId}/albums")
     public ResponseEntity<List<Album>> getAllAlbumsByArtist(@PathVariable int artistId) {
         List<Album> albums = artistService.getAllAlbumsByArtistId(artistId);
         return ResponseEntity.ok(albums);
     }
 
-    @GetMapping("/api/{artistId}/mediaList")
+    @GetMapping("/api/media/{artistId}/mediaList")
     public ResponseEntity<List<Media>> getAllMediaByArtist(@PathVariable int artistId) {
         List<Media> mediaList = artistService.getAllMediaByArtistId(artistId);
         return ResponseEntity.ok(mediaList);
