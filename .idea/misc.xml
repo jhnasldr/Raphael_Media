@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/Edufy-Service/pom.xml" />
+        <option value="$PROJECT_DIR$/Media-Service/pom.xml" />
+        <option value="$PROJECT_DIR$/Raphael-Server/pom.xml" />
+        <option value="$PROJECT_DIR$/Raphael-Gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/Customer-Service/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_X" default="true" project-jdk-name="corretto-21" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>

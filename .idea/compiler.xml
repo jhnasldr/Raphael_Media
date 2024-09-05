@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="Raphael-Server" />
+        <module name="Edufy-Service" />
+        <module name="Customer-Service" />
+        <module name="Raphael-Gateway" />
+        <module name="Media-Service" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Customer-Servic" target="17" />
+      <module name="Edufy" target="17" />
+      <module name="Media_Service" target="17" />
+      <module name="Raphael_Media" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Customer-Servic" options="-parameters" />
+      <module name="Customer-Service" options="-parameters" />
+      <module name="Edufy" options="-parameters" />
+      <module name="Edufy-Service" options="-parameters" />
+      <module name="Media-Service" options="-parameters" />
+      <module name="Media_Service" options="-parameters" />
+      <module name="Raphael-Gateway" options="-parameters" />
+      <module name="Raphael-Server" options="-parameters" />
+      <module name="Raphael_Media" options="-parameters" />
+    </option>
+  </component>
+</project>
