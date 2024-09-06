@@ -21,7 +21,7 @@ public class ArtistController {
         return ResponseEntity.ok(albums);
     }
 
-    @GetMapping("{artistId}/mediaList")
+    @GetMapping("{artistId}/medialist")
     public ResponseEntity<List<Media>> getAllMediaByArtist(@PathVariable int artistId) {
         List<Media> mediaList = artistService.getAllMediaByArtistId(artistId);
         return ResponseEntity.ok(mediaList);
