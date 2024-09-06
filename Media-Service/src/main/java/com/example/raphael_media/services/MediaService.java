@@ -4,6 +4,7 @@ import com.example.raphael_media.entities.Media;
 import com.example.raphael_media.exceptions.ResourceNotFoundException;
 import com.example.raphael_media.repositores.MediaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -62,6 +63,9 @@ public class MediaService implements MediaServiceInterface {
 
     @Override
     public void deleteMediaById(int mediaId) {
-
+        if(!mediaRepository.existsById(mediaId)) {
+            throw new ResourceNotFoundException("Media", "id", mediaId);
+        }
+        mediaRepository.deleteById(mediaId);
     }
 }

@@ -32,4 +32,9 @@ public class MediaController {
         mediaService.updateMedia(id,media);
         return new ResponseEntity<>("Media is updated", HttpStatus.OK);
     }
+    @DeleteMapping("deletemedia/{id}")
+    public ResponseEntity<String> deleteMedia(@PathVariable("id") int id) {
+        mediaService.deleteMediaById(id);
+        return new ResponseEntity<>("Media deleted!", HttpStatus.OK);
+    }
 }
