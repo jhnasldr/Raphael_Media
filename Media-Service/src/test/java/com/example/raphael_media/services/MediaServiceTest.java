@@ -98,6 +98,27 @@ class MediaServiceTest {
         });
         //then
         assertEquals(expectation, exception.getMessage());
+    }
 
+    @Test
+    void deleteMediaShouldRemoveMediaWhenIdExists() {
+        int mediaId = 1;
+        when(mockedMediaRepository.existsById(mediaId)).thenReturn(true);
+
+        mediaService.deleteMediaById(mediaId);
+
+        verify(mockedMediaRepository).deleteById(mediaId);
+    }
+
+    @Test
+    void deleteMediaShouldThrowNotFoundExceptionWhenIdDoesNotExist() {
+        int mediaId = 1;
+        when(mockedMediaRepository.existsById(mediaId)).thenReturn(false);
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            mediaService.deleteMediaById(mediaId);
+        });
+
+        assertEquals("Media with id '1' was not found", exception.getMessage());
     }
 }
