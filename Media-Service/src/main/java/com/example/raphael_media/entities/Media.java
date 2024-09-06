@@ -48,6 +48,21 @@ public class Media {
 
     public Media() {
     }
+    public Media(String mediaType, String title, String URL) {
+        this.mediaType = mediaType;
+        this.title = title;
+        this.URL = URL;
+    }
+    public Media(String mediaType, String title, String URL, LocalDate releaseDate, List<Artist> artists, List<Album> albums, List<Genre> genres) {
+
+        this.mediaType = mediaType;
+        this.title = title;
+        this.URL = URL;
+        this.releaseDate = releaseDate;
+        this.artists = artists;
+        this.albums = albums;
+        this.genres = genres;
+    }
 
     public Long getId() {
         return id;
