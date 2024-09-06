@@ -12,7 +12,7 @@ public class Media {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
     @Column(length = 30, nullable = false)
     private String mediaType;
     @Column(length = 60, nullable = false)
@@ -64,7 +64,11 @@ public class Media {
         this.genres = genres;
     }
 
-    public Long getId() {
+    public Media(LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public int getId() {
         return id;
     }
 
