@@ -3,7 +3,7 @@ package com.example.edufy.entities;
 import jakarta.persistence.*;
 
 @Entity
-public class Customer {
+public class EdufyUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
