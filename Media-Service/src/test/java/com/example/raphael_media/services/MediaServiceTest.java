@@ -1,15 +1,22 @@
 package com.example.raphael_media.services;
 
-import com.example.raphael_media.entities.Media;
+import com.example.raphael_media.entities.*;
+import com.example.raphael_media.exceptions.ResourceNotFoundException;
 import com.example.raphael_media.repositores.MediaRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class MediaServiceTest {
@@ -18,6 +25,15 @@ class MediaServiceTest {
     MediaService mediaService;
     MediaRepository mockedMediaRepository;
     List<Media> mockedMediaList;
+
+    private MediaRepository mockMediaRepository = mock(MediaRepository.class);
+    private Music musicMedia;
+    private List<Genre> genreList = new ArrayList<>();
+    private List<Artist> artistList = new ArrayList<>();
+    private List<Album> albumsList = new ArrayList<>();
+
+    private ResourceNotFoundException exception;
+    private String expectation;
 
 
     @BeforeEach
@@ -30,6 +46,7 @@ class MediaServiceTest {
         mockedMediaList = Arrays.asList(new Media("Music", "songTitle", "URLForSong"),
                 new Media("Vide", "videTitle", "URLForVideo")
         );
+        musicMedia =  new Music("titelMusic","www.url.com", LocalDate.now());
     }
 
     @Test
@@ -49,5 +66,38 @@ class MediaServiceTest {
     void addNewMedia_WhenUsed_ShouldVerifyMethodSaveFromMediaRepository() {
         mediaService.addNewMedia(mockMedia);
         verify(mockedMediaRepository).save(mockMedia);
+    }
+
+    @Test
+    void updateMedia_ShouldReturnTrueWhenSavingUser(){
+        //given
+        musicMedia.setGenres(genreList);
+        musicMedia.setAlbums(albumsList);
+        musicMedia.setArtists(artistList);
+        Media existningMedia;
+
+        when(mockedMediaRepository.findById(1)).thenReturn(Optional.ofNullable(musicMedia));
+        //when
+        existningMedia = mediaService.updateMedia(1,musicMedia);
+        //then
+        verify(mockedMediaRepository).save(existningMedia);
+    }
+
+    @Test
+    void updateMedia_ShouldThrowExeptionResourceNotFound(){
+        //given
+        musicMedia.setGenres(genreList);
+        musicMedia.setAlbums(albumsList);
+        musicMedia.setArtists(artistList);
+        expectation = "music with id '3' was not found";
+
+        when(mockedMediaRepository.findById(1)).thenReturn(Optional.ofNullable(musicMedia));
+        //when
+        exception = assertThrows(ResourceNotFoundException.class, () -> {
+            mediaService.updateMedia(3,musicMedia);
+        });
+        //then
+        assertEquals(expectation, exception.getMessage());
+
     }
 }

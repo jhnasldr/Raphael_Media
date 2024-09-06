@@ -1,0 +1,48 @@
+# Ignorera IDE-specifika filer och mappar (JetBrains .idea)
+.idea/
+*.iml
+*.iws
+out/
+target/
+
+# Ignorera byggspecifika filer
+/build/
+*.class
+*.jar
+*.war
+*.ear
+
+# Ignorera användarspecifika inställningsfiler
+*.log
+*.swp
+*.swo
+*.tmp
+*.DS_Store
+*.vscode/
+*.env
+misc.xml
+
+# Ignorera Docker-relaterade filer
+docker-compose.override.yml
+docker-compose.override.yaml
+docker-compose.local.yml
+docker-compose.local.yaml
+.env
+
+# Ignorera node_modules (om du använder Node.js i projektet)
+node_modules/
+
+# Ignorera Python-virtuella miljöer
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Ignorera andra operativsystemspecifika filer
+Thumbs.db
+.DS_Store
+
+# Ignorera beroendefiler (för olika teknologier)
+package-lock.json
+yarn.lock
+*.lock
