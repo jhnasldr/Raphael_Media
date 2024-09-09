@@ -18,4 +18,10 @@ public class CustomerService implements CustomerServiceInterface {
     public Optional<Customer> findCustomerById(int customerId) {
         return customerRepository.findById(customerId);
     }
+
+    @Override
+    public Customer addCustomer(Customer customer) {
+        customerRepository.save(customer);
+        return customer;
+    }
 }

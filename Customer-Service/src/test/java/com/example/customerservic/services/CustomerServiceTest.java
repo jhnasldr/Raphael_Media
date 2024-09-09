@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,13 +28,17 @@ class CustomerServiceTest {
 
     private Customer customer;
 
-
-    @Test
-    void TestFindCustomerByIdIfCustomerExists() {
+    @BeforeEach
+    void setUp(){
         customer = new Customer();
         customer.setCustomerId(1);
         customer.setUserName("Test User");
         customer.setEmailAdress("Test@Example.com");
+    }
+
+
+    @Test
+    void TestFindCustomerByIdIfCustomerExists() {
 
         int customerId = 1;
         when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
@@ -60,5 +65,14 @@ class CustomerServiceTest {
         Optional<Customer> foundCustomer = customerService.findCustomerById(customerId);
 
         assertTrue(foundCustomer.isEmpty());
+    }
+
+    @Test
+    void addCustomer(){
+        //given
+        //when
+        customerService.addCustomer(customer);
+        //then
+        verify(customerRepository).save(customer);
     }
 }
