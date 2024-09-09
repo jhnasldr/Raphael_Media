@@ -10,4 +10,6 @@ public interface CustomerServiceInterface {
     Customer addCustomer(Customer customer);
 
     void deleteCustomerById(int id);
+
+    Customer updateCustomer(int customerId,Customer customer);
 }
