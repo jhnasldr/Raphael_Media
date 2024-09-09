@@ -4,6 +4,7 @@ import com.example.edufy.VO.Customer;
 import com.example.edufy.VO.Media;
 import com.example.edufy.entities.EdufyUser;
 
+//Vet inte riktigt om den här behövs eller om den bara krånglar till det från videon
 public class ResponseTemplateVO {
 
     private EdufyUser edufyUser;
