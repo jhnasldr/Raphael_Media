@@ -18,6 +18,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
 
@@ -30,7 +31,7 @@ class CustomerServiceTest {
     private Customer customer;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         customer = new Customer();
         customer.setCustomerId(1);
         customer.setUserName("Test User");
@@ -38,6 +39,8 @@ class CustomerServiceTest {
     }
 
 
+
+    //TODO eventuellt lägga till testning i FindCustomerById och kolla att mediaInteractionsListan kommer med rätt också
     @Test
     void TestFindCustomerByIdIfCustomerExists() {
 
@@ -50,7 +53,6 @@ class CustomerServiceTest {
         assertEquals(customer.getCustomerId(), foundCustomer.get().getCustomerId());
         assertEquals("Test User", foundCustomer.get().getUserName());
         assertEquals("Test@Example.com", foundCustomer.get().getEmailAdress());
-
     }
 
     @Test
@@ -69,7 +71,7 @@ class CustomerServiceTest {
     }
 
     @Test
-    void addCustomer_ShouldAddCustomer(){
+    void addCustomer_ShouldAddCustomer() {
         //given
         //when
         customerService.addCustomer(customer);
@@ -78,7 +80,7 @@ class CustomerServiceTest {
     }
 
     @Test
-    void deleteCustomerById_ShouldDeleteCustomer(){
+    void deleteCustomerById_ShouldDeleteCustomer() {
         //give
         when(customerRepository.findById(1)).thenReturn(Optional.ofNullable(customer));
         //when
@@ -88,7 +90,7 @@ class CustomerServiceTest {
     }
 
     @Test
-    void deleteCustomerById_ThrowExceptionWhenCustomerNotFound(){
+    void deleteCustomerById_ThrowExceptionWhenCustomerNotFound() {
         //give
         when(customerRepository.findById(1)).thenReturn(Optional.empty());
         String expectation = "Customer with id '1' was not found";

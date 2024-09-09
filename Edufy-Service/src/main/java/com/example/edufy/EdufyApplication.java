@@ -15,6 +15,8 @@ public class EdufyApplication {
 
     @Bean
     @LoadBalanced
+    //har man med loadbalanced så går den via sevicerna så den vill ha service namn ist för hela endpoint för resttremplate, ex för customer vill den ha
+//   "http://customer-service/customer/1" istället för "http://127.0.0.1:6060/customer/1" 
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }

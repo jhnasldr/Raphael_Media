@@ -1,5 +1,6 @@
 package com.example.customerservic.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,25 +10,19 @@ public class MediaInteractions {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int mediaInteractionId;
 
-    @Column(name = "music_id", length = 20, nullable = false)
-    private int musicId;
+    @Column(name = "media_id", length = 20, nullable = false)
+    private int mediaId;
 
-    @Column(name = "video_id", length = 20, nullable = false)
-    private int videoId;
 
-    @Column(name = "podcast_id")
-    private int podcastId;
+    @Column(name = "like_status", length = 20, nullable = false)
+    private String likeStatus; //like, dislike or empty
 
-    @Column(name = "liked", length = 20, nullable = false)
-    private String liked;
-
-    @Column(name = "disliked", length = 20, nullable = false)
-    private String disliked;
 
     @Column(name = "times_listened_to", length = 20, nullable = false)
     private int timesListenedTo;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
@@ -35,20 +30,12 @@ public class MediaInteractions {
     }
 
 
-    public String getLiked() {
-        return liked;
+    public String getLikeStatus() {
+        return likeStatus;
     }
 
-    public void setLiked(String liked) {
-        this.liked = liked;
-    }
-
-    public String getDisliked() {
-        return disliked;
-    }
-
-    public void setDisliked(String disliked) {
-        this.disliked = disliked;
+    public void setLikeStatus(String likeStatus) {
+        this.likeStatus = likeStatus;
     }
 
     public int getTimesListenedTo() {
@@ -67,27 +54,19 @@ public class MediaInteractions {
         this.mediaInteractionId = mediaInteractionId;
     }
 
-    public int getMusicId() {
-        return musicId;
+    public int getMediaId() {
+        return mediaId;
     }
 
-    public void setMusicId(int musicId) {
-        this.musicId = musicId;
+    public void setMediaId(int mediaId) {
+        this.mediaId = mediaId;
     }
 
-    public int getVideoId() {
-        return videoId;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setVideoId(int videoId) {
-        this.videoId = videoId;
-    }
-
-    public int getPodcastId() {
-        return podcastId;
-    }
-
-    public void setPodcastId(int podcastId) {
-        this.podcastId = podcastId;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }
