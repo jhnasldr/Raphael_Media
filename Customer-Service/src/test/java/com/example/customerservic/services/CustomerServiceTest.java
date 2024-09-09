@@ -1,6 +1,7 @@
 package com.example.customerservic.services;
 
 import com.example.customerservic.entities.Customer;
+import com.example.customerservic.exceptions.ResourceNotFoundException;
 import com.example.customerservic.repositories.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,11 +69,35 @@ class CustomerServiceTest {
     }
 
     @Test
-    void addCustomer(){
+    void addCustomer_ShouldAddCustomer(){
         //given
         //when
         customerService.addCustomer(customer);
         //then
         verify(customerRepository).save(customer);
+    }
+
+    @Test
+    void deleteCustomerById_ShouldDeleteCustomer(){
+        //give
+        when(customerRepository.findById(1)).thenReturn(Optional.ofNullable(customer));
+        //when
+        customerService.deleteCustomerById(1);
+        //the
+        verify(customerRepository).delete(customer);
+    }
+
+    @Test
+    void deleteCustomerById_ThrowExceptionWhenCustomerNotFound(){
+        //give
+        when(customerRepository.findById(1)).thenReturn(Optional.empty());
+        String expectation = "Customer with id '1' was not found";
+
+        //when
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            customerService.deleteCustomerById(1);
+        });
+        //then
+        assertEquals(expectation, exception.getMessage());
     }
 }

@@ -8,4 +8,6 @@ public interface CustomerServiceInterface {
     Optional<Customer> findCustomerById(int customerId);
 
     Customer addCustomer(Customer customer);
+
+    void deleteCustomerById(int id);
 }
