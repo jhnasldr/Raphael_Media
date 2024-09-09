@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -21,8 +22,8 @@ public class CustomerController {
     @GetMapping("{customerId}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable int customerId) {
         Optional<Customer> customer = customerService.findCustomerById(customerId);
-        //Returns correct HTTP-answer depending on whether the customer was found or not
-        return customer.map(c -> ResponseEntity.ok().body(c)).orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(customer.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+
     }
 
     @PostMapping("addcustomer")
