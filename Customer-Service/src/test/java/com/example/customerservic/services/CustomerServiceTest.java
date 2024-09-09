@@ -102,4 +102,38 @@ class CustomerServiceTest {
         //then
         assertEquals(expectation, exception.getMessage());
     }
+
+    @Test
+    void TestUpdateCustomer_ThrowExceptionWhenCustomerNotFound() {
+        Customer updatedCustomer = new Customer();
+        updatedCustomer.setCustomerId(1);
+        updatedCustomer.setUserName("New Name");
+        updatedCustomer.setEmailAdress("New Email Address");
+
+        when(customerRepository.findById(customer.getCustomerId())).thenReturn(Optional.empty());
+        String exception = "Customer with id '1' was not found";
+
+        ResourceNotFoundException exception1 = assertThrows(ResourceNotFoundException.class, () -> {
+            customerService.updateCustomer(customer.getCustomerId(), updatedCustomer);
+        });
+
+        assertEquals(exception, exception1.getMessage());
+    }
+
+    @Test
+    void TestUpdateCustomerSuccess() {
+        Customer updatedCustomer = new Customer();
+        updatedCustomer.setUserName("New Name");
+        updatedCustomer.setEmailAdress("New Email Address");
+
+        when(customerRepository.findById(customer.getCustomerId())).thenReturn(Optional.of(customer));
+        when(customerRepository.save(customer)).thenReturn(customer);
+
+        Customer result = customerService.updateCustomer(customer.getCustomerId(), updatedCustomer);
+
+        assertEquals("New Name", result.getUserName());
+        assertEquals("New Email Address", result.getEmailAdress());
+        verify(customerRepository).findById(customer.getCustomerId());
+        verify(customerRepository).save(customer);
+    }
 }

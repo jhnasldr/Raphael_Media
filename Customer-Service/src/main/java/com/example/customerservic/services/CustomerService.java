@@ -31,4 +31,16 @@ public class CustomerService implements CustomerServiceInterface {
       Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id));
       customerRepository.delete(customer);
     }
+
+    @Override
+    public Customer updateCustomer(int customerId, Customer customer) {
+        Customer customerToUpdate = customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException("Customer", "id", customerId));
+
+        customerToUpdate.setUserName(customer.getUserName());
+        customerToUpdate.setEmailAdress(customer.getEmailAdress());
+
+        return customerRepository.save(customerToUpdate);
+    }
+
+
 }
