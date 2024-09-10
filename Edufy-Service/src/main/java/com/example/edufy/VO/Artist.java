@@ -1,37 +1,21 @@
-package com.example.raphael_media.entities;
+package com.example.edufy.VO;
 
-import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.util.List;
 
-@Entity
 public class Artist {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int artistId;
 
-    @Column(name = "artist_name",length = 50, nullable = false)
     private String artistName;
-
-    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JsonManagedReference
     private List<Album> albums;
 
-    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "artists")
-    @JsonIgnore
     private List<Media> mediaList;
 
     public Artist() {
-
-    }
-
-    public List<Media> getMediaList() {
-        return mediaList;
-    }
-
-    public void setMediaList(List<Media> mediaList) {
-        this.mediaList = mediaList;
     }
 
     public int getArtistId() {
@@ -58,4 +42,11 @@ public class Artist {
         this.albums = albums;
     }
 
+    public List<Media> getMediaList() {
+        return mediaList;
+    }
+
+    public void setMediaList(List<Media> mediaList) {
+        this.mediaList = mediaList;
+    }
 }
