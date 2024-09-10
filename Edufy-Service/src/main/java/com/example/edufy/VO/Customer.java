@@ -1,6 +1,6 @@
 package com.example.edufy.VO;
 
-        import java.util.List;
+import java.util.List;
 
 public class Customer {
 
@@ -8,16 +8,11 @@ public class Customer {
 
     private int customerId;
 
-
     private String userName;
-
 
     private String emailAdress;
 
-
     private List<MediaInteractions> MediaInteractions;
-
-
 
     public Customer() {
     }
