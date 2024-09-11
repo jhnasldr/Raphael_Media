@@ -68,4 +68,13 @@ public class MediaService implements MediaServiceInterface {
         }
         mediaRepository.deleteById(mediaId);
     }
+
+    @Override
+    public List<Media> getMediaByType(String mediaType) {
+        List<Media> mediaList = mediaRepository.findByMediaType(mediaType);
+        if (mediaList.isEmpty()) {
+            throw new ResourceNotFoundException("Media", "type", mediaType);
+        }
+        return mediaList;
+    }
 }
