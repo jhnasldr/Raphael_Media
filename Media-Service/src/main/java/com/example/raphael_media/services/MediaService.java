@@ -72,6 +72,7 @@ public class MediaService implements MediaServiceInterface {
     }
 
     @Override
+
     public List<MediaDTO> getAllMediaDTO() {
         List<Media> allMedia = mediaRepository.findAll();
         return allMedia.stream().map(this::convertToMediaDTO).toList();
@@ -81,5 +82,14 @@ public class MediaService implements MediaServiceInterface {
         return new MediaDTO(media.getId(), media.getTitle(), media.getGenres(), media.getArtists(), media.getMediaType());
     }
 
+
+
+    public List<Media> getMediaByType(String mediaType) {
+        List<Media> mediaList = mediaRepository.findByMediaType(mediaType);
+        if (mediaList.isEmpty()) {
+            throw new ResourceNotFoundException("Media", "type", mediaType);
+        }
+        return mediaList;
+    }
 
 }

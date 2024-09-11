@@ -41,8 +41,15 @@ public class MediaController {
     }
 
 
+
     @GetMapping("getallmediadto")
     public ResponseEntity<List<MediaDTO>> getAllMediaDTO() {
         return ResponseEntity.ok(mediaService.getAllMediaDTO());
+
+    @GetMapping("getmediatype/{mediatype}")
+    public ResponseEntity<List<Media>> getMediaByType(@PathVariable String mediatype) {
+        List<Media> mediaList = mediaService.getMediaByType(mediatype);
+        return ResponseEntity.ok(mediaList);
+
     }
 }

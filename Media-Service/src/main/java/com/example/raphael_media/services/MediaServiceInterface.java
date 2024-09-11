@@ -19,6 +19,10 @@ public interface MediaServiceInterface {
     void deleteMediaById(int mediaId);
 
 
+
     List<MediaDTO> getAllMediaDTO();
+
+    List<Media> getMediaByType(String mediaType);
+
 
 }
