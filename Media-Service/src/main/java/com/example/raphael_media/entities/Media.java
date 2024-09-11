@@ -68,6 +68,10 @@ public class Media {
         this.releaseDate = releaseDate;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }

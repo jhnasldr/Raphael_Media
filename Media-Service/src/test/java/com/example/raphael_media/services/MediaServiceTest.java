@@ -1,5 +1,6 @@
 package com.example.raphael_media.services;
 
+import com.example.raphael_media.DTOs.MediaDTO;
 import com.example.raphael_media.entities.*;
 import com.example.raphael_media.exceptions.ResourceNotFoundException;
 import com.example.raphael_media.repositores.MediaRepository;
@@ -23,7 +24,8 @@ class MediaServiceTest {
     MediaRepository mockedMediaRepository;
     List<Media> mockedMediaList;
 
-    private MediaRepository mockMediaRepository = mock(MediaRepository.class);
+    private List<MediaDTO> mockedMediaDTOList;
+    // private MediaRepository mockMediaRepository = mock(MediaRepository.class);
     private Music musicMedia;
     private List<Genre> genreList = new ArrayList<>();
     private List<Artist> artistList = new ArrayList<>();
@@ -41,9 +43,17 @@ class MediaServiceTest {
         mediaService.mediaRepository = mockedMediaRepository;
 
         mockedMediaList = Arrays.asList(new Media("Music", "songTitle", "URLForSong"),
-                new Media("Vide", "videTitle", "URLForVideo")
+                new Media("Video", "videoTitle", "URLForVideo")
         );
-        musicMedia =  new Music("titelMusic","www.url.com", LocalDate.now());
+
+        mockedMediaDTOList = Arrays.asList(new MediaDTO(1, "songTitle", "Music"),
+                new MediaDTO(2, "videoTitle", "Video")
+        );
+
+        musicMedia = new Music("titelMusic", "www.url.com", LocalDate.now());
+        musicMedia = new Music("titelMusic", "www.url.com", LocalDate.now());
+
+
     }
 
     @Test
@@ -58,6 +68,21 @@ class MediaServiceTest {
         assertThat(mediaService.getAllMedia()).hasSize(2);
     }
 
+    @Test
+    void getAllMediaDTO_shouldReturnMediaTypeMusic() {
+        when(mockedMediaRepository.findAll()).thenReturn(mockedMediaList);
+        List<MediaDTO> actualMediaDTOs = mediaService.getAllMediaDTO();
+        assertEquals(mockedMediaDTOList.get(0).getMediaType(), actualMediaDTOs.get(0).getMediaType());
+        assertEquals("Music", actualMediaDTOs.get(0).getMediaType());
+    }
+
+    @Test
+    void getAllMediaDTO_shouldReturnListWithSizeTwo() {
+        when(mockedMediaRepository.findAll()).thenReturn(mockedMediaList);
+        List<MediaDTO> actualMediaDTOs = mediaService.getAllMediaDTO();
+        assertEquals(2, actualMediaDTOs.size());
+    }
+
 
     @Test
     void addNewMedia_WhenUsed_ShouldVerifyMethodSaveFromMediaRepository() {
@@ -66,7 +91,7 @@ class MediaServiceTest {
     }
 
     @Test
-    void updateMedia_ShouldReturnTrueWhenSavingUser(){
+    void updateMedia_ShouldReturnTrueWhenSavingUser() {
         //given
         musicMedia.setGenres(genreList);
         musicMedia.setAlbums(albumsList);
@@ -75,13 +100,13 @@ class MediaServiceTest {
 
         when(mockedMediaRepository.findById(1)).thenReturn(Optional.ofNullable(musicMedia));
         //when
-        existningMedia = mediaService.updateMedia(1,musicMedia);
+        existningMedia = mediaService.updateMedia(1, musicMedia);
         //then
         verify(mockedMediaRepository).save(existningMedia);
     }
 
     @Test
-    void updateMedia_ShouldThrowExeptionResourceNotFound(){
+    void updateMedia_ShouldThrowExeptionResourceNotFound() {
         //given
         musicMedia.setGenres(genreList);
         musicMedia.setAlbums(albumsList);
@@ -91,7 +116,7 @@ class MediaServiceTest {
         when(mockedMediaRepository.findById(1)).thenReturn(Optional.ofNullable(musicMedia));
         //when
         exception = assertThrows(ResourceNotFoundException.class, () -> {
-            mediaService.updateMedia(3,musicMedia);
+            mediaService.updateMedia(3, musicMedia);
         });
         //then
         assertEquals(expectation, exception.getMessage());
