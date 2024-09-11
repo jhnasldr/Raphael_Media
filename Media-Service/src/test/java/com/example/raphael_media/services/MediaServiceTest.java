@@ -10,10 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -120,5 +117,82 @@ class MediaServiceTest {
         });
 
         assertEquals("Media with id '1' was not found", exception.getMessage());
+    }
+
+    @Test
+    void getMediaByTypeWhenMediaDoesNotExistShouldThrowResourceNotFoundException() {
+        String mediaType = "NoMediaTypeFound";
+
+        when(mockedMediaRepository.findByMediaType(mediaType)).thenReturn(Collections.emptyList());
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            mediaService.getMediaByType(mediaType);
+        });
+
+        assertEquals("Media with type 'NoMediaTypeFound' was not found", exception.getMessage());
+        verify(mockedMediaRepository, times(1)).findByMediaType(mediaType);
+    }
+
+    @Test
+    void getMediaByTypeWhenMediaExistsShouldReturnMusic() {
+       String mediaType = "Music";
+
+       when(mockedMediaRepository.findByMediaType(mediaType)).thenReturn(
+               Arrays.asList(new Media("Music", "songTitle", "URLForSong")
+       ));
+
+       Media expectedMedia = new Media("Music", "songTitle", "URLForSong");
+
+       List<Media> result = mediaService.getMediaByType(mediaType);
+
+       assertNotNull(result);
+       assertEquals(1, result.size());
+       Media actualMedia = result.get(0);
+       assertEquals(expectedMedia.getTitle(), actualMedia.getTitle());
+       assertEquals(expectedMedia.getURL(), actualMedia.getURL());
+       assertEquals(expectedMedia.getMediaType(), actualMedia.getMediaType());
+       verify(mockedMediaRepository, times(1)).findByMediaType(mediaType);
+    }
+
+    @Test
+    void getMediaByTypeWhenMediaExistsShouldReturnVideo() {
+        String mediaType = "Video";
+
+        when(mockedMediaRepository.findByMediaType(mediaType)).thenReturn(
+                Arrays.asList(new Media("Video", "videoTitle", "URLForVideo")
+                ));
+
+        Media expectedMedia = new Media("Video", "videoTitle", "URLForVideo");
+
+        List<Media> result = mediaService.getMediaByType(mediaType);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        Media actualMedia = result.get(0);
+        assertEquals(expectedMedia.getTitle(), actualMedia.getTitle());
+        assertEquals(expectedMedia.getURL(), actualMedia.getURL());
+        assertEquals(expectedMedia.getMediaType(), actualMedia.getMediaType());
+        verify(mockedMediaRepository, times(1)).findByMediaType(mediaType);
+    }
+
+    @Test
+    void getMediaByTypeWhenMediaExistsShouldReturnPodcast() {
+        String mediaType = "Podcast";
+
+        when(mockedMediaRepository.findByMediaType(mediaType)).thenReturn(
+                Arrays.asList(new Media("Podcast", "podcastTitle", "URLForPodcast")
+                ));
+
+        Media expectedMedia = new Media("Podcast", "podcastTitle", "URLForPodcast");
+
+        List<Media> result = mediaService.getMediaByType(mediaType);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        Media actualMedia = result.get(0);
+        assertEquals(expectedMedia.getTitle(), actualMedia.getTitle());
+        assertEquals(expectedMedia.getURL(), actualMedia.getURL());
+        assertEquals(expectedMedia.getMediaType(), actualMedia.getMediaType());
+        verify(mockedMediaRepository, times(1)).findByMediaType(mediaType);
     }
 }

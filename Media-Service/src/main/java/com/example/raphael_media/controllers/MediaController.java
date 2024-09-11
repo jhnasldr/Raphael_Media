@@ -37,4 +37,10 @@ public class MediaController {
         mediaService.deleteMediaById(id);
         return new ResponseEntity<>("Media deleted!", HttpStatus.OK);
     }
+
+    @GetMapping("getmediatype/{mediatype}")
+    public ResponseEntity<List<Media>> getMediaByType(@PathVariable String mediatype) {
+        List<Media> mediaList = mediaService.getMediaByType(mediatype);
+        return ResponseEntity.ok(mediaList);
+    }
 }
