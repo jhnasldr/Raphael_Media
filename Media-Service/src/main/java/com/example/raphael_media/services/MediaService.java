@@ -1,5 +1,6 @@
 package com.example.raphael_media.services;
 
+import com.example.raphael_media.DTOs.MediaDTO;
 import com.example.raphael_media.entities.Media;
 import com.example.raphael_media.exceptions.ResourceNotFoundException;
 import com.example.raphael_media.repositores.MediaRepository;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MediaService implements MediaServiceInterface {
@@ -34,26 +36,26 @@ public class MediaService implements MediaServiceInterface {
     @Override
     public Media updateMedia(int mediaId, Media media) {
         Media existningMedia = mediaRepository.findById(mediaId).orElseThrow(() -> new ResourceNotFoundException(media.getMediaType(), "id", mediaId));
-        if(media.getMediaType() != null){
+        if (media.getMediaType() != null) {
             existningMedia.setMediaType(media.getMediaType());
         }
-        if(media.getAlbums() != null){
+        if (media.getAlbums() != null) {
             existningMedia.setAlbums(media.getAlbums());
         }
-        if(media.getArtists() != null){
+        if (media.getArtists() != null) {
             existningMedia.setArtists(media.getArtists());
         }
-        if(media.getGenres() != null){
+        if (media.getGenres() != null) {
             existningMedia.setGenres(media.getGenres());
         }
-        if(media.getReleaseDate() != null){
+        if (media.getReleaseDate() != null) {
             existningMedia.setReleaseDate(media.getReleaseDate());
         }
-        if(media.getTitle() != null){
+        if (media.getTitle() != null) {
             existningMedia.setTitle(media.getTitle());
         }
 
-        if(media.getURL() != null){
+        if (media.getURL() != null) {
             existningMedia.setURL(media.getURL());
         }
 
@@ -63,9 +65,21 @@ public class MediaService implements MediaServiceInterface {
 
     @Override
     public void deleteMediaById(int mediaId) {
-        if(!mediaRepository.existsById(mediaId)) {
+        if (!mediaRepository.existsById(mediaId)) {
             throw new ResourceNotFoundException("Media", "id", mediaId);
         }
         mediaRepository.deleteById(mediaId);
     }
+
+    @Override
+    public List<MediaDTO> getAllMediaDTO() {
+        List<Media> allMedia = mediaRepository.findAll();
+        return allMedia.stream().map(this::convertToMediaDTO).toList();
+    }
+
+    private MediaDTO convertToMediaDTO(Media media) {
+        return new MediaDTO(media.getId(), media.getTitle(), media.getGenres(), media.getArtists(), media.getMediaType());
+    }
+
+
 }

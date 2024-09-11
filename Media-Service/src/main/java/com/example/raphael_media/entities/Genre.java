@@ -1,5 +1,7 @@
 package com.example.raphael_media.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -14,6 +16,7 @@ public class Genre {
     private String genre;
 
     @ManyToMany(mappedBy = "genres")
+    @JsonIgnore
     private List<Media> mediaList;
 
     public Genre() {
