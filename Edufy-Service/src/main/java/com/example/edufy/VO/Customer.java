@@ -1,5 +1,10 @@
 package com.example.edufy.VO;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+
 import java.util.List;
 
 public class Customer {
@@ -12,12 +17,14 @@ public class Customer {
 
     private String emailAdress;
 
+    @OneToMany(cascade = CascadeType.MERGE,fetch = FetchType.EAGER, mappedBy = "customer")
+    @JsonManagedReference
     private List<MediaInteractions> MediaInteractions;
 
     public Customer() {
     }
 
-    public Customer(int customerId, String userName, String emailAdress, List<com.example.edufy.VO.MediaInteractions> mediaInteractions) {
+    public Customer(int customerId, String userName, String emailAdress, List<MediaInteractions> mediaInteractions) {
         this.customerId = customerId;
         this.userName = userName;
         this.emailAdress = emailAdress;
