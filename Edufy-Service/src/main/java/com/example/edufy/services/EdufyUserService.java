@@ -5,8 +5,12 @@ import com.example.edufy.VO.Customer;
 import com.example.edufy.VO.Media;
 import com.example.edufy.VO.MediaInteractions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class EdufyUserService implements EdufyServiceInterface {
@@ -29,55 +33,16 @@ public class EdufyUserService implements EdufyServiceInterface {
         return customerVO;
     }
 
-    public Media getMediaVO() {
-        //Har man med loadbalanced letar den inom sina services och man kan inte köra med localhost utan måste använda servicenamnet
-        //    Customer customerVO = restTemplate.getForObject("http://127.0.0.1:6060/api/customer/1", Customer.class);
-        //    Customer customerVO = restTemplate.getForObject("localhost:6060/api/customer/1", Customer.class);
-        Media mediaVO = restTemplate.getForObject("http://media-service/api/media/1", Media.class);
-
-        // restTemplate och getForObject för att köra get, verkar finnas metoder för alla crud operationer med restTemplate
-        return mediaVO;
-    }
-
-    public Customer putCustomerVO() {
-        //Har man med loadbalanced letar den inom sina services och man kan inte köra med localhost utan måste använda servicenamnet
-        //    Customer customerVO = restTemplate.getForObject("http://127.0.0.1:6060/api/customer/1", Customer.class);
-        //    Customer customerVO = restTemplate.getForObject("localhost:6060/api/customer/1", Customer.class);
-        Customer customerVO = getCustomerVO();
-        customerVO.setUserName("hej");
-        customerVO.setEmailAdress("hej.com");
-        restTemplate.put("http://customer-service/api/customer/updatecustomer/1", customerVO);
-
-        // restTemplate och getForObject för att köra get, verkar finnas metoder för alla crud operationer med restTemplate
-        return customerVO;
-    }
-
-    public MediaInteractions  postMediaInteractionsVO() {
-        //Har man med loadbalanced letar den inom sina services och man kan inte köra med localhost utan måste använda servicenamnet
-        //    Customer customerVO = restTemplate.getForObject("http://127.0.0.1:6060/api/customer/1", Customer.class);
-        //    Customer customerVO = restTemplate.getForObject("localhost:6060/api/customer/1", Customer.class);
-        MediaInteractions mediaInteractions = new MediaInteractions();
-        mediaInteractions.setMediaId(100);
-        mediaInteractions.setTimesListenedTo(1);
-        mediaInteractions.setLikeStatus("like");
-        restTemplate.postForEntity("http://customer-service/api/customer/addmediainteractions", mediaInteractions, MediaInteractions.class);
-
-        // restTemplate och getForObject för att köra get, verkar finnas metoder för alla crud operationer med restTemplate
-        return mediaInteractions;
-    }
 
     @Override
     public Media playAndUpdateListedToInCustomer(int idCustomer, int idMedia){
         String customerGetURL = "http://customer-service/api/customer/" + idCustomer;
         String mediaGetURL = "http://media-service/api/media/" + idMedia;
         String customerPutURl = "http://customer-service/api/customer/updatecustomer/" + idCustomer;
-        String mediaInteractionsPostURl = "http://customer-service/api/customer/addmediainteractions";
 
         Customer customerVO = restTemplate.getForObject(customerGetURL, Customer.class);
         Media mediaVO = restTemplate.getForObject(mediaGetURL,Media.class);
 
-        customerVO.setUserName("kevin");
-        customerVO.setEmailAdress("new kevin");
 
         for (MediaInteractions m: customerVO.getMediaInteractions()) {
             if (m.getMediaId() == mediaVO.getId()){
@@ -87,17 +52,17 @@ public class EdufyUserService implements EdufyServiceInterface {
             }
         }
 
-        MediaInteractions mediaInteractionsVO = new MediaInteractions("empty",0,customerVO);
-
-
-        mediaInteractionsVO.setMediaInteractionId(customerVO.getMediaInteractions().size()+1);
-        mediaInteractionsVO.setMediaId(mediaVO.getId());
+        MediaInteractions mediaInteractionsVO = new MediaInteractions();
+        mediaInteractionsVO.setLikeStatus("empty");
         mediaInteractionsVO.increasePlayCount();
-        //restTemplate.postForEntity(mediaInteractionsPostURl,mediaInteractionsVO, MediaInteractions.class);
+        mediaInteractionsVO.setMediaId(mediaVO.getId());
+        mediaInteractionsVO.setCustomer(customerVO);
         customerVO.getMediaInteractions().add(mediaInteractionsVO);
-
+        System.out.println(customerVO.getMediaInteractions().size());
         restTemplate.put(customerPutURl,customerVO);
+
         return mediaVO;
+
     }
 
     public void setRestTemplate(RestTemplate restTemplate) {

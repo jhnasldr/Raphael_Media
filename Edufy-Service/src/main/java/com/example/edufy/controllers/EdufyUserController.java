@@ -26,24 +26,6 @@ public class EdufyUserController {
         return edufyUserService.getCustomerVO();
     }
 
-    @GetMapping("/getmediavo")
-    public Media getmediaVo(){
-        return edufyUserService.getMediaVO();
-    }
-
-    @PutMapping("/putvo")
-    public ResponseEntity<Customer> update(){
-        Customer update = edufyUserService.putCustomerVO();
-        return ResponseEntity.ok(update);
-    }
-
-    @PostMapping("/postMI")
-    public ResponseEntity<MediaInteractions> addMI(){
-        MediaInteractions mediaInteractions = edufyUserService.postMediaInteractionsVO();
-        return ResponseEntity.ok(mediaInteractions);
-    }
-
-
     @PutMapping("/playmedia")
     public ResponseEntity<String> playMediaAndIncreaseTimesListenedTo(@RequestBody MediaRequstBody mediaRequstBody){
         Media playMedia = edufyUserService.playAndUpdateListedToInCustomer(mediaRequstBody.getCustomerId(), mediaRequstBody.getMediaId());

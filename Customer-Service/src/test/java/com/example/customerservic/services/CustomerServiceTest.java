@@ -1,6 +1,7 @@
 package com.example.customerservic.services;
 
 import com.example.customerservic.entities.Customer;
+import com.example.customerservic.entities.MediaInteractions;
 import com.example.customerservic.exceptions.ResourceNotFoundException;
 import com.example.customerservic.repositories.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,6 +31,9 @@ class CustomerServiceTest {
     @InjectMocks
     private CustomerService customerService;
 
+    @Mock
+    private MediaInteractionsService mediaInteractionsService;
+
     private Customer customer;
 
     @BeforeEach
@@ -39,8 +45,23 @@ class CustomerServiceTest {
     }
 
 
+    @Test
+    void findCustomerById_ShouldFindCustomer(){
+        //give
+        int customerId = 1;
+        List<MediaInteractions> list = new ArrayList<>();
+        list.add(new MediaInteractions());
+        customer.setMediaInteractions(list);
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
 
-    //TODO eventuellt lägga till testning i FindCustomerById och kolla att mediaInteractionsListan kommer med rätt också
+        //when
+        Optional<Customer> fundCustomer = customerService.findCustomerById(customerId);
+
+
+        //then
+        assertEquals(1, fundCustomer.get().getMediaInteractions().size());
+
+    }
     @Test
     void TestFindCustomerByIdIfCustomerExists() {
 
@@ -125,15 +146,44 @@ class CustomerServiceTest {
         Customer updatedCustomer = new Customer();
         updatedCustomer.setUserName("New Name");
         updatedCustomer.setEmailAdress("New Email Address");
+        updatedCustomer.setCustomerId(1);
+        List<MediaInteractions> list = new ArrayList<>();
+        list.add(new MediaInteractions());
+        updatedCustomer.setMediaInteractions(list);
 
-        when(customerRepository.findById(customer.getCustomerId())).thenReturn(Optional.of(customer));
-        when(customerRepository.save(customer)).thenReturn(customer);
+        when(customerRepository.findById(1)).thenReturn(Optional.of(updatedCustomer));
 
-        Customer result = customerService.updateCustomer(customer.getCustomerId(), updatedCustomer);
+        Customer result = customerService.updateCustomer(1, updatedCustomer);
 
-        assertEquals("New Name", result.getUserName());
-        assertEquals("New Email Address", result.getEmailAdress());
-        verify(customerRepository).findById(customer.getCustomerId());
-        verify(customerRepository).save(customer);
+        verify(customerRepository).save(updatedCustomer);
+    }
+
+    @Test
+    void TestUpdate_ShouldAddMediaInteractionIfListOfUpdatedCustomerIsBigger() {
+        MediaInteractions mediaInteractions = new MediaInteractions();
+        Customer updatedCustomer = new Customer();
+        updatedCustomer.setUserName("New Name");
+        updatedCustomer.setEmailAdress("New Email Address");
+        updatedCustomer.setCustomerId(1);
+
+        List<MediaInteractions> list = new ArrayList<>();
+        List<MediaInteractions> list2 = new ArrayList<>();
+
+        list2.add(new MediaInteractions());
+        customer.setMediaInteractions(list2);
+
+        list.add(new MediaInteractions());
+        list.add(mediaInteractions);
+        updatedCustomer.setMediaInteractions(list);
+
+
+
+        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
+        when(mediaInteractionsService.addMediaInteraction(mediaInteractions)).thenReturn(mediaInteractions);
+
+        Customer result = customerService.updateCustomer(1, updatedCustomer);
+
+        //assertEquals("New Name", result.getUserName()
+        verify(mediaInteractionsService).addMediaInteraction(mediaInteractions);
     }
 }

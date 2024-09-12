@@ -1,5 +1,9 @@
 package com.example.edufy.VO;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
 public class MediaInteractions {
 
     private int mediaInteractionId = 0;
@@ -10,6 +14,9 @@ public class MediaInteractions {
 
     private int timesListenedTo;
 
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     public void increasePlayCount() {
@@ -72,13 +79,5 @@ public class MediaInteractions {
     public void setTimesListenedTo(int timesListenedTo) {
         this.timesListenedTo = timesListenedTo;
     }
-
-//    public Customer getCustomer() {
-//        return customer;
-//    }
-//
-//    public void setCustomer(Customer customer) {
-//        this.customer = customer;
-//    }
 
 }
