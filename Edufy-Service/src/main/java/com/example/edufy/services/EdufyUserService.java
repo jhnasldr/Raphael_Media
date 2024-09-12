@@ -65,6 +65,57 @@ public class EdufyUserService implements EdufyServiceInterface {
 
     }
 
+    @Override
+    public MediaInteractions rateMedia(int customerId, int mediaId, String likeStatus) {
+        if(customerId <= 0) {
+            throw new IllegalArgumentException("customerId must be greater than 0");
+        }
+
+        String getCustomerURL = "http://customer-service/api/customer/" + customerId;
+        String getMediaURL = "http://media-service/api/media/" + mediaId;
+        String customerPutURl = "http://customer-service/api/customer/updatecustomer/" + customerId;
+        String mediaInteractionsURL = "http://customer-service/api/customer/addmediainteractions";
+
+        try {
+            Customer customerVO = restTemplate.getForObject(getCustomerURL, Customer.class);
+            if (customerVO == null) {
+                throw new RuntimeException("Customer not found");
+            }
+            Media mediaVO = restTemplate.getForObject(getMediaURL, Media.class);
+            if (mediaVO == null) {
+                throw new RuntimeException("Media not found");
+            }
+
+            MediaInteractions existingInteraction = customerVO.getMediaInteractions().stream()
+                    .filter(m -> m.getMediaId() == mediaVO.getId())
+                    .findFirst()
+                    .orElse(null);
+
+            if (existingInteraction != null) {
+                existingInteraction.setLikeStatus(likeStatus);
+                restTemplate.put(customerPutURl, customerVO);
+                return existingInteraction;
+            } else {
+                MediaInteractions newInteraction = new MediaInteractions("empty", 0, customerVO);
+                newInteraction.setMediaId(mediaVO.getId());
+                newInteraction.setLikeStatus(likeStatus);
+                newInteraction.setCustomer(customerVO);
+
+                customerVO.getMediaInteractions().add(newInteraction);
+
+                restTemplate.postForEntity(mediaInteractionsURL, newInteraction, MediaInteractions.class);
+
+                restTemplate.put(customerPutURl, customerVO);
+
+                return newInteraction;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error while processing media interaction", e);
+        }
+
+    }
+
     public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
