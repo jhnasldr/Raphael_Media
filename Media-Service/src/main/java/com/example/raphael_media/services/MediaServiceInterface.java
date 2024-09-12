@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface MediaServiceInterface {
 
-    //
+
     Optional<Media> getMediaById(int mediaId);
 
     List<Media> getAllMedia();

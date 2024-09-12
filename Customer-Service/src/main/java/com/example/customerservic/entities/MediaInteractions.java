@@ -12,15 +12,15 @@ public class MediaInteractions {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int mediaInteractionId;
 
-    @Column(name = "media_id", length = 20, nullable = false)
+    @Column(name = "media_id", length = 20)
     private int mediaId;
 
 
-    @Column(name = "like_status", length = 20, nullable = false)
+    @Column(name = "like_status", length = 20)
     private String likeStatus; //like, dislike or empty
 
 
-    @Column(name = "times_listened_to", length = 20, nullable = false)
+    @Column(name = "times_listened_to", length = 20)
     private int timesListenedTo;
 
     @ManyToOne
