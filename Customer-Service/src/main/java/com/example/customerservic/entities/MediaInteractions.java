@@ -1,6 +1,8 @@
 package com.example.customerservic.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
@@ -23,7 +25,8 @@ public class MediaInteractions {
 
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id")
+    //@JsonIgnoreProperties("mediaInteractions")
     private Customer customer;
 
     public MediaInteractions() {

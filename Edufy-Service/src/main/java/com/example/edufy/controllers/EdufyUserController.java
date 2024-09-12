@@ -1,12 +1,17 @@
 package com.example.edufy.controllers;
 
 import com.example.edufy.VO.Customer;
+import com.example.edufy.VO.Media;
+import com.example.edufy.VO.MediaInteractions;
+import com.example.edufy.VO.MediaRequstBody;
 import com.example.edufy.services.EdufyUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/edufy")
 public class EdufyUserController {
 
     @Autowired
@@ -19,5 +24,30 @@ public class EdufyUserController {
     @GetMapping("/getcustomervo")
     public Customer getVo(){
         return edufyUserService.getCustomerVO();
+    }
+
+    @GetMapping("/getmediavo")
+    public Media getmediaVo(){
+        return edufyUserService.getMediaVO();
+    }
+
+    @PutMapping("/putvo")
+    public ResponseEntity<Customer> update(){
+        Customer update = edufyUserService.putCustomerVO();
+        return ResponseEntity.ok(update);
+    }
+
+    @PostMapping("/postMI")
+    public ResponseEntity<MediaInteractions> addMI(){
+        MediaInteractions mediaInteractions = edufyUserService.postMediaInteractionsVO();
+        return ResponseEntity.ok(mediaInteractions);
+    }
+
+
+    @PutMapping("/playmedia")
+    public ResponseEntity<String> playMediaAndIncreaseTimesListenedTo(@RequestBody MediaRequstBody mediaRequstBody){
+        Media playMedia = edufyUserService.playAndUpdateListedToInCustomer(mediaRequstBody.getCustomerId(), mediaRequstBody.getMediaId());
+        return new ResponseEntity<>("This " + playMedia.getMediaType() + " is playing \n" + playMedia.getURL(), HttpStatus.OK);
+
     }
 }

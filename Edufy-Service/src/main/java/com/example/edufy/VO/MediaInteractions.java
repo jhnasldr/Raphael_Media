@@ -2,20 +2,44 @@ package com.example.edufy.VO;
 
 public class MediaInteractions {
 
-    private int mediaInteractionId;
+    private int mediaInteractionId = 0;
 
     private int mediaId;
 
     private String likeStatus;
 
-
     private int timesListenedTo;
 
-//    private Customer customer;
+    private Customer customer;
+
+    public void increasePlayCount() {
+        this.timesListenedTo++;
+    }
 
     public MediaInteractions() {
     }
 
+    public MediaInteractions(String likeStatus, int timesListenedTo, Customer customer) {
+        this.likeStatus = likeStatus;
+        this.timesListenedTo = timesListenedTo;
+        this.customer = customer;
+    }
+
+    public MediaInteractions(int mediaInteractionId, int mediaId, String likeStatus, int timesListenedTo) {
+        this.mediaInteractionId = mediaInteractionId;
+        this.mediaId = mediaId;
+        this.likeStatus = likeStatus;
+        this.timesListenedTo = timesListenedTo;
+    }
+
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 
     public int getMediaInteractionId() {
         return mediaInteractionId;

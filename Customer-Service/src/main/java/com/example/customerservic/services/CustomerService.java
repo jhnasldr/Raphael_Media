@@ -1,6 +1,7 @@
 package com.example.customerservic.services;
 
 import com.example.customerservic.entities.Customer;
+import com.example.customerservic.entities.MediaInteractions;
 import com.example.customerservic.exceptions.ResourceNotFoundException;
 import com.example.customerservic.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ public class CustomerService implements CustomerServiceInterface {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private MediaInteractionsService mediaInteractionsService;
 
     @Override
     public Optional<Customer> findCustomerById(int customerId) {
@@ -36,10 +39,34 @@ public class CustomerService implements CustomerServiceInterface {
     public Customer updateCustomer(int customerId, Customer customer) {
         Customer customerToUpdate = customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException("Customer", "id", customerId));
 
-        customerToUpdate.setUserName(customer.getUserName());
-        customerToUpdate.setEmailAdress(customer.getEmailAdress());
+        if(customer.getUserName() != null){
+            customerToUpdate.setUserName(customer.getUserName());
+        }
+        if(customer.getEmailAdress() != null){
+            customerToUpdate.setEmailAdress(customer.getEmailAdress());
+        }
 
-        return customerRepository.save(customerToUpdate);
+        if(customer.getMediaInteractions() != null) {
+            if (customer.getMediaInteractions().size() > customerToUpdate.getMediaInteractions().size()) {
+                System.out.println("Jag inne i storlek");
+                int count = 0;
+
+                for (MediaInteractions m : customer.getMediaInteractions()) {
+                    if (m.getMediaInteractionId() != customerToUpdate.getMediaInteractions().get(count).getMediaInteractionId()) {
+                        mediaInteractionsService.addMediaInteraction(m);
+                    }
+                    count++;
+                }
+            }
+            else {
+                customerToUpdate.setMediaInteractions(customer.getMediaInteractions());
+            }
+
+        }
+
+        //customerToUpdate.setMediaInteractions(customer.getMediaInteractions());
+        customerRepository.save(customerToUpdate);
+        return customerToUpdate;
     }
 
 

@@ -17,6 +17,12 @@ public class Customer {
     public Customer() {
     }
 
+    public Customer(int customerId, String userName, String emailAdress, List<com.example.edufy.VO.MediaInteractions> mediaInteractions) {
+        this.customerId = customerId;
+        this.userName = userName;
+        this.emailAdress = emailAdress;
+        MediaInteractions = mediaInteractions;
+    }
 
     public int getCustomerId() {
         return customerId;

@@ -1,5 +1,7 @@
 package com.example.customerservic.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
@@ -16,8 +18,9 @@ public class Customer {
     @Column(name = "email_adress", length = 75, nullable = false)
     private String emailAdress;
 
-    @OneToMany(cascade = CascadeType.REMOVE,fetch = FetchType.EAGER, mappedBy = "customer")
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "customer")
     @JsonManagedReference
+    //@JsonIgnoreProperties("Customer")
     private List<MediaInteractions> mediaInteractions;
 
     public Customer() {
