@@ -2,6 +2,9 @@ package com.example.raphael_media.services;
 
 import com.example.raphael_media.DTOs.MediaDTO;
 import com.example.raphael_media.entities.Media;
+import com.example.raphael_media.entities.Music;
+import com.example.raphael_media.entities.Podcast;
+import com.example.raphael_media.entities.Video;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,14 +16,15 @@ public interface MediaServiceInterface {
 
     List<Media> getAllMedia();
 
-    void addNewMedia(Media media);
+    void addNewMusic(Music music);
+    void addNewVideo(Video video);
+    void addNewPodcast(Podcast podcast);
 
-    Media updateMedia(int mediaId, Media media);
+    Music updateMusic(int musicId, Music music);
+    Video updateVideo(int videoId, Video video);
+    Podcast updatePodcast(int podcastId, Podcast podcast);
 
     void deleteMediaById(int mediaId);
-
-
-
     List<MediaDTO> getAllMediaDTO();
 
     List<Media> getMediaByType(String mediaType);
