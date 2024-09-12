@@ -5,11 +5,10 @@ import com.example.raphael_media.entities.Media;
 import com.example.raphael_media.exceptions.ResourceNotFoundException;
 import com.example.raphael_media.repositores.MediaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class MediaService implements MediaServiceInterface {
@@ -19,8 +18,8 @@ public class MediaService implements MediaServiceInterface {
     MediaRepository mediaRepository;
 
     @Override
-    public Media getMediaById(int mediaId) {
-        return null;
+    public Optional<Media> getMediaById(int mediaId) {
+        return mediaRepository.findById(mediaId);
     }
 
     @Override

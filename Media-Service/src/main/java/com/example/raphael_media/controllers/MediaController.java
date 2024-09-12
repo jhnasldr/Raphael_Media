@@ -57,8 +57,8 @@ public class MediaController {
     }
 
     @GetMapping("{mediaId}")
-    public ResponseEntity<Media> getMediaByType(@PathVariable int mediaId) {
-        Optional<Media> media = Optional.ofNullable(mediaService.getMediaById(mediaId));
+    public ResponseEntity<Media> getMediaById(@PathVariable int mediaId) {
+        Optional<Media> media = (mediaService.getMediaById(mediaId));
         return ResponseEntity.ok(media.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 }
