@@ -3,11 +3,12 @@ package com.example.raphael_media.services;
 import com.example.raphael_media.entities.Media;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MediaServiceInterface {
 
     //
-    Media getMediaById(int mediaId);
+    Optional<Media> getMediaById(int mediaId);
 
     List<Media> getAllMedia();
 

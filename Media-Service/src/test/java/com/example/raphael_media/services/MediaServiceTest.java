@@ -81,7 +81,7 @@ class MediaServiceTest {
     }
 
     @Test
-    void updateMedia_ShouldThrowExeptionResourceNotFound(){
+    void updateMedia_ShouldThrowExceptionResourceNotFound(){
         //given
         musicMedia.setGenres(genreList);
         musicMedia.setAlbums(albumsList);

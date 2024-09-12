@@ -24,6 +24,14 @@ public class Media {
     public Media() {
     }
 
+    public Media(int id, String mediaType, String title, String URL, LocalDate releaseDate) {
+        this.id = id;
+        this.mediaType = mediaType;
+        this.title = title;
+        this.URL = URL;
+        this.releaseDate = releaseDate;
+    }
+
     public int getId() {
         return id;
     }
