@@ -3,6 +3,7 @@ package com.example.raphael_media.services;
 import com.example.raphael_media.entities.Album;
 import com.example.raphael_media.entities.Artist;
 import com.example.raphael_media.entities.Media;
+import com.example.raphael_media.entities.Music;
 import com.example.raphael_media.repositores.ArtistRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,8 +70,8 @@ class ArtistServiceTest {
     void getMediaByArtistReturnsMediaListCorrectlyWhenArtistExists() {
         int artistId = 1;
         List<Media> mediaList = new ArrayList<>();
-        mediaList.add(new Media());
-        mediaList.add(new Media());
+        mediaList.add(new Music());
+        mediaList.add(new Music());
 
         Artist artist = new Artist();
         artist.setMediaList(mediaList);
