@@ -7,11 +7,8 @@ public class Customer {
     //Denna klass ska vara likadan som vår Customer entitet i Customer mikrotjänsten men den ska inte vara en entitet
 
     private int customerId;
-
     private String userName;
-
     private String emailAdress;
-
     private List<MediaInteractions> MediaInteractions;
 
     public Customer() {

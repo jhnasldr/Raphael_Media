@@ -38,7 +38,7 @@ public class Media {
     @JsonIgnore
     private List<Album> albums;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "media_genres",
             joinColumns = @JoinColumn(name = "media_id"),

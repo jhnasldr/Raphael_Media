@@ -6,19 +6,12 @@ import java.util.List;
 
 public class Media {
     private int id;
-
     private String mediaType;
-
     private String title;
-
     private String URL;
-
     private LocalDate releaseDate;
-
     private List<Artist> artists;
-
     private List<Album> albums;
-
     private List<Genre> genres;
 
     public Media() {

@@ -3,13 +3,9 @@ package com.example.edufy.VO;
 public class MediaInteractions {
 
     private int mediaInteractionId = 0;
-
     private int mediaId;
-
     private String likeStatus;
-
     private int timesListenedTo;
-
     private Customer customer;
 
     public void increasePlayCount() {

@@ -5,11 +5,16 @@ import java.util.List;
 public class Genre {
 
     private int genreId;
-
     private String genre;
     private List<Media> mediaList;
 
     public Genre() {
+    }
+
+    public Genre(int genreId, String genre, List<Media> mediaList) {
+        this.genreId = genreId;
+        this.genre = genre;
+        this.mediaList = mediaList;
     }
 
     public int getGenreId() {

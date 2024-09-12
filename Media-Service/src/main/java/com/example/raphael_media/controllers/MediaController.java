@@ -43,7 +43,6 @@ public class MediaController {
     }
 
 
-
     @GetMapping("getallmediadto")
     public ResponseEntity<List<MediaDTO>> getAllMediaDTO() {
         return ResponseEntity.ok(mediaService.getAllMediaDTO());

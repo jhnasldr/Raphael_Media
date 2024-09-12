@@ -10,14 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/edufy")
 public class EdufyUserController {
 
     @Autowired
     EdufyUserService edufyUserService;
-
-
 
     //Bara test här, ska göras riktigt med responseEntity, testning, namngivning mm
     //får fram kund ett anna
@@ -29,6 +29,18 @@ public class EdufyUserController {
     @GetMapping("/getmediavo")
     public Media getmediaVo(){
         return edufyUserService.getMediaVO();
+    }
+
+    @GetMapping("/getallmediadto")
+    public ResponseEntity<List<Media>> getAllmediaDTO() {
+        return ResponseEntity.ok(edufyUserService.getAllMediaDTO());
+    }
+
+    @GetMapping("/recommendations/{customerId}")
+    public ResponseEntity<List<Media>> getRecommendedMedia(@PathVariable int customerId) {
+        Customer customer = edufyUserService.getCustomerData(customerId);
+        List<Media> recommendations = edufyUserService.getRecommendedMedia(customerId);
+        return ResponseEntity.ok(recommendations);
     }
 
     @PutMapping("/putvo")
