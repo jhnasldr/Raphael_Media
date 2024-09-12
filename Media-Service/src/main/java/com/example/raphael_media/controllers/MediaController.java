@@ -55,7 +55,7 @@ public class MediaController {
         return ResponseEntity.ok(mediaList);
 
     }
-
+//
     @GetMapping("{mediaId}")
     public ResponseEntity<Media> getMediaById(@PathVariable int mediaId) {
         Optional<Media> media = (mediaService.getMediaById(mediaId));

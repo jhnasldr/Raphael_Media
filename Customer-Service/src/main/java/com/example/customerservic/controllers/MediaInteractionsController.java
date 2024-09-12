@@ -17,7 +17,7 @@ public class MediaInteractionsController {
 
     @Autowired
     private MediaInteractionsService mediaInteractionsService;
-
+//
     @PostMapping("addmediainteractions")
     public ResponseEntity<String> addCustomer(@RequestBody MediaInteractions mediaInteractions){
         mediaInteractionsService.addMediaInteraction(mediaInteractions);
