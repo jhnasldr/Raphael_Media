@@ -13,7 +13,7 @@ VALUES ('Sven Svensson', 'svenne@outlook.com');
 INSERT INTO media_interactions (media_id, like_status, times_listened_to, customer_id)
 VALUES (1, 'like', 4, 1),
        (2, '', 2, 1),
-       (3, 'dislike', 1, 1),
+       (3, 'dislike', 7, 1),
        (1, 'like', 20, 2),
        (2, 'dislike', 1, 2),
        (4, '', 3, 2),

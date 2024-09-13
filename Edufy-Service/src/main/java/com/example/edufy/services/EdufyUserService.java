@@ -2,13 +2,13 @@ package com.example.edufy.services;
 
 import com.example.edufy.VO.*;
 //import com.example.edufy.repositories.EdufyUserRepository;
+import com.example.edufy.VO.Media;
+import com.example.edufy.VO.MediaInteractions;
+import com.example.edufy.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -120,6 +120,36 @@ public class EdufyUserService implements EdufyServiceInterface {
     public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
+
+
+    //    public List<Integer> getMostPlayedMediaForUserById(int userId) {
+    public List<Media> getMostPlayedMediaForUserById(int userId) {
+        Customer customer;
+        List<MediaInteractions> mediaInteractions;
+        List<MediaInteractions> mediaInteractionsSortedByTimesListenedTo;
+        List<Integer> idsOfMostPlayedMediaSorted;
+        List<Media> mostPlayedMedia;
+
+
+        customer = restTemplate.getForObject("http://customer-service/api/customer/" + userId, Customer.class);
+
+        mediaInteractions = customer.getMediaInteractions();
+
+        mediaInteractionsSortedByTimesListenedTo = mediaInteractions.stream().sorted(Comparator.comparingInt(MediaInteractions::getTimesListenedTo).reversed()).collect(Collectors.toList());
+
+        idsOfMostPlayedMediaSorted = mediaInteractionsSortedByTimesListenedTo.stream()
+                .map(MediaInteractions::getMediaId)
+                .distinct()
+                .collect(Collectors.toList());
+
+        mostPlayedMedia = Arrays.stream(Objects.requireNonNull(restTemplate.postForObject(
+                        "http://Media-Service/api/media/getlistofmediadtofromlistofid",
+                        idsOfMostPlayedMediaSorted,
+                        Media[].class)))
+                .collect(Collectors.toList());
+        return mostPlayedMedia;
+    }
+
 
     public Customer getCustomerData(int customerId) {
         String url = "http://customer-service/api/customer/" + customerId;

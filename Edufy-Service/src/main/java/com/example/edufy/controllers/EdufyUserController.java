@@ -40,10 +40,14 @@ public class EdufyUserController {
 
 
     @PutMapping("/playmedia")
-    public ResponseEntity<String> playMediaAndIncreaseTimesListenedTo(@RequestBody MediaRequstBody mediaRequstBody){
+    public ResponseEntity<String> playMediaAndIncreaseTimesListenedTo(@RequestBody MediaRequstBody mediaRequstBody) {
         Media playMedia = edufyUserService.playAndUpdateListedToInCustomer(mediaRequstBody.getCustomerId(), mediaRequstBody.getMediaId());
         return new ResponseEntity<>("This " + playMedia.getMediaType() + " is playing \n" + playMedia.getURL(), HttpStatus.OK);
+    }
 
+    @GetMapping("/getmostplayedmedia/{customerId}")
+    public ResponseEntity<List<Media>> getMostPlayedMedia(@PathVariable  int customerId) {
+        return ResponseEntity.ok(edufyUserService.getMostPlayedMediaForUserById(customerId));
     }
 
     @PostMapping("/ratemedia")

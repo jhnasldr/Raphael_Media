@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MediaService implements MediaServiceInterface {
@@ -162,9 +164,19 @@ public class MediaService implements MediaServiceInterface {
         return allMedia.stream().map(this::convertToMediaDTO).toList();
     }
 
+    //
+    @Override
+    public List<MediaDTO> getListOfMediaDTOFromListOfIds(List<Integer> listOfId) {
+        List<Media> listOfMediaFromIds = mediaRepository.findAllById(listOfId);
+        Map<Integer, Media> mediaMap = listOfMediaFromIds.stream().collect(Collectors.toMap(Media::getId, media -> media));
+        List<MediaDTO> orderedMediaDTOs = listOfId.stream().map(mediaMap::get).map(this::convertToMediaDTO).toList();
+        return orderedMediaDTOs;
+    }
+
     private MediaDTO convertToMediaDTO(Media media) {
         return new MediaDTO(media.getId(), media.getTitle(), media.getGenres(), media.getArtists(), media.getMediaType());
     }
+
 
 
     public List<Media> getMediaByType(String mediaType) {
