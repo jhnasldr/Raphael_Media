@@ -60,9 +60,9 @@ class MediaServiceTest {
                 new Video("Video", "videoTitle", LocalDate.now())
         );
 
-        mockedMediaDTOList = Arrays.asList(new MediaDTO(1, "songTitle", "Music"),
+        mockedMediaDTOList = new ArrayList<>(Arrays.asList(new MediaDTO(1, "songTitle", "Music"),
                 new MediaDTO(2, "videoTitle", "Video")
-        );
+        ));
 
         musicMedia = new Music("titelMusic", "www.url.com", LocalDate.now());
         podcastMedia = new Podcast("titelPodcast", "www.url.com", LocalDate.now());
@@ -95,6 +95,29 @@ class MediaServiceTest {
         when(mockedMediaRepository.findAll()).thenReturn(mockedMediaList);
         List<MediaDTO> actualMediaDTOs = mediaService.getAllMediaDTO();
         assertEquals(2, actualMediaDTOs.size());
+    }
+
+    @Test
+    void getListOfMediaDTOFromListOfIds_ShouldReturnMediaTypeVideo() {
+        List<Integer> listOfId = Arrays.asList(1, 2);
+        mockedMediaList.get(0).setId(1);
+        mockedMediaList.get(1).setId(2);
+        when(mockedMediaRepository.findAllById(listOfId)).thenReturn(mockedMediaList);
+        List<MediaDTO> actualMediaDTOs = mediaService.getListOfMediaDTOFromListOfIds(listOfId);
+
+        assertEquals("Video", actualMediaDTOs.get(1).getMediaType());
+    }
+
+    @Test
+    void getListOfMediaDTOFromListOfIds_ShouldReturnListOfSizeThree() {
+        mockedMediaList.add(new Media("Music", "songTitle", "URLForSong"));
+        mockedMediaList.get(0).setId(1);
+        mockedMediaList.get(1).setId(2);
+        mockedMediaList.get(2).setId(3);
+        List<Integer> listOfId = List.of(1, 2, 3);
+        when(mockedMediaRepository.findAllById(listOfId)).thenReturn(mockedMediaList);
+        List<MediaDTO> actualMediaDTOs = mediaService.getListOfMediaDTOFromListOfIds(listOfId);
+        assertEquals(3, actualMediaDTOs.size());
     }
 
 

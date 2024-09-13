@@ -65,9 +65,17 @@ public class MediaController {
         return new ResponseEntity<>("Media deleted!", HttpStatus.OK);
     }
 
+
+
     @GetMapping("getallmediadto")
     public ResponseEntity<List<MediaDTO>> getAllMediaDTO() {
         return ResponseEntity.ok(mediaService.getAllMediaDTO());
+    }
+
+
+    @PostMapping ("getlistofmediadtofromlistofid")
+    public ResponseEntity<List<MediaDTO>> getMediaDTOsFromListOfIds(@RequestBody List<Integer> mediaId) {
+        return ResponseEntity.ok(mediaService.getListOfMediaDTOFromListOfIds(mediaId));
     }
 
     @GetMapping("getmediatype/{mediatype}")

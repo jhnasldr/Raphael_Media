@@ -39,6 +39,13 @@ public class MediaInteractions {
         this.timesListenedTo = timesListenedTo;
     }
 
+    public MediaInteractions(int mediaInteractionId, int mediaId, String likeStatus, int timesListenedTo, Customer customer) {
+        this.mediaInteractionId = mediaInteractionId;
+        this.mediaId = mediaId;
+        this.likeStatus = likeStatus;
+        this.timesListenedTo = timesListenedTo;
+        this.customer = customer;
+    }
 
     public Customer getCustomer() {
         return customer;
