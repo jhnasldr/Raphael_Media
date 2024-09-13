@@ -5,6 +5,8 @@ import com.example.edufy.VO.*;
 import com.example.edufy.VO.Media;
 import com.example.edufy.VO.MediaInteractions;
 import com.example.edufy.exceptions.ResourceNotFoundException;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ public class EdufyUserService implements EdufyServiceInterface {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    Logger logger = Logger.getLogger(EdufyUserService.class);
 
     //Test för forskning, det saknas enhetstestning för den här mm
     public Customer getCustomerVO() {
@@ -64,7 +68,7 @@ public class EdufyUserService implements EdufyServiceInterface {
         if(customerId <= 0) {
             throw new IllegalArgumentException("customerId must be greater than 0");
         }
-
+      //  logger.log(Level.WARN, "Testlogg rateMedia");
         String getCustomerURL = "http://customer-service/api/customer/" + customerId;
         String getMediaURL = "http://media-service/api/media/" + mediaId;
         String customerPutURl = "http://customer-service/api/customer/updatecustomer/" + customerId;
@@ -137,6 +141,7 @@ public class EdufyUserService implements EdufyServiceInterface {
                         idsOfMostPlayedMediaSorted,
                         Media[].class)))
                 .collect(Collectors.toList());
+        logger.log(Level.WARN, "Testlogg moset played media");
         return mostPlayedMedia;
     }
 

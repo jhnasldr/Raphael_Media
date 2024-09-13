@@ -21,9 +21,9 @@ spring:
             predicates:
               - Path=/api/customer/**
 
-#eureka:
-  #client:
-    #service-url:
+eureka:
+  client:
+    service-url:
       #defaultZone: http://raphael-server:8761/eureka/ # docker
       defaultZone: http://localhost:8761/eureka/ #din dator
 

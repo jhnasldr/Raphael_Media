@@ -10,6 +10,8 @@ import com.example.raphael_media.repositores.MediaRepository;
 import com.example.raphael_media.repositores.MusicRepository;
 import com.example.raphael_media.repositores.PodcastRepository;
 import com.example.raphael_media.repositores.VideoRepository;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,8 @@ public class MediaService implements MediaServiceInterface {
     @Autowired
     PodcastRepository podcastRepository;
 
+    Logger logger = Logger.getLogger(MediaService.class);
+
     @Override
     public Optional<Media> getMediaById(int mediaId) {
         return mediaRepository.findById(mediaId);
@@ -47,16 +51,19 @@ public class MediaService implements MediaServiceInterface {
     @Override
     public void addNewMusic(Music music) {
         musicRepository.save(music);
+        logger.log(Level.WARN, "New music with id: " + music.getId() + " created");
     }
 
     @Override
     public void addNewVideo(Video video) {
         videoRepository.save(video);
+        logger.log(Level.WARN, "New video with id: " + video.getId() + " created");
     }
 
     @Override
     public void addNewPodcast(Podcast podcast) {
         podcastRepository.save(podcast);
+        logger.log(Level.WARN, "New podcast with id: " + podcast.getId() + " created");
     }
 
     @Override
@@ -86,6 +93,7 @@ public class MediaService implements MediaServiceInterface {
         }
 
         musicRepository.save(existningMusic);
+        logger.log(Level.WARN, "Music with id: " + musicId + " updated");
         return existningMusic;
     }
 
@@ -116,12 +124,13 @@ public class MediaService implements MediaServiceInterface {
         }
 
         videoRepository.save(existningVideo);
+        logger.log(Level.WARN, "Video with id: " + videoId + " updated");
         return existningVideo;
     }
 
     @Override
     public Podcast updatePodcast(int podcastId, Podcast podcast) {
-       Podcast existningPodcast = podcastRepository.findById(podcastId).orElseThrow(() -> new ResourceNotFoundException(podcast.getMediaType(), "id", podcastId));
+        Podcast existningPodcast = podcastRepository.findById(podcastId).orElseThrow(() -> new ResourceNotFoundException(podcast.getMediaType(), "id", podcastId));
         if (podcast.getMediaType() != null) {
             existningPodcast.setMediaType(podcast.getMediaType());
         }
@@ -146,6 +155,8 @@ public class MediaService implements MediaServiceInterface {
         }
 
         podcastRepository.save(existningPodcast);
+
+        logger.log(Level.WARN, "Podcast with id: " + podcastId + " updated");
         return existningPodcast;
     }
 
@@ -155,6 +166,7 @@ public class MediaService implements MediaServiceInterface {
             throw new ResourceNotFoundException("Media", "id", mediaId);
         }
         mediaRepository.deleteById(mediaId);
+        logger.log(Level.WARN, "Media with id: " + mediaId + " deleted");
     }
 
     @Override
@@ -176,7 +188,6 @@ public class MediaService implements MediaServiceInterface {
     private MediaDTO convertToMediaDTO(Media media) {
         return new MediaDTO(media.getId(), media.getTitle(), media.getGenres(), media.getArtists(), media.getMediaType());
     }
-
 
 
     public List<Media> getMediaByType(String mediaType) {
