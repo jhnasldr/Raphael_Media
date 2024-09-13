@@ -17,7 +17,8 @@ public class Customer {
 
     private String emailAdress;
 
-    @OneToMany(cascade = CascadeType.MERGE,fetch = FetchType.EAGER, mappedBy = "customer")
+   @OneToMany(cascade = CascadeType.MERGE,fetch = FetchType.EAGER, mappedBy = "customer")
+    //@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "customer")
     @JsonManagedReference
     private List<MediaInteractions> MediaInteractions;
 

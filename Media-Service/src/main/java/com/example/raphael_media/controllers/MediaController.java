@@ -37,23 +37,23 @@ public class MediaController {
         mediaService.addNewPodcast(podcast);
         return ResponseEntity.ok("New podcast created");
     }
-    @PostMapping("addnewVideo")
+    @PostMapping("addnewvideo")
     ResponseEntity<String> addNewVideo(@RequestBody Video video) {
         mediaService.addNewVideo(video);
         return ResponseEntity.ok("New video created");
     }
 
-    @PutMapping("updateVideo/{id}")
+    @PutMapping("updatevideo/{id}")
     public ResponseEntity<String> updateVideo(@PathVariable int id, @RequestBody Video video) {
         mediaService.updateVideo(id, video);
         return new ResponseEntity<>("Video is updated", HttpStatus.OK);
     }
-    @PutMapping("updateMusic/{id}")
+    @PutMapping("updatemusic/{id}")
     public ResponseEntity<String> updateMusic(@PathVariable int id, @RequestBody Music music) {
         mediaService.updateMusic(id, music);
         return new ResponseEntity<>("Music is updated", HttpStatus.OK);
     }
-    @PutMapping("updatePodcast/{id}")
+    @PutMapping("updatepodcast/{id}")
     public ResponseEntity<String> updatePodcast(@PathVariable int id, @RequestBody Podcast podcast) {
         mediaService.updatePodcast(id, podcast);
         return new ResponseEntity<>("Podcast is updated", HttpStatus.OK);

@@ -19,7 +19,7 @@ public class MediaInteractionsController {
     private MediaInteractionsService mediaInteractionsService;
 //
     @PostMapping("addmediainteractions")
-    public ResponseEntity<String> addCustomer(@RequestBody MediaInteractions mediaInteractions){
+    public ResponseEntity<String> addMediaInteraction(@RequestBody MediaInteractions mediaInteractions){
         mediaInteractionsService.addMediaInteraction(mediaInteractions);
         return new ResponseEntity<>("MediaInteractions is added", HttpStatus.OK);
     }

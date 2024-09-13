@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
 @Service
 public class CustomerService implements CustomerServiceInterface {
-
+    Logger logger = Logger.getLogger(CustomerService.class);
     @Autowired
     private CustomerRepository customerRepository;
 
@@ -25,13 +28,15 @@ public class CustomerService implements CustomerServiceInterface {
     @Override
     public Customer addCustomer(Customer customer) {
         customerRepository.save(customer);
+        logger.log(Level.WARN, "New customer created with id:" + customer.getCustomerId());
         return customer;
     }
 
     @Override
     public void deleteCustomerById(int id) {
-      Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id));
-      customerRepository.delete(customer);
+        Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id));
+        customerRepository.delete(customer);
+        logger.log(Level.WARN, "Customer with id: " + id + " deleted");
     }
 
     @Override
@@ -44,14 +49,13 @@ public class CustomerService implements CustomerServiceInterface {
         if(customer.getEmailAdress() != null){
             customerToUpdate.setEmailAdress(customer.getEmailAdress());
         }
-        System.out.println(customer.getMediaInteractions().size());
-        System.out.println(customerToUpdate.getMediaInteractions().size());
-
-        if(customer.getMediaInteractions() != null) {
+//        System.out.println(customer.getMediaInteractions().size());
+//        System.out.println(customerToUpdate.getMediaInteractions().size());
+        if (customer.getMediaInteractions() != null) {
             if (customer.getMediaInteractions().size() > customerToUpdate.getMediaInteractions().size()) {
                 System.out.println("Jag inne i storlek");
                 for (int i = customerToUpdate.getMediaInteractions().size(); i < customer.getMediaInteractions().size(); i++) {
-                    System.out.println("index "+ i);
+                    System.out.println("index " + i);
                     mediaInteractionsService.addMediaInteraction(customer.getMediaInteractions().get(i));
                 }
             }

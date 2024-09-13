@@ -1,8 +1,6 @@
 package com.example.customerservic.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -19,8 +17,7 @@ public class Customer {
     private String emailAdress;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "customer")
-    @JsonManagedReference
-    //@JsonIgnoreProperties("Customer")
+   @JsonManagedReference
     private List<MediaInteractions> mediaInteractions;
 
     public Customer() {

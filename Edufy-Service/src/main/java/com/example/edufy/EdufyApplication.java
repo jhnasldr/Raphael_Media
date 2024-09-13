@@ -1,5 +1,6 @@
 package com.example.edufy;
 
+import org.apache.log4j.BasicConfigurator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -10,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 public class EdufyApplication {
 
     public static void main(String[] args) {
+        BasicConfigurator.configure();
         SpringApplication.run(EdufyApplication.class, args);
     }
 

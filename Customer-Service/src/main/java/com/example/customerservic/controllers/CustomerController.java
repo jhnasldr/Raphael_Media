@@ -23,7 +23,6 @@ public class CustomerController {
     public ResponseEntity<Customer> getCustomerById(@PathVariable int customerId) {
         Optional<Customer> customer = customerService.findCustomerById(customerId);
         return ResponseEntity.ok(customer.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
-
     }
 
     @PostMapping("addcustomer")
