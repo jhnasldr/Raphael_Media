@@ -110,7 +110,7 @@ class MediaServiceTest {
 
     @Test
     void getListOfMediaDTOFromListOfIds_ShouldReturnListOfSizeThree() {
-        mockedMediaList.add(new Media("Music", "songTitle", "URLForSong"));
+        mockedMediaList.add(new Music("Music", "songTitle", LocalDate.now()));
         mockedMediaList.get(0).setId(1);
         mockedMediaList.get(1).setId(2);
         mockedMediaList.get(2).setId(3);

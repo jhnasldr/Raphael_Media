@@ -46,6 +46,7 @@ public class CustomerService implements CustomerServiceInterface {
         }
         System.out.println(customer.getMediaInteractions().size());
         System.out.println(customerToUpdate.getMediaInteractions().size());
+
         if(customer.getMediaInteractions() != null) {
             if (customer.getMediaInteractions().size() > customerToUpdate.getMediaInteractions().size()) {
                 System.out.println("Jag inne i storlek");
