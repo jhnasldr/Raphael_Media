@@ -1,7 +1,6 @@
 package com.example.customerservic.services;
 
 import com.example.customerservic.entities.Customer;
-import com.example.customerservic.entities.MediaInteractions;
 import com.example.customerservic.exceptions.ResourceNotFoundException;
 import com.example.customerservic.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,29 +44,22 @@ public class CustomerService implements CustomerServiceInterface {
         if(customer.getEmailAdress() != null){
             customerToUpdate.setEmailAdress(customer.getEmailAdress());
         }
-
+        System.out.println(customer.getMediaInteractions().size());
+        System.out.println(customerToUpdate.getMediaInteractions().size());
         if(customer.getMediaInteractions() != null) {
             if (customer.getMediaInteractions().size() > customerToUpdate.getMediaInteractions().size()) {
                 System.out.println("Jag inne i storlek");
-                int count = 0;
-
-                for (MediaInteractions m : customer.getMediaInteractions()) {
-                    if (m.getMediaInteractionId() != customerToUpdate.getMediaInteractions().get(count).getMediaInteractionId()) {
-                        mediaInteractionsService.addMediaInteraction(m);
-                    }
-                    count++;
+                for (int i = customerToUpdate.getMediaInteractions().size(); i < customer.getMediaInteractions().size(); i++) {
+                    System.out.println("index "+ i);
+                    mediaInteractionsService.addMediaInteraction(customer.getMediaInteractions().get(i));
                 }
             }
             else {
+                System.out.println("Jag är lika stor");
                 customerToUpdate.setMediaInteractions(customer.getMediaInteractions());
             }
-
         }
-
-        //customerToUpdate.setMediaInteractions(customer.getMediaInteractions());
         customerRepository.save(customerToUpdate);
         return customerToUpdate;
     }
-
-
 }

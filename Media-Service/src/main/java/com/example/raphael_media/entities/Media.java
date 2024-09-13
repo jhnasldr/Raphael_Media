@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Media {
+public abstract class Media {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
