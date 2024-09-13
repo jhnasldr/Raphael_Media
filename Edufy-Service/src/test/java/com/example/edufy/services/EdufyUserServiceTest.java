@@ -7,11 +7,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,6 +39,7 @@ class EdufyUserServiceTest {
     private MediaInteractions mediaInteractions2;
     private MediaInteractions mediaInteractions3;
     private List<MediaInteractions> mediaInteractionsList;
+
 
     @BeforeEach
     void setUp() {
@@ -192,4 +196,118 @@ class EdufyUserServiceTest {
         // Kollar att lista med mediaId ifrån metoden är samma som den faktiska ordningen som det skulle vara
         assertEquals(Arrays.asList(2, 1, 3), capturedListOfIds); // Media ID 2 (10 listens), 1 (5 listens), 3 (3 listens)
     }
+
+    //Validation of customerId
+    @Test
+    void rateMedia_shouldThrowExceptionForInvalidCustomerId() {
+       IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            edufyUserService.rateMedia(0,1,"like");
+        });
+
+        assertEquals("customerId must be greater than 0", exception.getMessage());
+    }
+
+    //If customer not found
+    @Test
+    void rateMedia_shouldThrowExceptionWhenCustomerNotFound() {
+        when(mockRestTemplate.getForObject(any(), eq(Customer.class))).thenReturn(null);
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            edufyUserService.rateMedia(1,1,"like");
+        });
+
+        assertEquals("Error while processing media interaction",exception.getMessage());
+    }
+
+    //If media was not found
+    @Test
+    void rateMedia_shouldThrowExceptionWhenMediaNotFound() {
+
+        int customerId = 1;
+        int mediaId = 1;
+        String likeStatus = "like";
+        String getMediaURL = "http://media-service/api/media/1";
+
+        Customer mockCustomer = new Customer();
+        mockCustomer.setCustomerId(customerId);
+        mockCustomer.setMediaInteractions(new ArrayList<>());
+
+        // Mock the RestTemplate to return a non-null customer but null for media
+        when(mockRestTemplate.getForObject(eq("http://customer-service/api/customer/1"), eq(Customer.class))).thenReturn(mockCustomer);
+        when(mockRestTemplate.getForObject(eq(getMediaURL), eq(Media.class))).thenReturn(null);
+
+
+        assertThrows(RuntimeException.class, () -> {
+            edufyUserService.rateMedia(customerId, mediaId, likeStatus);
+        }, "Media not found");
+    }
+
+    //Update of existing mediaInteraction
+    @Test
+    void rateMedia_shouldUpdateExistingMediaInteraction() {
+        Customer mockCustomer = new Customer();
+        mockCustomer.setCustomerId(1);
+        List<MediaInteractions> mediaInteractionsList = new ArrayList<>(); // Mutable list
+        mockCustomer.setMediaInteractions(mediaInteractionsList);
+
+        MediaInteractions existingInteraction = new MediaInteractions();
+        existingInteraction.setMediaId(1);
+        existingInteraction.setLikeStatus("like");
+        existingInteraction.setTimesListenedTo(10);
+        mediaInteractionsList.add(existingInteraction);
+
+        Media mockMedia = new Media();
+        mockMedia.setId(1);
+        mockMedia.setMediaType("Music");
+        mockMedia.setTitle("Test Music");
+        mockMedia.setURL("http://testurl.com");
+        mockMedia.setReleaseDate(LocalDate.of(2020, 5, 15));
+        mockMedia.setArtists(Collections.emptyList());
+        mockMedia.setAlbums(Collections.emptyList());
+        mockMedia.setGenres(Collections.emptyList());
+
+        when(mockRestTemplate.getForObject("http://customer-service/api/customer/1", Customer.class)).thenReturn(mockCustomer);
+        when(mockRestTemplate.getForObject("http://media-service/api/media/1", Media.class)).thenReturn(mockMedia);
+
+        MediaInteractions updatedInteraction = new MediaInteractions();
+        updatedInteraction.setMediaId(1);
+        updatedInteraction.setLikeStatus("like");
+        updatedInteraction.setTimesListenedTo(10);
+
+        edufyUserService.rateMedia(1, 1, "like");
+
+        verify(mockRestTemplate).put(eq("http://customer-service/api/customer/updatecustomer/1"), any(Customer.class));
+    }
+
+    //Create a new mediaInteraction
+    @Test
+    void rateMedia_shouldCreateNewMediaInteraction() {
+        Customer mockCustomer = new Customer();
+        Media mockMedia = new Media();
+        mockMedia.setId(1);
+
+        // Initialize mediaInteractions-list as empty but not null
+        mockCustomer.setMediaInteractions(new ArrayList<>());
+
+        MediaInteractions newInteraction = new MediaInteractions();
+        newInteraction.setMediaId(1);
+        newInteraction.setLikeStatus("like");
+
+        when(mockRestTemplate.getForObject(anyString(), eq(Customer.class))).thenReturn(mockCustomer);
+        when(mockRestTemplate.getForObject(anyString(), eq(Media.class))).thenReturn(mockMedia);
+        when(mockRestTemplate.postForEntity(anyString(), any(MediaInteractions.class), eq(MediaInteractions.class)))
+                .thenReturn(new ResponseEntity<>(newInteraction, HttpStatus.CREATED));
+
+        MediaInteractions result = edufyUserService.rateMedia(1, 1, "like");
+
+        assertNotNull(result);
+        assertEquals("like", result.getLikeStatus());
+        assertEquals(1, result.getMediaId());
+
+        //Verifies that the correct URL and object are passed to the postForEntity method
+        verify(mockRestTemplate).postForEntity(eq("http://customer-service/api/customer/addmediainteractions"), any(MediaInteractions.class), eq(MediaInteractions.class));
+        verify(mockRestTemplate).put(eq("http://customer-service/api/customer/updatecustomer/1"), eq(mockCustomer));
+    }
+
 }
+
