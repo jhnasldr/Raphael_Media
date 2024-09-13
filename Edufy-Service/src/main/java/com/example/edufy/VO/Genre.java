@@ -17,6 +17,11 @@ public class Genre {
         this.mediaList = mediaList;
     }
 
+    public Genre(int genreId, String genre) {
+        this.genreId = genreId;
+        this.genre = genre;
+    }
+
     public int getGenreId() {
         return genreId;
     }

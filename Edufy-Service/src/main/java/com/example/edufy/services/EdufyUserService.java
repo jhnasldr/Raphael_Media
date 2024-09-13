@@ -15,13 +15,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class EdufyUserService implements EdufyServiceInterface {
-//
-//    @Autowired
-//    private EdufyUserRepository edufyUserRepository;
+
     @Autowired
     private RestTemplate restTemplate;
-
-
 
     //Test för forskning, det saknas enhetstestning för den här mm
     public Customer getCustomerVO() {
@@ -34,7 +30,6 @@ public class EdufyUserService implements EdufyServiceInterface {
         return customerVO;
     }
 
-
     @Override
     public Media playAndUpdateListedToInCustomer(int idCustomer, int idMedia){
         String customerGetURL = "http://customer-service/api/customer/" + idCustomer;
@@ -43,7 +38,6 @@ public class EdufyUserService implements EdufyServiceInterface {
 
         Customer customerVO = restTemplate.getForObject(customerGetURL, Customer.class);
         Media mediaVO = restTemplate.getForObject(mediaGetURL,Media.class);
-
 
         for (MediaInteractions m: customerVO.getMediaInteractions()) {
             if (m.getMediaId() == mediaVO.getId()){
@@ -63,7 +57,6 @@ public class EdufyUserService implements EdufyServiceInterface {
         restTemplate.put(customerPutURl,customerVO);
 
         return mediaVO;
-
     }
 
     @Override
@@ -105,7 +98,6 @@ public class EdufyUserService implements EdufyServiceInterface {
                 customerVO.getMediaInteractions().add(newInteraction);
 
                 restTemplate.postForEntity(mediaInteractionsURL, newInteraction, MediaInteractions.class);
-
                 restTemplate.put(customerPutURl, customerVO);
 
                 return newInteraction;
@@ -114,13 +106,11 @@ public class EdufyUserService implements EdufyServiceInterface {
             e.printStackTrace();
             throw new RuntimeException("Error while processing media interaction", e);
         }
-
     }
 
     public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
-
 
     //    public List<Integer> getMostPlayedMediaForUserById(int userId) {
     public List<Media> getMostPlayedMediaForUserById(int userId) {
@@ -150,40 +140,15 @@ public class EdufyUserService implements EdufyServiceInterface {
         return mostPlayedMedia;
     }
 
-
     public Customer getCustomerData(int customerId) {
         String url = "http://customer-service/api/customer/" + customerId;
         return restTemplate.getForObject(url, Customer.class);
-    }
-
-    /*public List<MediaDTO> getAllMediaDTO() {
-        String url = "http://media-service/api/media/getallmediadto";
-        MediaDTO[] mediaArray = restTemplate.getForObject(url, MediaDTO[].class);
-        return Arrays.asList(mediaArray);
-    }*/
-    public List<Media> getAllMedia() {
-        String url = "http://media-service/api/media/getallmedia";
-        Media[] mediaArray = restTemplate.getForObject(url, Media[].class);
-        return Arrays.asList(mediaArray);
     }
 
     public List<Media> getAllMediaDTO() {
         List<Media> mediaDTO;
         mediaDTO = Arrays.asList(Objects.requireNonNull(restTemplate.getForObject("http://Media-Service/api/media/getallmediadto", Media[].class)));
         return mediaDTO;
-    }
-
-    public Media getMediaById(int mediaId) {
-        String url = "http://media-service/api/media/" + mediaId;
-        Media media = restTemplate.getForObject(url, Media.class);
-
-        if (media == null) {
-            System.err.println("Media with id " + mediaId + " not found.");
-            throw new RuntimeException("Media not found for id: " + mediaId);
-        }
-
-        System.out.println("Media fetched: " + media.getTitle());
-        return media;
     }
 
     public List<Media> getRecommendedMedia(int customerId) {
@@ -217,7 +182,6 @@ public class EdufyUserService implements EdufyServiceInterface {
                 }
             }
         }
-
         // Sortera genrer efter antal lyssningar och hämta topp 3
         List<Genre> topGenres = genreListenCount.entrySet().stream()
                 .sorted(Map.Entry.<Genre, Integer>comparingByValue().reversed())
@@ -255,7 +219,6 @@ public class EdufyUserService implements EdufyServiceInterface {
                     .limit(remainingSlots)
                     .collect(Collectors.toList()));
         }
-
         return recommendedMediaDTOs;
     }
 

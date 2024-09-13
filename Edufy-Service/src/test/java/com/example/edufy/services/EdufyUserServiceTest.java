@@ -1,6 +1,7 @@
 package com.example.edufy.services;
 
 import com.example.edufy.VO.Customer;
+import com.example.edufy.VO.Genre;
 import com.example.edufy.VO.Media;
 import com.example.edufy.VO.MediaInteractions;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +53,6 @@ class EdufyUserServiceTest {
         edufyUserService.setRestTemplate(mockRestTemplate);
         mockCustomer = mock(Customer.class);
 //2, 1 3
-
         mediaInteractions1 = new MediaInteractions(1, 1, "liked", 3);
         mediaInteractions2 = new MediaInteractions(2, 2, "liked", 5);
         mediaInteractions3 = new MediaInteractions(3, 3, "disliked", 1);
@@ -69,7 +69,6 @@ class EdufyUserServiceTest {
         mediaList.add(media1);
         mediaList.add(media2);
         mediaList.add(media3);
-
     }
 
     @Test
@@ -85,14 +84,12 @@ class EdufyUserServiceTest {
         when(mockRestTemplate.getForObject(mediaGetURL, Media.class)).thenReturn(mediaTest);
         when(mockRestTemplate.getForObject(customerGetURL, Customer.class)).thenReturn(customerTest);
 
-
         //when
         edufyUserService.playAndUpdateListedToInCustomer(idCustomer, idMedia);
 
         //then
         verify(mockRestTemplate).put(customerPutURl, customerTest);
         assertEquals(1, mediaInteractionsTest.getTimesListenedTo());
-
     }
 
     @Test
@@ -115,13 +112,11 @@ class EdufyUserServiceTest {
         //then
         verify(mockRestTemplate).put(customerPutURl, customerTest);
         assertEquals(2, customerTest.getMediaInteractions().size());
-
     }
 
     @Test
     void setRestTemplate() {
     }
-
 
     //malin
     // vill kolla att vi får fram listan i rätt ordning
@@ -160,9 +155,6 @@ class EdufyUserServiceTest {
 //        assertEquals(3, sortedListOfMedia.get(0).getId());
 //        assertEquals(1, sortedListOfMedia.get(1).getId());
 //        assertEquals(2, sortedListOfMedia.get(2).getId());
-
-
-
     }
 
     @Test
@@ -236,7 +228,6 @@ class EdufyUserServiceTest {
         when(mockRestTemplate.getForObject(eq("http://customer-service/api/customer/1"), eq(Customer.class))).thenReturn(mockCustomer);
         when(mockRestTemplate.getForObject(eq(getMediaURL), eq(Media.class))).thenReturn(null);
 
-
         assertThrows(RuntimeException.class, () -> {
             edufyUserService.rateMedia(customerId, mediaId, likeStatus);
         }, "Media not found");
@@ -308,6 +299,40 @@ class EdufyUserServiceTest {
         verify(mockRestTemplate).postForEntity(eq("http://customer-service/api/customer/addmediainteractions"), any(MediaInteractions.class), eq(MediaInteractions.class));
         verify(mockRestTemplate).put(eq("http://customer-service/api/customer/updatecustomer/1"), eq(mockCustomer));
     }
+
+    @Test
+    void testGetRecommendedMedia_FillsToExpectedNumber() {
+        when(mockRestTemplate.getForObject(eq("http://customer-service/api/customer/1"), eq(Customer.class)))
+                .thenReturn(customerTest);
+
+        List<Genre> genres1 = Collections.singletonList(new Genre(1, "Rock"));
+        List<Genre> genres2 = Collections.singletonList(new Genre(2, "Pop"));
+        List<Genre> genres3 = Collections.singletonList(new Genre(3, "Jazz"));
+        List<Genre> genresOther = Collections.singletonList(new Genre(4, "Classical"));
+
+        Media media4 = new Media(4, "music4", "testmusic4", "www.TestMusic4.com", LocalDate.now());
+        media4.setGenres(genresOther);
+        Media media5 = new Media(5, "music5", "testmusic5", "www.TestMusic5.com", LocalDate.now());
+        media5.setGenres(genresOther);
+
+        media1.setGenres(genres1);
+        media2.setGenres(genres2);
+        media3.setGenres(genres3);
+        media4.setGenres(genresOther);
+        media5.setGenres(genresOther);
+
+        List<Media> mockMediaList = Arrays.asList(media1, media2, media3, media4, media5);
+
+        when(mockRestTemplate.getForObject(eq("http://Media-Service/api/media/getallmediadto"), eq(Media[].class)))
+                .thenReturn(mockMediaList.toArray(new Media[0]));
+
+        List<Media> recommendations = edufyUserService.getRecommendedMedia(1);
+
+        assertEquals(5, recommendations.size());  // Kontrollera att metoden returnerar exakt så många media som vi mockat
+        assertTrue(recommendations.containsAll(mockMediaList));  // Kontrollera att de mockade mediaobjekten finns med
+    }
+
+
 
 }
 
