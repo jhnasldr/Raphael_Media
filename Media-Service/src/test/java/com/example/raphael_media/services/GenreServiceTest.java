@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
 class GenreServiceTest {
 
     private GenreRepository mockGenreRepository = mock(GenreRepository.class);
-    private MediaRepository mockMediaRepository = mock();
+    private MediaRepository mockMediaRepository = mock(MediaRepository.class);
     private GenreService genreService = new GenreService();
     private Genre genreRock = new Genre("rock");
     private Genre genrePop = new Genre("pop");
@@ -101,7 +101,7 @@ class GenreServiceTest {
         when(mockGenreRepository.findById(1)).thenReturn(Optional.empty());
         //When
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
-            genreService.fetchGenre(2);
+            genreService.updateGenre(2, genrePop);
         });
         //Then
         assertEquals("genre with id '2' was not found", exception.getMessage());
@@ -142,7 +142,7 @@ class GenreServiceTest {
         when(mockGenreRepository.findById(1)).thenReturn(Optional.empty());
         //When
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
-            genreService.fetchGenre(2);
+            genreService.deleteGenre(2);
         });
         //Then
         assertEquals("genre with id '2' was not found", exception.getMessage());
