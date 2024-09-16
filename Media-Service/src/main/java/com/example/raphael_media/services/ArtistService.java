@@ -21,10 +21,8 @@ public class ArtistService implements ArtistServiceInterface {
     public ArtistRepository artistRepository;
 
     @Autowired
-    public MediaRepository mediaRepository;
+    private MediaRepository mediaRepository;
 
-    @Autowired
-    public AlbumRepository albumRepository;
 
     Logger logger = Logger.getLogger(ArtistService.class);
 
@@ -70,7 +68,6 @@ public class ArtistService implements ArtistServiceInterface {
             existingArtist.setMediaList(artist.getMediaList());
         }
 
-        System.out.println("Old " + existingArtist.getAlbums().size());
         if(artist.getAlbums()!= null){
             existingArtist.setAlbums(artist.getAlbums());
         }
@@ -92,5 +89,7 @@ public class ArtistService implements ArtistServiceInterface {
         logger.log(Level.WARN, "Artist with id: " + artistId + " deleted");
     }
 
-
+    public void setMediaRepository(MediaRepository mediaRepository) {
+        this.mediaRepository = mediaRepository;
+    }
 }
