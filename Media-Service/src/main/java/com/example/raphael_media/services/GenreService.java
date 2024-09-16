@@ -62,4 +62,12 @@ public class GenreService implements GenreServiceInterface{
 
         genreRepository.delete(genre);
     }
+
+    public void setGenreRepository(GenreRepository genreRepository) {
+        this.genreRepository = genreRepository;
+    }
+
+    public void setMediaRepository(MediaRepository mediaRepository) {
+        this.mediaRepository = mediaRepository;
+    }
 }

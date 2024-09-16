@@ -49,4 +49,5 @@ public class Genre {
     public void setMediaList(List<Media> mediaList) {
         this.mediaList = mediaList;
     }
+
 }
