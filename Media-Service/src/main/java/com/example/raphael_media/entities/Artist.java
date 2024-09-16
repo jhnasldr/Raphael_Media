@@ -14,11 +14,11 @@ public class Artist {
     @Column(name = "artist_name",length = 50, nullable = false)
     private String artistName;
 
-    @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "artist", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<Album> albums;
 
-    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "artists")
+    @ManyToMany(mappedBy = "artists")
     @JsonIgnore
     private List<Media> mediaList;
 
