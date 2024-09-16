@@ -5,6 +5,8 @@ import com.example.raphael_media.entities.*;
 import com.example.raphael_media.exceptions.ResourceNotFoundException;
 import com.example.raphael_media.repositores.GenreRepository;
 import com.example.raphael_media.repositores.MediaRepository;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,9 +23,12 @@ public class GenreService implements GenreServiceInterface{
     @Autowired
     private MediaRepository mediaRepository;
 
+    Logger logger = Logger.getLogger(ArtistService.class);
+
     @Override
     public Genre addGenre(Genre genre) {
         genreRepository.save(genre);
+        logger.log(Level.WARN, "New genre with id: " + genre.getGenreId() + " created");
         return genre;
     }
 
@@ -48,6 +53,7 @@ public class GenreService implements GenreServiceInterface{
         }
 
         genreRepository.save(existingGenre);
+        logger.log(Level.WARN, "Genre with id: " + genreId + " updated");
         return existingGenre;
     }
 
@@ -60,6 +66,7 @@ public class GenreService implements GenreServiceInterface{
             mediaRepository.save(media);
         }
 
+        logger.log(Level.WARN, "Genre with id: " + genreId + " updated");
         genreRepository.delete(genre);
     }
 
