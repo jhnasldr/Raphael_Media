@@ -160,10 +160,8 @@ public class EdufyUserService implements EdufyServiceInterface {
         // Hämta kundens interaktioner
         Customer customer = getCustomerData(customerId);
         List<Media> recommendedMediaDTOs = new ArrayList<>();
-
         // Skapa en set för att undvika dubbletter
         Set<Integer> usedMediaIds = new HashSet<>();
-
         // Hämta alla Media från Media-tjänsten
         List<Media> allMediaDTO = getAllMediaDTO();
 

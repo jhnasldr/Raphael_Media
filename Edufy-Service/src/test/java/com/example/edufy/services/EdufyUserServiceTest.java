@@ -327,12 +327,46 @@ class EdufyUserServiceTest {
                 .thenReturn(mockMediaList.toArray(new Media[0]));
 
         List<Media> recommendations = edufyUserService.getRecommendedMedia(1);
-
-        assertEquals(5, recommendations.size());  // Kontrollera att metoden returnerar exakt så många media som vi mockat
-        assertTrue(recommendations.containsAll(mockMediaList));  // Kontrollera att de mockade mediaobjekten finns med
+        assertEquals(5, recommendations.size());
+        assertTrue(recommendations.containsAll(mockMediaList));
     }
 
+    @Test
+    void testGetRecommendedMedia_DislikedMediaIsNotRecommended() {
+        MediaInteractions dislikedInteraction = new MediaInteractions(1, 1, "dislike", 1);
+        customerTest.setMediaInteractions(Collections.singletonList(dislikedInteraction));
 
+        when(mockRestTemplate.getForObject(eq("http://customer-service/api/customer/1"), eq(Customer.class)))
+                .thenReturn(customerTest);
+
+        media1.setGenres(Collections.emptyList());
+        media2.setGenres(Collections.emptyList());
+        media3.setGenres(Collections.emptyList());
+        List<Media> mockMediaList = Arrays.asList(media1, media2, media3);
+
+        when(mockRestTemplate.getForObject(eq("http://Media-Service/api/media/getallmediadto"), eq(Media[].class)))
+                .thenReturn(mockMediaList.toArray(new Media[0]));
+
+        List<Media> recommendations = edufyUserService.getRecommendedMedia(1);
+        assertTrue(recommendations.stream().noneMatch(media -> media.getId() == media1.getId()));
+    }
+
+    @Test
+    void testGetRecommendedMedia_AllMediaIsDisliked_NoMediaShouldBeRecommendations() {
+        MediaInteractions dislikedInteraction1 = new MediaInteractions(1, 1, "dislike", 1);
+        MediaInteractions dislikedInteraction2 = new MediaInteractions(2, 2, "dislike", 1);
+        customerTest.setMediaInteractions(Arrays.asList(dislikedInteraction1, dislikedInteraction2));
+
+        when(mockRestTemplate.getForObject(eq("http://customer-service/api/customer/1"), eq(Customer.class)))
+                .thenReturn(customerTest);
+
+        List<Media> mockMediaList = Arrays.asList(media1, media2);
+        when(mockRestTemplate.getForObject(eq("http://Media-Service/api/media/getallmediadto"), eq(Media[].class)))
+                .thenReturn(mockMediaList.toArray(new Media[0]));
+
+        List<Media> recommendations = edufyUserService.getRecommendedMedia(1);
+        assertEquals(0, recommendations.size());
+    }
 
 }
 
