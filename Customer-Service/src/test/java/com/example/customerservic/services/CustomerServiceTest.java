@@ -102,7 +102,7 @@ class CustomerServiceTest {
     @Test
     void addCustomer_shouldThrowExceptionIfUsernameExists() {
 
-        when(customerRepository.existsByUsername(customer.getUserName())).thenReturn(true);
+        when(customerRepository.existsByUserName(customer.getUserName())).thenReturn(true);
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             customerService.addCustomer(customer);
@@ -116,8 +116,8 @@ class CustomerServiceTest {
     @Test
     void addCustomer_shouldThrowExceptionIfEmailAddressExists() {
 
-        when(customerRepository.existsByUsername(customer.getUserName())).thenReturn(false);
-        when(customerRepository.existsByEmail(customer.getEmailAdress())).thenReturn(true);
+        when(customerRepository.existsByUserName(customer.getUserName())).thenReturn(false);
+        when(customerRepository.existsByEmailAdress(customer.getEmailAdress())).thenReturn(true);
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             customerService.addCustomer(customer);
