@@ -27,36 +27,15 @@ public class MediaController {
         return ResponseEntity.ok(mediaService.getAllMedia());
     }
 
-    @PostMapping("addnewmusic")
-    ResponseEntity<String> addNewMusic(@RequestBody Music music) {
-        mediaService.addNewMusic(music);
-        return ResponseEntity.ok("New music created");
+    @PostMapping("addnewmedia")
+    ResponseEntity<String> addNewMedia(@RequestBody Media media) {
+        mediaService.addNewMedia(media);
+        return ResponseEntity.ok("New " + media.getMediaType() + " created");
     }
-    @PostMapping("addnewpodcast")
-    ResponseEntity<String> addNewPodcast(@RequestBody Podcast podcast) {
-        mediaService.addNewPodcast(podcast);
-        return ResponseEntity.ok("New podcast created");
-    }
-    @PostMapping("addnewvideo")
-    ResponseEntity<String> addNewVideo(@RequestBody Video video) {
-        mediaService.addNewVideo(video);
-        return ResponseEntity.ok("New video created");
-    }
-
-    @PutMapping("updatevideo/{id}")
-    public ResponseEntity<String> updateVideo(@PathVariable int id, @RequestBody Video video) {
-        mediaService.updateVideo(id, video);
-        return new ResponseEntity<>("Video is updated", HttpStatus.OK);
-    }
-    @PutMapping("updatemusic/{id}")
-    public ResponseEntity<String> updateMusic(@PathVariable int id, @RequestBody Music music) {
-        mediaService.updateMusic(id, music);
-        return new ResponseEntity<>("Music is updated", HttpStatus.OK);
-    }
-    @PutMapping("updatepodcast/{id}")
-    public ResponseEntity<String> updatePodcast(@PathVariable int id, @RequestBody Podcast podcast) {
-        mediaService.updatePodcast(id, podcast);
-        return new ResponseEntity<>("Podcast is updated", HttpStatus.OK);
+    @PutMapping("updatemedia/{id}")
+    public ResponseEntity<String> updateMedia(@PathVariable int id, @RequestBody Media media) {
+        mediaService.updateMedia(id, media);
+        return new ResponseEntity<>(media.getMediaType() + " is updated", HttpStatus.OK);
     }
 
     @DeleteMapping("deletemedia/{id}")
@@ -64,8 +43,6 @@ public class MediaController {
         mediaService.deleteMediaById(id);
         return new ResponseEntity<>("Media deleted!", HttpStatus.OK);
     }
-
-
 
     @GetMapping("getallmediadto")
     public ResponseEntity<List<MediaDTO>> getAllMediaDTO() {

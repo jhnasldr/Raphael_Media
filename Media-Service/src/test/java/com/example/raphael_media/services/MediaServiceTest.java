@@ -122,38 +122,50 @@ class MediaServiceTest {
 
 
     @Test
-    void addNewMusic_WhenUsed_ShouldVerifyMethodSaveFromMediaRepository() {
-        mediaService.addNewMusic(musicMedia);
+    void addNewMedia_ShouldVerifyThatMusicWasSaved() {
+        mediaService.addNewMedia(musicMedia);
         verify(mockedMusicRepository).save(musicMedia);
     }
     @Test
-    void addNewPodcast_WhenUsed_ShouldVerifyMethodSaveFromMediaRepository() {
-        mediaService.addNewPodcast(podcastMedia);
+    void addNewMedia_ShouldVerifyThatVideoWasSaved() {
+        mediaService.addNewMedia(podcastMedia);
         verify(mockedPodcastRepository).save(podcastMedia);
     }
     @Test
-    void addNewVideo_WhenUsed_ShouldVerifyMethodSaveFromMediaRepository() {
-        mediaService.addNewVideo(videoMedia);
+    void addNewMedia_ShouldVerifyThatPodcastWasSaved() {
+        mediaService.addNewMedia(videoMedia);
         verify(mockedVideoRepository).save(videoMedia);
     }
-
     @Test
-    void updateMusic_ShouldReturnTrueWhenSavingUser() {
+    void addNewMedia_ShouldThrowExeptionResourceNotFoundWhenMediaNotFound() {
         //given
-        musicMedia.setGenres(genreList);
-        musicMedia.setAlbums(albumsList);
-        musicMedia.setArtists(artistList);
-        Music existningMusic;
-
-        when(mockedMusicRepository.findById(1)).thenReturn(Optional.ofNullable(musicMedia));
+        Media media = new Music();
+        media.setMediaType("Sko");
+        expectation = "Unknown media type: Sko";
         //when
-        existningMusic = mediaService.updateMusic(1, musicMedia);
+        IllegalArgumentException exceptiontwo = assertThrows(IllegalArgumentException.class, () -> {
+            mediaService.addNewMedia(media);
+        });
         //then
-        verify(mockedMusicRepository).save(existningMusic);
+        assertEquals(expectation, exceptiontwo.getMessage());
     }
 
     @Test
-    void updatePodcast_ShouldReturnTrueWhenSavingUser() {
+    void updateMedia_ShouldThrowExeptionResourceNotFoundWhenMediaNotFound() {
+        //given
+        Media media = new Music();
+        media.setMediaType("Sko");
+        expectation = "Unknown media type: Sko";
+
+        //when
+        IllegalArgumentException exceptiontwo = assertThrows(IllegalArgumentException.class, () -> {
+            mediaService.updateMedia(1,media);
+        });
+        //then
+        assertEquals(expectation, exceptiontwo.getMessage());
+    }
+    @Test
+    void updateMedia_ShouldReturnTrueWhenUpdateAndSavedPodcast() {
         //given
         podcastMedia.setGenres(genreList);
         podcastMedia.setAlbums(albumsList);
@@ -162,13 +174,27 @@ class MediaServiceTest {
 
         when(mockedPodcastRepository.findById(1)).thenReturn(Optional.ofNullable(podcastMedia));
         //when
-        existningPodcast = mediaService.updatePodcast(1, podcastMedia);
+        existningPodcast = (Podcast) mediaService.updateMedia(1, podcastMedia);
         //then
         verify(mockedPodcastRepository).save(existningPodcast);
     }
+    @Test
+    void updateMedia_ShouldReturnTrueWhenUpdateAndSavedMusic() {
+        //given
+        musicMedia.setGenres(genreList);
+        musicMedia.setAlbums(albumsList);
+        musicMedia.setArtists(artistList);
+        Music existningMusic;
+
+        when(mockedMusicRepository.findById(1)).thenReturn(Optional.ofNullable(musicMedia));
+        //when
+        existningMusic = (Music) mediaService.updateMedia(1, musicMedia);
+        //then
+        verify(mockedMusicRepository).save(existningMusic);
+    }
 
     @Test
-    void updateMedia_ShouldReturnTrueWhenSavingUser() {
+    void updateMedia_ShouldReturnTrueWhenUpdateAndSavedVideo() {
         //given
         videoMedia.setGenres(genreList);
         videoMedia.setAlbums(albumsList);
@@ -177,13 +203,13 @@ class MediaServiceTest {
 
         when(mockedVideoRepository.findById(1)).thenReturn(Optional.ofNullable(videoMedia));
         //when
-        existningVideo = mediaService.updateVideo(1, videoMedia);
+        existningVideo = (Video) mediaService.updateMedia(1, videoMedia);
         //then
         verify(mockedVideoRepository).save(existningVideo);
     }
 
     @Test
-    void updateMedia_ShouldThrowExeptionResourceNotFound() {
+    void updateMedia_ShouldThrowExeptionResourceNotFoundWhenMusicNotFound() {
         //given
         musicMedia.setGenres(genreList);
         musicMedia.setAlbums(albumsList);
@@ -193,13 +219,13 @@ class MediaServiceTest {
         when(mockedMediaRepository.findById(1)).thenReturn(Optional.ofNullable(musicMedia));
         //when
         exception = assertThrows(ResourceNotFoundException.class, () -> {
-            mediaService.updateMusic(3, musicMedia);
+            mediaService.updateMedia(3, musicMedia);
         });
         //then
         assertEquals(expectation, exception.getMessage());
     }
     @Test
-    void updatePodcast_ShouldThrowExeptionResourceNotFound() {
+    void updateMedia_ShouldThrowExeptionResourceNotFoundWhenPodcastNotFound() {
         //given
         podcastMedia.setGenres(genreList);
         podcastMedia.setAlbums(albumsList);
@@ -209,13 +235,13 @@ class MediaServiceTest {
         when(mockedPodcastRepository.findById(1)).thenReturn(Optional.ofNullable(podcastMedia));
         //when
         exception = assertThrows(ResourceNotFoundException.class, () -> {
-            mediaService.updatePodcast(3, podcastMedia);
+            mediaService.updateMedia(3, podcastMedia);
         });
         //then
         assertEquals(expectation, exception.getMessage());
     }
     @Test
-    void updateVideo_ShouldThrowExeptionResourceNotFound() {
+    void updateMedia_ShouldThrowExeptionResourceNotFoundWhenVideoNotFound() {
         //given
         videoMedia.setGenres(genreList);
         videoMedia.setAlbums(albumsList);
@@ -225,7 +251,7 @@ class MediaServiceTest {
         when(mockedVideoRepository.findById(1)).thenReturn(Optional.ofNullable(videoMedia));
         //when
         exception = assertThrows(ResourceNotFoundException.class, () -> {
-            mediaService.updateVideo(3, videoMedia);
+            mediaService.updateMedia(3, videoMedia);
         });
         //then
         assertEquals(expectation, exception.getMessage());

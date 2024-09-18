@@ -1,6 +1,6 @@
 package com.example.raphael_media.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -8,18 +8,28 @@ import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        property = "mediaType"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Video.class, name = "Video"),
+        @JsonSubTypes.Type(value = Music.class, name = "Music"),
+        @JsonSubTypes.Type(value = Podcast.class, name = "Podcast")
+})
 public abstract class Media {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(length = 30, nullable = false)
+    @Column(length = 30)
+    @JsonIgnore
     private String mediaType;
-    @Column(length = 60, nullable = false)
+    @Column(length = 60)
     private String title;
-    @Column(length = 75, nullable = false)
+    @Column(length = 75)
     private String URL;
-    @Column(length = 15,nullable = false)
+    @Column(length = 15)
     private LocalDate releaseDate;
 
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
@@ -62,6 +72,10 @@ public abstract class Media {
         this.artists = artists;
         this.albums = albums;
         this.genres = genres;
+    }
+
+    public Media(String mediaType) {
+        this.mediaType = mediaType;
     }
 
     public Media(LocalDate releaseDate) {
@@ -131,4 +145,5 @@ public abstract class Media {
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
     }
+
 }
