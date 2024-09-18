@@ -1,5 +1,6 @@
 package com.example.edufy.services;
 
+import com.example.edufy.DTOs.MediaResponseDTO;
 import com.example.edufy.VO.*;
 //import com.example.edufy.repositories.EdufyUserRepository;
 import com.example.edufy.VO.Media;
@@ -156,20 +157,18 @@ public class EdufyUserService implements EdufyServiceInterface {
         return mediaDTO;
     }
 
-    public List<Media> getRecommendedMedia(int customerId) {
+    public List<MediaResponseDTO> getRecommendedMedia(int customerId) {
         // Hämta kundens interaktioner
         Customer customer = getCustomerData(customerId);
-        List<Media> recommendedMediaDTOs = new ArrayList<>();
-
+        List<Media> recommendedMedia = new ArrayList<>();
         // Skapa en set för att undvika dubbletter
         Set<Integer> usedMediaIds = new HashSet<>();
-
         // Hämta alla Media från Media-tjänsten
         List<Media> allMediaDTO = getAllMediaDTO();
 
-        // Filtrera bort media som användaren markerat som "dislike"
-        Set<Integer> dislikedMediaIds = customer.getMediaInteractions().stream()
-                .filter(interaction -> "dislike".equalsIgnoreCase(interaction.getLikeStatus()))
+        // Filtrera bort media som användaren markerat som "dislike" och media de redan lyssnat på
+        Set<Integer> interactedMediaIds = customer.getMediaInteractions().stream()
+                .filter(interaction -> interaction.getTimesListenedTo() > 0 || "dislike".equalsIgnoreCase(interaction.getLikeStatus()))
                 .map(MediaInteractions::getMediaId)
                 .collect(Collectors.toSet());
 
@@ -181,7 +180,7 @@ public class EdufyUserService implements EdufyServiceInterface {
                     .findFirst()
                     .orElse(null);
 
-            if (mediaDTO != null && !dislikedMediaIds.contains(mediaDTO.getId())) {
+            if (mediaDTO != null && !interactedMediaIds.contains(mediaDTO.getId())) {
                 for (Genre genre : mediaDTO.getGenres()) {
                     genreListenCount.put(genre, genreListenCount.getOrDefault(genre, 0) + interaction.getTimesListenedTo());
                 }
@@ -196,22 +195,22 @@ public class EdufyUserService implements EdufyServiceInterface {
 
         // Hämta rekommendationer från topp 3 genrer
         List<Media> topGenreRecommendations = allMediaDTO.stream()
-                .filter(media -> !dislikedMediaIds.contains(media.getId()))  // Uteslut media som användaren inte gillar
+                .filter(media -> !interactedMediaIds.contains(media.getId()))  // Uteslut media som användaren inte gillar och redan lyssnat på
                 .filter(media -> media.getGenres().stream().anyMatch(topGenres::contains))  // Filtrera för topp 3 genrer
                 .filter(media -> !usedMediaIds.contains(media.getId()))  // Undvik dubbletter
                 .limit(8)  // Försök att rekommendera 80% från topp 3 genrer (8 av 10)
                 .collect(Collectors.toList());
 
-        recommendedMediaDTOs.addAll(topGenreRecommendations);
+        recommendedMedia.addAll(topGenreRecommendations);
         topGenreRecommendations.forEach(media -> usedMediaIds.add(media.getId()));  // Lägg till i usedMediaIds
 
         // Kolla om vi har mindre än 10 rekommendationer
-        int remainingSlots = 10 - recommendedMediaDTOs.size();
+        int remainingSlots = 10 - recommendedMedia.size();
 
         // Om det finns färre än 8 rekommendationer från toppgenrerna, fyll på med andra genrer tills vi når 10
         if (remainingSlots > 0) {
             List<Media> otherGenreRecommendations = allMediaDTO.stream()
-                    .filter(media -> !dislikedMediaIds.contains(media.getId()))  // Uteslut media som användaren inte gillar
+                    .filter(media -> !interactedMediaIds.contains(media.getId()))  // Uteslut media som användaren inte gillar och redan lyssnat på
                     .filter(media -> media.getGenres().stream().noneMatch(topGenres::contains))  // Filtrera bort topp 3 genrer
                     .filter(media -> !usedMediaIds.contains(media.getId()))  // Undvik dubbletter
                     .collect(Collectors.toList());
@@ -220,11 +219,19 @@ public class EdufyUserService implements EdufyServiceInterface {
             Collections.shuffle(otherGenreRecommendations);
 
             // Lägg till upp till de återstående platserna
-            recommendedMediaDTOs.addAll(otherGenreRecommendations.stream()
+            recommendedMedia.addAll(otherGenreRecommendations.stream()
                     .limit(remainingSlots)
                     .collect(Collectors.toList()));
         }
-        return recommendedMediaDTOs;
+        return recommendedMedia.stream()
+                .map(media -> new MediaResponseDTO(
+                        media.getId(),
+                        media.getMediaType(),
+                        media.getTitle(),
+                        media.getGenres() != null && !media.getGenres().isEmpty() ? media.getGenres().get(0).getGenre() : "Unknown Genre",
+                        media.getArtists() != null && !media.getArtists().isEmpty() ? media.getArtists().get(0).getArtistName() : "Unknown Artist"
+                ))
+                .collect(Collectors.toList());
     }
 
 }
