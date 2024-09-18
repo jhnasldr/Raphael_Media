@@ -16,13 +16,10 @@ public interface MediaServiceInterface {
 
     List<Media> getAllMedia();
 
-    void addNewMusic(Music music);
-    void addNewVideo(Video video);
-    void addNewPodcast(Podcast podcast);
+    void addNewMedia(Media media);
 
-    Music updateMusic(int musicId, Music music);
-    Video updateVideo(int videoId, Video video);
-    Podcast updatePodcast(int podcastId, Podcast podcast);
+
+    Media updateMedia(int mediaId, Media media);
 
     void deleteMediaById(int mediaId);
     List<MediaDTO> getAllMediaDTO();

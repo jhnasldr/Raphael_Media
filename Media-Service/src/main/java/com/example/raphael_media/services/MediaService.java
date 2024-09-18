@@ -48,116 +48,77 @@ public class MediaService implements MediaServiceInterface {
         return mediaRepository.findAll();
     }
 
+
     @Override
-    public void addNewMusic(Music music) {
-        musicRepository.save(music);
-        logger.log(Level.WARN, "New music with id: " + music.getId() + " created");
+    public void addNewMedia(Media media){
+        if (media.getMediaType().equalsIgnoreCase("video")) {
+            Video video = (Video) media;
+            videoRepository.save(video);
+        } else if (media.getMediaType().equalsIgnoreCase("music")) {
+            Music music = (Music) media;
+            musicRepository.save(music);
+        } else if (media.getMediaType().equalsIgnoreCase("podcast")) {
+            Podcast podcast = (Podcast) media;
+            podcastRepository.save(podcast);
+        } else {
+            throw new IllegalArgumentException("Unknown media type: " + media.getMediaType());
+        }
+
+        logger.log(Level.WARN, "New " + media.getMediaType() + " with id: " + media.getId() + " created");
     }
 
-    @Override
-    public void addNewVideo(Video video) {
-        videoRepository.save(video);
-        logger.log(Level.WARN, "New video with id: " + video.getId() + " created");
-    }
 
     @Override
-    public void addNewPodcast(Podcast podcast) {
-        podcastRepository.save(podcast);
-        logger.log(Level.WARN, "New podcast with id: " + podcast.getId() + " created");
-    }
-
-    @Override
-    public Music updateMusic(int musicId, Music music) {
-        Music existningMusic = musicRepository.findById(musicId).orElseThrow(() -> new ResourceNotFoundException(music.getMediaType(), "id", musicId));
-        if (music.getMediaType() != null) {
-            existningMusic.setMediaType(music.getMediaType());
+    public Media updateMedia(int mediaId, Media media){
+        Media existningMedia;
+        if (media.getMediaType().equalsIgnoreCase("video")) {
+            existningMedia = videoRepository.findById(mediaId).orElseThrow(() -> new ResourceNotFoundException(media.getMediaType(), "id", mediaId));
         }
-        if (music.getAlbums() != null) {
-            existningMusic.setAlbums(music.getAlbums());
+        else if (media.getMediaType().equalsIgnoreCase("music")) {
+            existningMedia = musicRepository.findById(mediaId).orElseThrow(() -> new ResourceNotFoundException(media.getMediaType(), "id", mediaId));
         }
-        if (music.getArtists() != null) {
-            existningMusic.setArtists(music.getArtists());
-        }
-        if (music.getGenres() != null) {
-            existningMusic.setGenres(music.getGenres());
-        }
-        if (music.getReleaseDate() != null) {
-            existningMusic.setReleaseDate(music.getReleaseDate());
-        }
-        if (music.getTitle() != null) {
-            existningMusic.setTitle(music.getTitle());
+        else if (media.getMediaType().equalsIgnoreCase("podcast")) {
+            existningMedia = podcastRepository.findById(mediaId).orElseThrow(() -> new ResourceNotFoundException(media.getMediaType(), "id", mediaId));
+        } else {
+            throw new IllegalArgumentException("Unknown media type: " + media.getMediaType());
         }
 
-        if (music.getURL() != null) {
-            existningMusic.setURL(music.getURL());
+        if (media.getMediaType() != null) {
+            existningMedia.setMediaType(media.getMediaType());
+        }
+        if (media.getAlbums() != null) {
+            existningMedia.setAlbums(media.getAlbums());
+        }
+        if (media.getArtists() != null) {
+            existningMedia.setArtists(media.getArtists());
+        }
+        if (media.getGenres() != null) {
+            existningMedia.setGenres(media.getGenres());
+        }
+        if (media.getReleaseDate() != null) {
+            existningMedia.setReleaseDate(media.getReleaseDate());
+        }
+        if (media.getTitle() != null) {
+            existningMedia.setTitle(media.getTitle());
         }
 
-        musicRepository.save(existningMusic);
-        logger.log(Level.WARN, "Music with id: " + musicId + " updated");
-        return existningMusic;
-    }
-
-    @Override
-    public Video updateVideo(int videoId, Video video) {
-        Video existningVideo = videoRepository.findById(videoId).orElseThrow(() -> new ResourceNotFoundException(video.getMediaType(), "id", videoId));
-        if (video.getMediaType() != null) {
-            existningVideo.setMediaType(video.getMediaType());
-        }
-        if (video.getAlbums() != null) {
-            existningVideo.setAlbums(video.getAlbums());
-        }
-        if (video.getArtists() != null) {
-            existningVideo.setArtists(video.getArtists());
-        }
-        if (video.getGenres() != null) {
-            existningVideo.setGenres(video.getGenres());
-        }
-        if (video.getReleaseDate() != null) {
-            existningVideo.setReleaseDate(video.getReleaseDate());
-        }
-        if (video.getTitle() != null) {
-            existningVideo.setTitle(video.getTitle());
+        if (media.getURL() != null) {
+            existningMedia.setURL(media.getURL());
         }
 
-        if (video.getURL() != null) {
-            existningVideo.setURL(video.getURL());
+        if (media.getMediaType().equalsIgnoreCase("video")) {
+            Video video = (Video) existningMedia;
+            videoRepository.save(video);
+        } else if (media.getMediaType().equalsIgnoreCase("music")) {
+            Music music = (Music) existningMedia;
+            musicRepository.save(music);
+        } else if (media.getMediaType().equalsIgnoreCase("podcast")) {
+            Podcast podcast = (Podcast) existningMedia;
+            podcastRepository.save(podcast);
         }
 
-        videoRepository.save(existningVideo);
-        logger.log(Level.WARN, "Video with id: " + videoId + " updated");
-        return existningVideo;
-    }
-
-    @Override
-    public Podcast updatePodcast(int podcastId, Podcast podcast) {
-        Podcast existningPodcast = podcastRepository.findById(podcastId).orElseThrow(() -> new ResourceNotFoundException(podcast.getMediaType(), "id", podcastId));
-        if (podcast.getMediaType() != null) {
-            existningPodcast.setMediaType(podcast.getMediaType());
-        }
-        if (podcast.getAlbums() != null) {
-            existningPodcast.setAlbums(podcast.getAlbums());
-        }
-        if (podcast.getArtists() != null) {
-            existningPodcast.setArtists(podcast.getArtists());
-        }
-        if (podcast.getGenres() != null) {
-            existningPodcast.setGenres(podcast.getGenres());
-        }
-        if (podcast.getReleaseDate() != null) {
-            existningPodcast.setReleaseDate(podcast.getReleaseDate());
-        }
-        if (podcast.getTitle() != null) {
-            existningPodcast.setTitle(podcast.getTitle());
-        }
-
-        if (podcast.getURL() != null) {
-            existningPodcast.setURL(podcast.getURL());
-        }
-
-        podcastRepository.save(existningPodcast);
-
-        logger.log(Level.WARN, "Podcast with id: " + podcastId + " updated");
-        return existningPodcast;
+        logger.log(Level.WARN, "Podcast with id: " + mediaId + " updated");
+        return existningMedia;
     }
 
     @Override
@@ -170,13 +131,11 @@ public class MediaService implements MediaServiceInterface {
     }
 
     @Override
-
     public List<MediaDTO> getAllMediaDTO() {
         List<Media> allMedia = mediaRepository.findAll();
         return allMedia.stream().map(this::convertToMediaDTO).toList();
     }
 
-    //
     @Override
     public List<MediaDTO> getListOfMediaDTOFromListOfIds(List<Integer> listOfId) {
         List<Media> listOfMediaFromIds = mediaRepository.findAllById(listOfId);

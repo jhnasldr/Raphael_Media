@@ -17,6 +17,6 @@ public class Podcast extends Media{
     }
 
     public Podcast() {
-
+        super("Podcast");
     }
 }
