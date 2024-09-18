@@ -27,10 +27,10 @@ public class CustomerService implements CustomerServiceInterface {
 
     @Override
     public Customer addCustomer(Customer customer) {
-        if(customerRepository.existsByUsername(customer.getUserName())) {
+        if(customerRepository.existsByUserName(customer.getUserName())) {
             throw new RuntimeException("Customer with username " + customer.getUserName() + " already exists");
         }
-        if(customerRepository.existsByEmail(customer.getEmailAdress())) {
+        if(customerRepository.existsByEmailAdress(customer.getEmailAdress())) {
             throw new RuntimeException("Customer with email " + customer.getEmailAdress() + " already exists");
         }
         customerRepository.save(customer);
