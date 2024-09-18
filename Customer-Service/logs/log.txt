@@ -22,3 +22,8 @@
 2024-09-13 16:06:14,882 : WARN : com.example.customerservic.services.MediaInteractionsService: addMediaInteraction : New mediainteraction created
 2024-09-13 16:06:42,871 : WARN : com.example.customerservic.services.MediaInteractionsService: addMediaInteraction : New mediainteraction created
 2024-09-13 16:07:03,571 : WARN : com.example.customerservic.services.MediaInteractionsService: addMediaInteraction : New mediainteraction created
+2024-09-16 10:23:23,428 : WARN : com.example.customerservic.services.CustomerService: addCustomer : New customer created with id:6
+2024-09-16 10:40:45,944 : WARN : com.example.customerservic.services.CustomerService: addCustomer : New customer created with id:6
+2024-09-16 11:22:16,499 : WARN : io.lettuce.core.protocol.ConnectionWatchdog: log : Cannot reconnect to [localhost/<unresolved>:6379]: Connection refused: no further information: localhost/127.0.0.1:6379
+2024-09-18 11:39:39,360 : WARN : com.example.customerservic.services.CustomerService: addCustomer : New customer created with id:6
+2024-09-18 11:41:51,962 : WARN : com.example.customerservic.services.CustomerService: deleteCustomerById : Customer with id: 1 deleted

@@ -4,6 +4,10 @@ import com.example.customerservic.entities.Customer;
 import com.example.customerservic.exceptions.ResourceNotFoundException;
 import com.example.customerservic.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,6 +23,20 @@ public class CustomerService implements CustomerServiceInterface {
 
     @Autowired
     private MediaInteractionsService mediaInteractionsService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    public String authenticate(String username, String password) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password)
+            );
+            // Generate and return a token if authentication is successful
+            return "token"; // Replace with actual token generation logic
+        } catch (AuthenticationException e) {
+            throw new RuntimeException("Authentication failed", e);
+        }
+    }
 
     @Override
     public Optional<Customer> findCustomerById(int customerId) {

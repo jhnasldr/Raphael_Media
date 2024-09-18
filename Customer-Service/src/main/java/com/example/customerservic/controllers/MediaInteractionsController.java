@@ -6,6 +6,7 @@ import com.example.customerservic.services.MediaInteractionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ public class MediaInteractionsController {
     @Autowired
     private MediaInteractionsService mediaInteractionsService;
 //
+//@PreAuthorize("hasRole('user')")
     @PostMapping("addmediainteractions")
     public ResponseEntity<String> addMediaInteraction(@RequestBody MediaInteractions mediaInteractions){
         mediaInteractionsService.addMediaInteraction(mediaInteractions);
