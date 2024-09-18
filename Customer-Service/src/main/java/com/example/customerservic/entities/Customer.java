@@ -10,10 +10,10 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int customerId;
 
-    @Column(name = "user_name",length = 50, nullable = false)
+    @Column(name = "user_name",length = 50, nullable = false, unique = true)
     private String userName;
 
-    @Column(name = "email_adress", length = 75, nullable = false)
+    @Column(name = "email_adress", length = 75, nullable = false, unique = true)
     private String emailAdress;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "customer")

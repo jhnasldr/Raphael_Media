@@ -17,10 +17,9 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
@@ -98,6 +97,35 @@ class CustomerServiceTest {
         customerService.addCustomer(customer);
         //then
         verify(customerRepository).save(customer);
+    }
+
+    @Test
+    void addCustomer_shouldThrowExceptionIfUsernameExists() {
+
+        when(customerRepository.existsByUsername(customer.getUserName())).thenReturn(true);
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            customerService.addCustomer(customer);
+        });
+
+        assertEquals("Customer with username Test User already exists", exception.getMessage());
+
+        verify(customerRepository, never()).save(any(Customer.class));
+    }
+
+    @Test
+    void addCustomer_shouldThrowExceptionIfEmailAddressExists() {
+
+        when(customerRepository.existsByUsername(customer.getUserName())).thenReturn(false);
+        when(customerRepository.existsByEmail(customer.getEmailAdress())).thenReturn(true);
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            customerService.addCustomer(customer);
+        });
+
+        assertEquals("Customer with email Test@Example.com already exists", exception.getMessage());
+
+        verify(customerRepository, never()).save(any(Customer.class));
     }
 
     @Test
