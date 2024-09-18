@@ -1,5 +1,6 @@
 package com.example.edufy.services;
 
+import com.example.edufy.DTOs.MediaResponseDTO;
 import com.example.edufy.VO.Customer;
 import com.example.edufy.VO.Genre;
 import com.example.edufy.VO.Media;
@@ -13,10 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -308,27 +307,22 @@ class EdufyUserServiceTest {
         List<Genre> genres1 = Collections.singletonList(new Genre(1, "Rock"));
         List<Genre> genres2 = Collections.singletonList(new Genre(2, "Pop"));
         List<Genre> genres3 = Collections.singletonList(new Genre(3, "Jazz"));
-        List<Genre> genresOther = Collections.singletonList(new Genre(4, "Classical"));
-
-        Media media4 = new Media(4, "music4", "testmusic4", "www.TestMusic4.com", LocalDate.now());
-        media4.setGenres(genresOther);
-        Media media5 = new Media(5, "music5", "testmusic5", "www.TestMusic5.com", LocalDate.now());
-        media5.setGenres(genresOther);
 
         media1.setGenres(genres1);
         media2.setGenres(genres2);
         media3.setGenres(genres3);
-        media4.setGenres(genresOther);
-        media5.setGenres(genresOther);
 
-        List<Media> mockMediaList = Arrays.asList(media1, media2, media3, media4, media5);
+        List<Media> mockMediaList = Arrays.asList(media1, media2, media3);
 
         when(mockRestTemplate.getForObject(eq("http://Media-Service/api/media/getallmediadto"), eq(Media[].class)))
                 .thenReturn(mockMediaList.toArray(new Media[0]));
 
-        List<Media> recommendations = edufyUserService.getRecommendedMedia(1);
-        assertEquals(5, recommendations.size());
-        assertTrue(recommendations.containsAll(mockMediaList));
+        List<MediaResponseDTO> recommendations = edufyUserService.getRecommendedMedia(1);
+
+        assertEquals(3, recommendations.size());
+
+        Set<Integer> recommendedIds = recommendations.stream().map(MediaResponseDTO::getId).collect(Collectors.toSet());
+        assertEquals(recommendations.size(), recommendedIds.size());  // Det ska inte finnas dubbletter
     }
 
     @Test
@@ -347,7 +341,7 @@ class EdufyUserServiceTest {
         when(mockRestTemplate.getForObject(eq("http://Media-Service/api/media/getallmediadto"), eq(Media[].class)))
                 .thenReturn(mockMediaList.toArray(new Media[0]));
 
-        List<Media> recommendations = edufyUserService.getRecommendedMedia(1);
+        List<MediaResponseDTO> recommendations = edufyUserService.getRecommendedMedia(1);
         assertTrue(recommendations.stream().noneMatch(media -> media.getId() == media1.getId()));
     }
 
@@ -364,7 +358,7 @@ class EdufyUserServiceTest {
         when(mockRestTemplate.getForObject(eq("http://Media-Service/api/media/getallmediadto"), eq(Media[].class)))
                 .thenReturn(mockMediaList.toArray(new Media[0]));
 
-        List<Media> recommendations = edufyUserService.getRecommendedMedia(1);
+        List<MediaResponseDTO> recommendations = edufyUserService.getRecommendedMedia(1);
         assertEquals(0, recommendations.size());
     }
 

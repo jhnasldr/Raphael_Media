@@ -1,5 +1,6 @@
 package com.example.edufy.controllers;
 
+import com.example.edufy.DTOs.MediaResponseDTO;
 import com.example.edufy.VO.*;
 import com.example.edufy.services.EdufyUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,9 @@ public class EdufyUserController {
     }
 
     @GetMapping("/recommendations/{customerId}")
-    public ResponseEntity<List<Media>> getRecommendedMedia(@PathVariable int customerId) {
-        Customer customer = edufyUserService.getCustomerData(customerId);
-        List<Media> recommendations = edufyUserService.getRecommendedMedia(customerId);
+    public ResponseEntity<List<MediaResponseDTO>> getRecommendedMedia(@PathVariable int customerId) {
+        //Customer customer = edufyUserService.getCustomerData(customerId);
+        List<MediaResponseDTO> recommendations = edufyUserService.getRecommendedMedia(customerId);
         return ResponseEntity.ok(recommendations);
     }
 
