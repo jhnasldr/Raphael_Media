@@ -19,7 +19,6 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-//    @PreAuthorize("hasRole('user')")
     @GetMapping("{customerId}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable int customerId) {
         Optional<Customer> customer = customerService.findCustomerById(customerId);
@@ -40,7 +39,6 @@ public class CustomerController {
         return new ResponseEntity<>("Customer is delete", HttpStatus.OK);
     }
 
-//    @PreAuthorize("hasRole('user')")
     @PutMapping("updatecustomer/{customerId}")
     public ResponseEntity<String> updateCustomer(@PathVariable int customerId, @RequestBody Customer customer) {
         customerService.updateCustomer(customerId, customer);

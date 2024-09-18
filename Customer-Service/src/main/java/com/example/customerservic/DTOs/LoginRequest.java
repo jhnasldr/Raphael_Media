@@ -7,11 +7,6 @@ public class LoginRequest {
     public LoginRequest() {
     }
 
-    public LoginRequest(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -20,7 +15,6 @@ public class LoginRequest {
         this.username = username;
     }
 
-    // Getter and Setter for password
     public String getPassword() {
         return password;
     }

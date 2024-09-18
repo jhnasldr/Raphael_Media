@@ -21,7 +21,6 @@ public class AuthenticationService {
                     new UsernamePasswordAuthenticationToken(username, password)
             );
 
-            // Generate and return a token if authentication is successful
             return jwtTokenProvider.generateToken(authentication);
         } catch (AuthenticationException e) {
             throw new RuntimeException("Authentication failed", e);

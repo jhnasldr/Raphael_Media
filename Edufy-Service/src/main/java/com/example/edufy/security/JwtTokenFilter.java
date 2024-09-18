@@ -7,7 +7,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,9 +17,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-public class JwtTokenFilter extends OncePerRequestFilter{
 
-    private final String SECRET_KEY = "your-secret-key"; // Replace with your actual secret key
+public class JwtTokenFilter extends OncePerRequestFilter {
+
+    private final String SECRET_KEY = "your-secret-key";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -28,7 +28,7 @@ public class JwtTokenFilter extends OncePerRequestFilter{
 
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7); // Remove "Bearer " from the token
+            token = token.substring(7);
 
             try {
                 Claims claims = Jwts.parser()
@@ -39,13 +39,12 @@ public class JwtTokenFilter extends OncePerRequestFilter{
                 String username = claims.getSubject();
 
                 List<SimpleGrantedAuthority> authorities = ((List<Map<String, String>>) claims.get("roles")).stream()
-                        .map(role -> new SimpleGrantedAuthority(role.get("authority"))) // Extract the authority
+                        .map(role -> new SimpleGrantedAuthority(role.get("authority")))
                         .collect(Collectors.toList());
 
                 Authentication auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (Exception e) {
-                // Handle token parsing or validation errors
                 SecurityContextHolder.clearContext();
             }
         }

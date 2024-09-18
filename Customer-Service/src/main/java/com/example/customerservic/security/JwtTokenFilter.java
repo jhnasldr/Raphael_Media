@@ -44,7 +44,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 String username = claims.getSubject();
 
                 List<SimpleGrantedAuthority> authorities = ((List<Map<String, String>>) claims.get("roles")).stream()
-                        .map(role -> new SimpleGrantedAuthority(role.get("authority"))) // Extract the authority
+                        .map(role -> new SimpleGrantedAuthority(role.get("authority")))
                         .collect(Collectors.toList());
 
 

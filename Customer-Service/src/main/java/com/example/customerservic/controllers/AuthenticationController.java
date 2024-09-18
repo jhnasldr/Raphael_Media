@@ -1,6 +1,5 @@
 package com.example.customerservic.controllers;
 
-//import com.example.customerservic.DTOs.JwtResponse;
 import com.example.customerservic.DTOs.LoginRequest;
 import com.example.customerservic.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,6 @@ public class AuthenticationController {
 
     @Autowired
     private AuthenticationService authService;
-
-
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {

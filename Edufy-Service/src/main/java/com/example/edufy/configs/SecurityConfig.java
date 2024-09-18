@@ -1,6 +1,5 @@
 package com.example.edufy.configs;
 
-
 import com.example.edufy.security.JwtTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

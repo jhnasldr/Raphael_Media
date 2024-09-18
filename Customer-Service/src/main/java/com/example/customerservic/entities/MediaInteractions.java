@@ -1,8 +1,6 @@
 package com.example.customerservic.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 @Entity
@@ -15,10 +13,8 @@ public class MediaInteractions {
     @Column(name = "media_id", length = 20)
     private int mediaId;
 
-
     @Column(name = "like_status", length = 20)
     private String likeStatus; //like, dislike or empty
-
 
     @Column(name = "times_listened_to", length = 20)
     private int timesListenedTo;
@@ -30,7 +26,6 @@ public class MediaInteractions {
 
     public MediaInteractions() {
     }
-
 
     public String getLikeStatus() {
         return likeStatus;
