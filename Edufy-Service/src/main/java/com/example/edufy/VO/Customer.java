@@ -8,17 +8,13 @@ import jakarta.persistence.OneToMany;
 import java.util.List;
 
 public class Customer {
-
-    //Denna klass ska vara likadan som vår Customer entitet i Customer mikrotjänsten men den ska inte vara en entitet
-
     private int customerId;
 
     private String userName;
 
     private String emailAdress;
 
-   @OneToMany(cascade = CascadeType.MERGE,fetch = FetchType.EAGER, mappedBy = "customer")
-    //@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "customer")
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER, mappedBy = "customer")
     @JsonManagedReference
     private List<MediaInteractions> MediaInteractions;
 

@@ -4,7 +4,6 @@ public class MediaRequstBody {
     private Integer customerId;
     private Integer mediaId;
 
-    // Getters och Setters
     public Integer getCustomerId() {
         return customerId;
     }

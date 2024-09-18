@@ -2,7 +2,6 @@ package com.example.raphael_media.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -26,7 +25,6 @@ public class Album {
     private List<Media> mediaList;
 
     public Album() {
-
     }
 
     public int getAlbumId() {
@@ -52,7 +50,6 @@ public class Album {
     public void setArtist(Artist artist) {
         this.artist = artist;
     }
-
 
     public List<Media> getMediaList() {
         return mediaList;

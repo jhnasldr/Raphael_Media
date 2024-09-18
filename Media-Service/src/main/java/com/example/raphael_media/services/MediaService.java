@@ -50,7 +50,7 @@ public class MediaService implements MediaServiceInterface {
 
 
     @Override
-    public void addNewMedia(Media media){
+    public void addNewMedia(Media media) {
         if (media.getMediaType().equalsIgnoreCase("video")) {
             Video video = (Video) media;
             videoRepository.save(video);
@@ -69,15 +69,13 @@ public class MediaService implements MediaServiceInterface {
 
 
     @Override
-    public Media updateMedia(int mediaId, Media media){
+    public Media updateMedia(int mediaId, Media media) {
         Media existningMedia;
         if (media.getMediaType().equalsIgnoreCase("video")) {
             existningMedia = videoRepository.findById(mediaId).orElseThrow(() -> new ResourceNotFoundException(media.getMediaType(), "id", mediaId));
-        }
-        else if (media.getMediaType().equalsIgnoreCase("music")) {
+        } else if (media.getMediaType().equalsIgnoreCase("music")) {
             existningMedia = musicRepository.findById(mediaId).orElseThrow(() -> new ResourceNotFoundException(media.getMediaType(), "id", mediaId));
-        }
-        else if (media.getMediaType().equalsIgnoreCase("podcast")) {
+        } else if (media.getMediaType().equalsIgnoreCase("podcast")) {
             existningMedia = podcastRepository.findById(mediaId).orElseThrow(() -> new ResourceNotFoundException(media.getMediaType(), "id", mediaId));
         } else {
             throw new IllegalArgumentException("Unknown media type: " + media.getMediaType());
@@ -117,7 +115,7 @@ public class MediaService implements MediaServiceInterface {
             podcastRepository.save(podcast);
         }
 
-        logger.log(Level.WARN, "Podcast with id: " + mediaId + " updated");
+        logger.log(Level.WARN, "Media with id: " + mediaId + " updated");
         return existningMedia;
     }
 

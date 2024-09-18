@@ -2,14 +2,11 @@ package com.example.edufy.services;
 
 import com.example.edufy.DTOs.MediaResponseDTO;
 import com.example.edufy.VO.*;
-//import com.example.edufy.repositories.EdufyUserRepository;
 import com.example.edufy.VO.Media;
 import com.example.edufy.VO.MediaInteractions;
-import com.example.edufy.exceptions.ResourceNotFoundException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,29 +22,30 @@ public class EdufyUserService implements EdufyServiceInterface {
     Logger logger = Logger.getLogger(EdufyUserService.class);
 
     //Test för forskning, det saknas enhetstestning för den här mm
-    public Customer getCustomerVO() {
-        //Har man med loadbalanced letar den inom sina services och man kan inte köra med localhost utan måste använda servicenamnet
-        //    Customer customerVO = restTemplate.getForObject("http://127.0.0.1:6060/api/customer/1", Customer.class);
-        //    Customer customerVO = restTemplate.getForObject("localhost:6060/api/customer/1", Customer.class);
-        Customer customerVO = restTemplate.getForObject("http://customer-service/api/customer/1", Customer.class);
-
-        // restTemplate och getForObject för att köra get, verkar finnas metoder för alla crud operationer med restTemplate
-        return customerVO;
-    }
+//    public Customer getCustomerVO() {
+//        //Har man med loadbalanced letar den inom sina services och man kan inte köra med localhost utan måste använda servicenamnet
+//        //    Customer customerVO = restTemplate.getForObject("http://127.0.0.1:6060/api/customer/1", Customer.class);
+//        //    Customer customerVO = restTemplate.getForObject("localhost:6060/api/customer/1", Customer.class);
+//        Customer customerVO = restTemplate.getForObject("http://customer-service/api/customer/1", Customer.class);
+//
+//        // restTemplate och getForObject för att köra get, verkar finnas metoder för alla crud operationer med restTemplate
+//        return customerVO;
+//    }
 
     @Override
-    public Media playAndUpdateListedToInCustomer(int idCustomer, int idMedia){
+    public Media playAndUpdateListedToInCustomer(int idCustomer, int idMedia) {
         String customerGetURL = "http://customer-service/api/customer/" + idCustomer;
         String mediaGetURL = "http://media-service/api/media/" + idMedia;
         String customerPutURl = "http://customer-service/api/customer/updatecustomer/" + idCustomer;
 
         Customer customerVO = restTemplate.getForObject(customerGetURL, Customer.class);
-        Media mediaVO = restTemplate.getForObject(mediaGetURL,Media.class);
+        Media mediaVO = restTemplate.getForObject(mediaGetURL, Media.class);
 
-        for (MediaInteractions m: customerVO.getMediaInteractions()) {
-            if (m.getMediaId() == mediaVO.getId()){
+        for (MediaInteractions m : customerVO.getMediaInteractions()) {
+            if (m.getMediaId() == mediaVO.getId()) {
                 m.increasePlayCount();
-                restTemplate.put(customerPutURl,customerVO);
+                restTemplate.put(customerPutURl, customerVO);
+                logger.log(Level.WARN, "Customer id: " + idCustomer + " played media with id: " + idMedia);
                 return mediaVO;
             }
         }
@@ -59,17 +57,17 @@ public class EdufyUserService implements EdufyServiceInterface {
         mediaInteractionsVO.setCustomer(customerVO);
         customerVO.getMediaInteractions().add(mediaInteractionsVO);
         System.out.println(customerVO.getMediaInteractions().size());
-        restTemplate.put(customerPutURl,customerVO);
+        restTemplate.put(customerPutURl, customerVO);
 
         return mediaVO;
     }
 
     @Override
     public MediaInteractions rateMedia(int customerId, int mediaId, String likeStatus) {
-        if(customerId <= 0) {
+        if (customerId <= 0) {
             throw new IllegalArgumentException("customerId must be greater than 0");
         }
-      //  logger.log(Level.WARN, "Testlogg rateMedia");
+
         String getCustomerURL = "http://customer-service/api/customer/" + customerId;
         String getMediaURL = "http://media-service/api/media/" + mediaId;
         String customerPutURl = "http://customer-service/api/customer/updatecustomer/" + customerId;
@@ -117,20 +115,21 @@ public class EdufyUserService implements EdufyServiceInterface {
         this.restTemplate = restTemplate;
     }
 
-    //    public List<Integer> getMostPlayedMediaForUserById(int userId) {
-    public List<Media> getMostPlayedMediaForUserById(int userId) {
+    @Override
+    public List<MediaResponseDTO> getMostPlayedMediaForUserById(int userId) {
         Customer customer;
         List<MediaInteractions> mediaInteractions;
         List<MediaInteractions> mediaInteractionsSortedByTimesListenedTo;
         List<Integer> idsOfMostPlayedMediaSorted;
         List<Media> mostPlayedMedia;
-
+        List<MediaResponseDTO> mostPlayedMediaDTO;
 
         customer = restTemplate.getForObject("http://customer-service/api/customer/" + userId, Customer.class);
 
         mediaInteractions = customer.getMediaInteractions();
 
-        mediaInteractionsSortedByTimesListenedTo = mediaInteractions.stream().sorted(Comparator.comparingInt(MediaInteractions::getTimesListenedTo).reversed()).collect(Collectors.toList());
+        mediaInteractionsSortedByTimesListenedTo = mediaInteractions.stream().sorted(Comparator.comparingInt(MediaInteractions::getTimesListenedTo).reversed()).limit(10).collect(Collectors.toList());
+
 
         idsOfMostPlayedMediaSorted = mediaInteractionsSortedByTimesListenedTo.stream()
                 .map(MediaInteractions::getMediaId)
@@ -142,8 +141,18 @@ public class EdufyUserService implements EdufyServiceInterface {
                         idsOfMostPlayedMediaSorted,
                         Media[].class)))
                 .collect(Collectors.toList());
-        logger.log(Level.WARN, "Testlogg moset played media");
-        return mostPlayedMedia;
+
+        mostPlayedMediaDTO = mostPlayedMedia.stream()
+                .map(media -> new MediaResponseDTO(
+                        media.getId(),
+                        media.getMediaType(),
+                        media.getTitle(),
+                        media.getGenres() != null && !media.getGenres().isEmpty() ? media.getGenres().get(0).getGenre() : "Unknown Genre",
+                        media.getArtists() != null && !media.getArtists().isEmpty() ? media.getArtists().get(0).getArtistName() : "Unknown Artist"
+                ))
+                .collect(Collectors.toList());
+
+        return mostPlayedMediaDTO;
     }
 
     public Customer getCustomerData(int customerId) {
@@ -157,6 +166,7 @@ public class EdufyUserService implements EdufyServiceInterface {
         return mediaDTO;
     }
 
+    @Override
     public List<MediaResponseDTO> getRecommendedMedia(int customerId) {
         // Hämta kundens interaktioner
         Customer customer = getCustomerData(customerId);

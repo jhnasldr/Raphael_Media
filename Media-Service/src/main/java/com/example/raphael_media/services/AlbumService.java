@@ -8,8 +8,10 @@ import com.example.raphael_media.repositores.ArtistRepository;
 import com.example.raphael_media.repositores.MediaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import java.util.List;
+
 
 @Service
 public class AlbumService implements AlbumServiceInterface {
@@ -19,28 +21,30 @@ public class AlbumService implements AlbumServiceInterface {
 
     @Autowired
     private MediaRepository mediaRepository;
+
     @Autowired
     private ArtistRepository artistRepository;
+    Logger logger = Logger.getLogger(AlbumService.class);
 
 
     @Override
     public Album addAlbum(Album album) {
-        if(album.getArtist() == null || !artistRepository.existsById(album.getArtist().getArtistId())){
+        if (album.getArtist() == null || !artistRepository.existsById(album.getArtist().getArtistId())) {
             throw new ResourceNotFoundException("artist", "id", album.getArtist().getArtistId());
         }
-       albumRepository.save(album);
-       return album;
+        albumRepository.save(album);
+        logger.log(Level.WARN, "New album with id: "+album.getAlbumId()+" created");
+        return album;
     }
 
     @Override
     public List<Album> fetchAllAlbums() {
-       return albumRepository.findAll();
-
+        return albumRepository.findAll();
     }
 
     @Override
     public Album fetchAlbum(int albumId) {
-      return albumRepository.findById(albumId).orElseThrow(() -> new ResourceNotFoundException("album", "id", albumId));
+        return albumRepository.findById(albumId).orElseThrow(() -> new ResourceNotFoundException("album", "id", albumId));
     }
 
     @Override
@@ -56,6 +60,7 @@ public class AlbumService implements AlbumServiceInterface {
         }
 
         albumRepository.save(existingAlbum);
+        logger.log(Level.WARN,"Updated album with id: "+albumId);
         return existingAlbum;
     }
 
@@ -66,10 +71,10 @@ public class AlbumService implements AlbumServiceInterface {
         for (Media media : album.getMediaList()) {
             media.getAlbums().remove(album);
             mediaRepository.save(media);
-
         }
 
         albumRepository.delete(album);
+        logger.log(Level.WARN, "Deleted album with id: "+albumId);
     }
 
     public void setMediaRepository(MediaRepository mediaRepository) {

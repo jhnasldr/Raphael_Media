@@ -22,17 +22,23 @@ public class EdufyUserController {
 
     //Bara test här, ska göras riktigt med responseEntity, testning, namngivning mm
     //får fram kund ett anna
-    @PreAuthorize("hasRole('user')")
-    @GetMapping("/getcustomervo")
-    public Customer getVo(){
-        return edufyUserService.getCustomerVO();
-    }
+//    @PreAuthorize("hasRole('user')")
+//    @GetMapping("/getcustomervo")
+//    public Customer getVo(){
+//        return edufyUserService.getCustomerVO();
+//    }
 
 
     @PreAuthorize("hasRole('user')")
     @GetMapping("/getallmediadto")
     public ResponseEntity<List<Media>> getAllmediaDTO() {
         return ResponseEntity.ok(edufyUserService.getAllMediaDTO());
+    }
+
+    @PreAuthorize("hasRole('user')")
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("Test");
     }
 
     @PreAuthorize("hasRole('user')")
@@ -52,7 +58,7 @@ public class EdufyUserController {
 
     @PreAuthorize("hasRole('user')")
     @GetMapping("/getmostplayedmedia/{customerId}")
-    public ResponseEntity<List<Media>> getMostPlayedMedia(@PathVariable  int customerId) {
+    public ResponseEntity<List<MediaResponseDTO>> getMostPlayedMedia(@PathVariable  int customerId) {
         return ResponseEntity.ok(edufyUserService.getMostPlayedMediaForUserById(customerId));
     }
 

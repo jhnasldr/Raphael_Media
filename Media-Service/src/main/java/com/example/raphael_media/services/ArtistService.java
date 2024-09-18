@@ -4,7 +4,7 @@ import com.example.raphael_media.entities.Album;
 import com.example.raphael_media.entities.Artist;
 import com.example.raphael_media.entities.Media;
 import com.example.raphael_media.exceptions.ResourceNotFoundException;
-import com.example.raphael_media.repositores.AlbumRepository;
+
 import com.example.raphael_media.repositores.ArtistRepository;
 import com.example.raphael_media.repositores.MediaRepository;
 import org.apache.log4j.Level;
@@ -54,21 +54,21 @@ public class ArtistService implements ArtistServiceInterface {
 
     @Override
     public Artist fetchArtist(int artistId) {
-        return artistRepository.findById(artistId).orElseThrow(()->new ResourceNotFoundException("artist", "id", artistId));
+        return artistRepository.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("artist", "id", artistId));
     }
 
     @Override
     public Artist updateArtist(int artistId, Artist artist) {
-        Artist existingArtist = artistRepository.findById(artistId).orElseThrow(()->new ResourceNotFoundException("artist", "id", artistId));
-        if(artist.getArtistName() != null){
+        Artist existingArtist = artistRepository.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("artist", "id", artistId));
+        if (artist.getArtistName() != null) {
             existingArtist.setArtistName(artist.getArtistName());
         }
 
-        if(artist.getMediaList() != null){
+        if (artist.getMediaList() != null) {
             existingArtist.setMediaList(artist.getMediaList());
         }
 
-        if(artist.getAlbums()!= null){
+        if (artist.getAlbums() != null) {
             existingArtist.setAlbums(artist.getAlbums());
         }
         artistRepository.save(existingArtist);

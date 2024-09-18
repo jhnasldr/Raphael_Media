@@ -46,12 +46,10 @@ public class MediaController {
         return new ResponseEntity<>("Media deleted!", HttpStatus.OK);
     }
 
-
     @GetMapping("getallmediadto")
     public ResponseEntity<List<MediaDTO>> getAllMediaDTO() {
         return ResponseEntity.ok(mediaService.getAllMediaDTO());
     }
-
 
     @PostMapping("getlistofmediadtofromlistofid")
     public ResponseEntity<List<MediaDTO>> getMediaDTOsFromListOfIds(@RequestBody List<Integer> mediaId) {
@@ -62,7 +60,6 @@ public class MediaController {
     public ResponseEntity<List<Media>> getMediaByType(@PathVariable String mediatype) {
         List<Media> mediaList = mediaService.getMediaByType(mediatype);
         return ResponseEntity.ok(mediaList);
-
     }
 
     @GetMapping("{mediaId}")

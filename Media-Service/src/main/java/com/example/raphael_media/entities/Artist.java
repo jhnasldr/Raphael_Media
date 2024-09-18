@@ -11,7 +11,7 @@ public class Artist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int artistId;
 
-    @Column(name = "artist_name",length = 50, nullable = false)
+    @Column(name = "artist_name", length = 50, nullable = false)
     private String artistName;
 
     @OneToMany(mappedBy = "artist", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
@@ -23,7 +23,6 @@ public class Artist {
     private List<Media> mediaList;
 
     public Artist() {
-
     }
 
     public List<Media> getMediaList() {

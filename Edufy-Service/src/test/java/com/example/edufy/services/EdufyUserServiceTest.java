@@ -117,9 +117,7 @@ class EdufyUserServiceTest {
     void setRestTemplate() {
     }
 
-    //malin
-    // vill kolla att vi får fram listan i rätt ordning
-    // kolla att när man anger listan i rätt ordning så skickar den faktisk rätt media
+
     @Test
     void getMostPlayedMediaForUserById_ShouldReturnListOf3() {
         when(mockRestTemplate.getForObject("http://customer-service/api/customer/" + 1, Customer.class))
@@ -132,7 +130,7 @@ class EdufyUserServiceTest {
         when(mockRestTemplate.postForObject("http://Media-Service/api/media/getlistofmediadtofromlistofid", Arrays.asList(2, 1, 3), Media[].class))
                 .thenReturn(mediaArraySortedByTimesListenedTo);
 
-        List<Media> sortedListOfMedia = edufyUserService.getMostPlayedMediaForUserById(1);
+        List<MediaResponseDTO> sortedListOfMedia = edufyUserService.getMostPlayedMediaForUserById(1);
 
         assertEquals(3, sortedListOfMedia.size());
     }
@@ -149,7 +147,7 @@ class EdufyUserServiceTest {
         when(mockRestTemplate.postForObject("http://Media-Service/api/media/getlistofmediadtofromlistofid", Arrays.asList(2, 1, 3), Media[].class))
                 .thenReturn(mediaArraySortedByTimesListenedTo);
 
-        List<Media> sortedListOfMedia = edufyUserService.getMostPlayedMediaForUserById(1);
+        List<MediaResponseDTO> sortedListOfMedia = edufyUserService.getMostPlayedMediaForUserById(1);
         assertEquals("testmusic1",sortedListOfMedia.get(2).getTitle());
 //        assertEquals(3, sortedListOfMedia.get(0).getId());
 //        assertEquals(1, sortedListOfMedia.get(1).getId());
