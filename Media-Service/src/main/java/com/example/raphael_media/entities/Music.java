@@ -17,6 +17,6 @@ public class Music extends Media{
     }
 
     public Music() {
-
+        super("Music");
     }
 }
