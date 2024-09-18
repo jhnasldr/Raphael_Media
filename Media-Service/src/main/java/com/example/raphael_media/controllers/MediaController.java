@@ -2,9 +2,6 @@ package com.example.raphael_media.controllers;
 
 import com.example.raphael_media.DTOs.MediaDTO;
 import com.example.raphael_media.entities.Media;
-import com.example.raphael_media.entities.Music;
-import com.example.raphael_media.entities.Podcast;
-import com.example.raphael_media.entities.Video;
 import com.example.raphael_media.services.MediaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,11 +25,14 @@ public class MediaController {
         return ResponseEntity.ok(mediaService.getAllMedia());
     }
 
+    @PreAuthorize("hasRole('admin')")
     @PostMapping("addnewmedia")
     ResponseEntity<String> addNewMedia(@RequestBody Media media) {
         mediaService.addNewMedia(media);
         return ResponseEntity.ok("New " + media.getMediaType() + " created");
     }
+
+    @PreAuthorize("hasRole('admin')")
     @PutMapping("updatemedia/{id}")
     public ResponseEntity<String> updateMedia(@PathVariable int id, @RequestBody Media media) {
         mediaService.updateMedia(id, media);
@@ -47,18 +47,17 @@ public class MediaController {
     }
 
 
-
     @GetMapping("getallmediadto")
     public ResponseEntity<List<MediaDTO>> getAllMediaDTO() {
         return ResponseEntity.ok(mediaService.getAllMediaDTO());
     }
 
 
-    @PostMapping ("getlistofmediadtofromlistofid")
+    @PostMapping("getlistofmediadtofromlistofid")
     public ResponseEntity<List<MediaDTO>> getMediaDTOsFromListOfIds(@RequestBody List<Integer> mediaId) {
         return ResponseEntity.ok(mediaService.getListOfMediaDTOFromListOfIds(mediaId));
     }
-    @PreAuthorize("hasRole('user')")
+
     @GetMapping("getmediatype/{mediatype}")
     public ResponseEntity<List<Media>> getMediaByType(@PathVariable String mediatype) {
         List<Media> mediaList = mediaService.getMediaByType(mediatype);

@@ -20,14 +20,14 @@ import java.util.List;
 public abstract class Media {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(length = 30)
+    @Column(length = 30, nullable = false)
     @JsonIgnore
     private String mediaType;
-    @Column(length = 60)
+    @Column(length = 60, nullable = false)
     private String title;
-    @Column(length = 75)
+    @Column(length = 75, nullable = false)
     private String URL;
     @Column(length = 15)
     private LocalDate releaseDate;
@@ -35,16 +35,16 @@ public abstract class Media {
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinTable(
             name = "media_artists",
-            joinColumns = @JoinColumn(name = "media_id" ),
-            inverseJoinColumns = @JoinColumn(name = "artist_id" ))
+            joinColumns = @JoinColumn(name = "media_id"),
+            inverseJoinColumns = @JoinColumn(name = "artist_id"))
     @JsonIgnore
     private List<Artist> artists;
 
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinTable(
             name = "media_albums",
-            joinColumns = @JoinColumn(name = "media_id" ),
-            inverseJoinColumns = @JoinColumn(name = "album_id" ))
+            joinColumns = @JoinColumn(name = "media_id"),
+            inverseJoinColumns = @JoinColumn(name = "album_id"))
     @JsonIgnore
     private List<Album> albums;
 
@@ -58,11 +58,13 @@ public abstract class Media {
 
     public Media() {
     }
+
     public Media(String mediaType, String title, String URL) {
         this.mediaType = mediaType;
         this.title = title;
         this.URL = URL;
     }
+
     public Media(String mediaType, String title, String URL, LocalDate releaseDate, List<Artist> artists, List<Album> albums, List<Genre> genres) {
 
         this.mediaType = mediaType;
