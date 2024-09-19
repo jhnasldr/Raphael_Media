@@ -29,13 +29,14 @@ public class EdufyUserController {
 //    }
 
 
-    @PreAuthorize("hasRole('user')")
+    @PreAuthorize("hasRole('user')") //Finns inte i Postman
     @GetMapping("/getallmediadto")
     public ResponseEntity<List<Media>> getAllmediaDTO() {
         return ResponseEntity.ok(edufyUserService.getAllMediaDTO());
     }
 
-    @PreAuthorize("hasRole('user')")
+    @PreAuthorize("hasRole('user')") //Finns inte i Postman (jag förstår att de är ett test men ändå)
+
     @GetMapping("/test")
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("Test");

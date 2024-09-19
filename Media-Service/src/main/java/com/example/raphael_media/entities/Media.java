@@ -32,7 +32,7 @@ public abstract class Media {
     @Column(length = 15)
     private LocalDate releaseDate;
 
-    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "media_artists",
             joinColumns = @JoinColumn(name = "media_id"),
@@ -40,7 +40,7 @@ public abstract class Media {
     @JsonIgnore
     private List<Artist> artists;
 
-    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "media_albums",
             joinColumns = @JoinColumn(name = "media_id"),
@@ -48,7 +48,7 @@ public abstract class Media {
     @JsonIgnore
     private List<Album> albums;
 
-    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "media_genres",
             joinColumns = @JoinColumn(name = "media_id"),

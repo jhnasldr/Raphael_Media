@@ -25,11 +25,33 @@ public class MediaController {
         return ResponseEntity.ok(mediaService.getAllMedia());
     }
 
+    @GetMapping("getmediatype/{mediatype}")
+    public ResponseEntity<List<Media>> getMediaByType(@PathVariable String mediatype) {
+        List<Media> mediaList = mediaService.getMediaByType(mediatype);
+        return ResponseEntity.ok(mediaList);
+    }
+
+    @GetMapping("{mediaId}")
+    public ResponseEntity<Media> getMediaById(@PathVariable int mediaId) {
+        Optional<Media> media = (mediaService.getMediaById(mediaId));
+        return ResponseEntity.ok(media.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+    }
+
+    @GetMapping("getallmediadto")
+    public ResponseEntity<List<MediaDTO>> getAllMediaDTO() {
+        return ResponseEntity.ok(mediaService.getAllMediaDTO());
+    }
+
     @PreAuthorize("hasRole('admin')")
     @PostMapping("addnewmedia")
     ResponseEntity<String> addNewMedia(@RequestBody Media media) {
         mediaService.addNewMedia(media);
         return ResponseEntity.ok("New " + media.getMediaType() + " created");
+    }
+
+    @PostMapping("getlistofmediadtofromlistofid")
+    public ResponseEntity<List<MediaDTO>> getMediaDTOsFromListOfIds(@RequestBody List<Integer> mediaId) {
+        return ResponseEntity.ok(mediaService.getListOfMediaDTOFromListOfIds(mediaId));
     }
 
     @PreAuthorize("hasRole('admin')")
@@ -44,27 +66,5 @@ public class MediaController {
     public ResponseEntity<String> deleteMedia(@PathVariable("id") int id) {
         mediaService.deleteMediaById(id);
         return new ResponseEntity<>("Media deleted!", HttpStatus.OK);
-    }
-
-    @GetMapping("getallmediadto")
-    public ResponseEntity<List<MediaDTO>> getAllMediaDTO() {
-        return ResponseEntity.ok(mediaService.getAllMediaDTO());
-    }
-
-    @PostMapping("getlistofmediadtofromlistofid")
-    public ResponseEntity<List<MediaDTO>> getMediaDTOsFromListOfIds(@RequestBody List<Integer> mediaId) {
-        return ResponseEntity.ok(mediaService.getListOfMediaDTOFromListOfIds(mediaId));
-    }
-
-    @GetMapping("getmediatype/{mediatype}")
-    public ResponseEntity<List<Media>> getMediaByType(@PathVariable String mediatype) {
-        List<Media> mediaList = mediaService.getMediaByType(mediatype);
-        return ResponseEntity.ok(mediaList);
-    }
-
-    @GetMapping("{mediaId}")
-    public ResponseEntity<Media> getMediaById(@PathVariable int mediaId) {
-        Optional<Media> media = (mediaService.getMediaById(mediaId));
-        return ResponseEntity.ok(media.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 }

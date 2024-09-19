@@ -1,15 +1,9 @@
 package com.example.raphael_media.services;
 
 import com.example.raphael_media.DTOs.MediaDTO;
-import com.example.raphael_media.entities.Media;
-import com.example.raphael_media.entities.Music;
-import com.example.raphael_media.entities.Podcast;
-import com.example.raphael_media.entities.Video;
+import com.example.raphael_media.entities.*;
 import com.example.raphael_media.exceptions.ResourceNotFoundException;
-import com.example.raphael_media.repositores.MediaRepository;
-import com.example.raphael_media.repositores.MusicRepository;
-import com.example.raphael_media.repositores.PodcastRepository;
-import com.example.raphael_media.repositores.VideoRepository;
+import com.example.raphael_media.repositores.*;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +29,15 @@ public class MediaService implements MediaServiceInterface {
 
     @Autowired
     PodcastRepository podcastRepository;
+
+    @Autowired
+    GenreRepository genreRepository;
+
+    @Autowired
+    AlbumRepository albumRepository;
+
+    @Autowired
+    ArtistRepository artistRepository;
 
     Logger logger = Logger.getLogger(MediaService.class);
 
@@ -121,10 +124,22 @@ public class MediaService implements MediaServiceInterface {
 
     @Override
     public void deleteMediaById(int mediaId) {
-        if (!mediaRepository.existsById(mediaId)) {
-            throw new ResourceNotFoundException("Media", "id", mediaId);
+        Media media = mediaRepository.findById(mediaId).orElseThrow(()->new ResourceNotFoundException("Media", "id", mediaId));
+
+        for (Genre genre: media.getGenres()) {
+            genre.getMediaList().remove(media);
+            genreRepository.save(genre);
         }
-        mediaRepository.deleteById(mediaId);
+        for (Artist artist: media.getArtists()) {
+            artist.getMediaList().remove(media);
+            artistRepository.save(artist);
+        }
+        for (Album album: media.getAlbums()) {
+            album.getMediaList().remove(media);
+            albumRepository.save(album);
+        }
+
+        mediaRepository.delete(media);
         logger.log(Level.WARN, "Media with id: " + mediaId + " deleted");
     }
 

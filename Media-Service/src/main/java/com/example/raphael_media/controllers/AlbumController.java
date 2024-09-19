@@ -33,7 +33,7 @@ public class AlbumController {
         return new ResponseEntity<>(albumService.addAlbum(album), HttpStatus.OK);
     }
     @PreAuthorize("hasRole('admin')")
-    @PutMapping("album/updatealbum/{albumId}")
+    @PutMapping("album/updatealbum/{albumId}") // funkar inte
     public ResponseEntity<Album> updateAlbum(@PathVariable int albumId, @RequestBody Album album) {
         return new ResponseEntity<>(albumService.updateAlbum(albumId, album), HttpStatus.OK);
     }
