@@ -260,11 +260,22 @@ class MediaServiceTest {
     @Test
     void deleteMediaShouldRemoveMediaWhenIdExists() {
         int mediaId = 1;
-        when(mockedMediaRepository.existsById(mediaId)).thenReturn(true);
+
+        // Mocka media med relationer till genre, artist och album
+        Genre mockGenre = mock(Genre.class);
+        Artist mockArtist = mock(Artist.class);
+        Album mockAlbum = mock(Album.class);
+
+        mockMedia.setGenres(List.of(mockGenre));
+        mockMedia.setArtists(List.of(mockArtist));
+        mockMedia.setAlbums(List.of(mockAlbum));
+
+        when(mockedMediaRepository.findById(mediaId)).thenReturn(Optional.of(mockMedia));
 
         mediaService.deleteMediaById(mediaId);
 
-        verify(mockedMediaRepository).deleteById(mediaId);
+        verify(mockedMediaRepository).delete(mockMedia);
+
     }
 
     @Test

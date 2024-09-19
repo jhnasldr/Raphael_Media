@@ -4,13 +4,10 @@ import com.example.customerservic.entities.Customer;
 import com.example.customerservic.entities.MediaInteractions;
 import com.example.customerservic.exceptions.ResourceNotFoundException;
 import com.example.customerservic.repositories.CustomerRepository;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,27 +18,36 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class CustomerServiceTest {
 
-    @Mock
-    private CustomerRepository customerRepository;
-
-    @InjectMocks
+    private CustomerRepository mockCustomerRepository;
+    private MediaInteractionsService mockMediaInteractionsService;
+    private Logger mockLogger;
     private CustomerService customerService;
 
-    @Mock
-    private MediaInteractionsService mediaInteractionsService;
-
     private Customer customer;
+    private List<MediaInteractions> mediaInteractionsList;
 
     @BeforeEach
     void setUp() {
+        mockCustomerRepository = mock(CustomerRepository.class);
+        mockMediaInteractionsService = mock(MediaInteractionsService.class);
+        mockLogger = mock(Logger.class);
+        customerService = new CustomerService();
+        customerService.setCustomerRepository(mockCustomerRepository);
+        customerService.setMediaInteractionsService(mockMediaInteractionsService);
+        customerService.setLogger(mockLogger);
+
         customer = new Customer();
         customer.setCustomerId(1);
         customer.setUserName("Test User");
         customer.setEmailAdress("Test@Example.com");
+
+        mediaInteractionsList = new ArrayList<>();
+        mediaInteractionsList.add(new MediaInteractions());
+        customer.setMediaInteractions(mediaInteractionsList);
     }
+
 
 
     @Test
@@ -51,7 +57,7 @@ class CustomerServiceTest {
         List<MediaInteractions> list = new ArrayList<>();
         list.add(new MediaInteractions());
         customer.setMediaInteractions(list);
-        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
+        when(mockCustomerRepository.findById(customerId)).thenReturn(Optional.of(customer));
 
         //when
         Optional<Customer> fundCustomer = customerService.findCustomerById(customerId);
@@ -65,7 +71,7 @@ class CustomerServiceTest {
     void TestFindCustomerByIdIfCustomerExists() {
 
         int customerId = 1;
-        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
+        when(mockCustomerRepository.findById(customerId)).thenReturn(Optional.of(customer));
 
         Optional<Customer> foundCustomer = customerService.findCustomerById(customerId);
 
@@ -83,7 +89,7 @@ class CustomerServiceTest {
         customer.setEmailAdress("Test@Example.com");
 
         int customerId = 2;
-        when(customerRepository.findById(customerId)).thenReturn(Optional.empty());
+        when(mockCustomerRepository.findById(customerId)).thenReturn(Optional.empty());
 
         Optional<Customer> foundCustomer = customerService.findCustomerById(customerId);
 
@@ -96,13 +102,14 @@ class CustomerServiceTest {
         //when
         customerService.addCustomer(customer);
         //then
-        verify(customerRepository).save(customer);
+        verify(mockCustomerRepository).save(customer);
+        verify(mockLogger).log(eq(Level.WARN), contains("New customer created with id:"));
     }
 
     @Test
     void addCustomer_shouldThrowExceptionIfUsernameExists() {
 
-        when(customerRepository.existsByUserName(customer.getUserName())).thenReturn(true);
+        when(mockCustomerRepository.existsByUserName(customer.getUserName())).thenReturn(true);
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             customerService.addCustomer(customer);
@@ -110,14 +117,15 @@ class CustomerServiceTest {
 
         assertEquals("Customer with username Test User already exists", exception.getMessage());
 
-        verify(customerRepository, never()).save(any(Customer.class));
+        verify(mockCustomerRepository, never()).save(any(Customer.class));
+        verify(mockLogger, never()).log(any(Level.class), anyString());
     }
 
     @Test
     void addCustomer_shouldThrowExceptionIfEmailAddressExists() {
 
-        when(customerRepository.existsByUserName(customer.getUserName())).thenReturn(false);
-        when(customerRepository.existsByEmailAdress(customer.getEmailAdress())).thenReturn(true);
+        when(mockCustomerRepository.existsByUserName(customer.getUserName())).thenReturn(false);
+        when(mockCustomerRepository.existsByEmailAdress(customer.getEmailAdress())).thenReturn(true);
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             customerService.addCustomer(customer);
@@ -125,23 +133,24 @@ class CustomerServiceTest {
 
         assertEquals("Customer with email Test@Example.com already exists", exception.getMessage());
 
-        verify(customerRepository, never()).save(any(Customer.class));
+        verify(mockCustomerRepository, never()).save(any(Customer.class));
+        verify(mockLogger, never()).log(any(Level.class), anyString());
     }
 
     @Test
     void deleteCustomerById_ShouldDeleteCustomer() {
         //give
-        when(customerRepository.findById(1)).thenReturn(Optional.ofNullable(customer));
+        when(mockCustomerRepository.findById(1)).thenReturn(Optional.ofNullable(customer));
         //when
         customerService.deleteCustomerById(1);
         //the
-        verify(customerRepository).delete(customer);
+        verify(mockCustomerRepository).delete(customer);
     }
 
     @Test
     void deleteCustomerById_ThrowExceptionWhenCustomerNotFound() {
         //give
-        when(customerRepository.findById(1)).thenReturn(Optional.empty());
+        when(mockCustomerRepository.findById(1)).thenReturn(Optional.empty());
         String expectation = "Customer with id '1' was not found";
 
         //when
@@ -159,7 +168,7 @@ class CustomerServiceTest {
         updatedCustomer.setUserName("New Name");
         updatedCustomer.setEmailAdress("New Email Address");
 
-        when(customerRepository.findById(customer.getCustomerId())).thenReturn(Optional.empty());
+        when(mockCustomerRepository.findById(customer.getCustomerId())).thenReturn(Optional.empty());
         String exception = "Customer with id '1' was not found";
 
         ResourceNotFoundException exception1 = assertThrows(ResourceNotFoundException.class, () -> {
@@ -179,11 +188,12 @@ class CustomerServiceTest {
         list.add(new MediaInteractions());
         updatedCustomer.setMediaInteractions(list);
 
-        when(customerRepository.findById(1)).thenReturn(Optional.of(updatedCustomer));
+        when(mockCustomerRepository.findById(1)).thenReturn(Optional.of(updatedCustomer));
 
         Customer result = customerService.updateCustomer(1, updatedCustomer);
 
-        verify(customerRepository).save(updatedCustomer);
+        verify(mockCustomerRepository).save(updatedCustomer);
+        verify(mockLogger).log(eq(Level.WARN), contains("Updated customer with id:"));
     }
 
     @Test
@@ -206,12 +216,13 @@ class CustomerServiceTest {
 
 
 
-        when(customerRepository.findById(1)).thenReturn(Optional.of(customer));
-        when(mediaInteractionsService.addMediaInteraction(mediaInteractions)).thenReturn(mediaInteractions);
-
+        when(mockCustomerRepository.findById(1)).thenReturn(Optional.of(customer));
+        //when(mockMediaInteractionsService).addMediaInteraction(mediaInteractions)).thenReturn(mediaInteractions);
+        when(mockMediaInteractionsService.addMediaInteraction(mediaInteractions)).thenReturn(mediaInteractions);
         Customer result = customerService.updateCustomer(1, updatedCustomer);
 
         //assertEquals("New Name", result.getUserName()
-        verify(mediaInteractionsService).addMediaInteraction(mediaInteractions);
+        verify(mockMediaInteractionsService).addMediaInteraction(mediaInteractions);
+        verify(mockLogger).log(eq(Level.WARN), contains("Updated customer with id:"));
     }
 }

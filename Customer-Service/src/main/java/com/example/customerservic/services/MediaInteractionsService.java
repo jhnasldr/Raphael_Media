@@ -21,4 +21,15 @@ public class MediaInteractionsService implements MediaInteractionsInterface {
         logger.log(Level.WARN, "New media interaction created");
         return mediaInteractions;
     }
+
+
+    public void setLogger(Logger logger) {
+        this.logger = logger;
+    }
+
+
+
+    public void setMediaInteractionsRepository(MediaInteractionsRepository mediaInteractionsRepository) {
+        this.mediaInteractionsRepository = mediaInteractionsRepository;
+    }
 }
