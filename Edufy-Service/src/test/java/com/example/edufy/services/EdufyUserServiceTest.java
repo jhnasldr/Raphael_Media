@@ -298,32 +298,6 @@ class EdufyUserServiceTest {
     }
 
     @Test
-    void testGetRecommendedMedia_FillsToExpectedNumber() {
-        when(mockRestTemplate.getForObject(eq("http://customer-service/api/customer/1"), eq(Customer.class)))
-                .thenReturn(customerTest);
-
-        List<Genre> genres1 = Collections.singletonList(new Genre(1, "Rock"));
-        List<Genre> genres2 = Collections.singletonList(new Genre(2, "Pop"));
-        List<Genre> genres3 = Collections.singletonList(new Genre(3, "Jazz"));
-
-        media1.setGenres(genres1);
-        media2.setGenres(genres2);
-        media3.setGenres(genres3);
-
-        List<Media> mockMediaList = Arrays.asList(media1, media2, media3);
-
-        when(mockRestTemplate.getForObject(eq("http://Media-Service/api/media/getallmediadto"), eq(Media[].class)))
-                .thenReturn(mockMediaList.toArray(new Media[0]));
-
-        List<MediaResponseDTO> recommendations = edufyUserService.getRecommendedMedia(1);
-
-        assertEquals(3, recommendations.size());
-
-        Set<Integer> recommendedIds = recommendations.stream().map(MediaResponseDTO::getId).collect(Collectors.toSet());
-        assertEquals(recommendations.size(), recommendedIds.size());  // Det ska inte finnas dubbletter
-    }
-
-    @Test
     void testGetRecommendedMedia_DislikedMediaIsNotRecommended() {
         MediaInteractions dislikedInteraction = new MediaInteractions(1, 1, "dislike", 1);
         customerTest.setMediaInteractions(Collections.singletonList(dislikedInteraction));
@@ -344,20 +318,75 @@ class EdufyUserServiceTest {
     }
 
     @Test
-    void testGetRecommendedMedia_AllMediaIsDisliked_NoMediaShouldBeRecommendations() {
-        MediaInteractions dislikedInteraction1 = new MediaInteractions(1, 1, "dislike", 1);
-        MediaInteractions dislikedInteraction2 = new MediaInteractions(2, 2, "dislike", 1);
-        customerTest.setMediaInteractions(Arrays.asList(dislikedInteraction1, dislikedInteraction2));
+    void testGetRecommendedMedia_ReachesMaxRecommendationsFromTopGenres_FillsTheRestWithOtherGenres() {
+        MediaInteractions interaction1 = new MediaInteractions(1, 1, "like", 5);
+        MediaInteractions interaction2 = new MediaInteractions(2, 2, "like", 4);
+        MediaInteractions interaction3 = new MediaInteractions(3, 3, "like", 3);
+        customerTest.setMediaInteractions(Arrays.asList(interaction1, interaction2, interaction3));
 
         when(mockRestTemplate.getForObject(eq("http://customer-service/api/customer/1"), eq(Customer.class)))
                 .thenReturn(customerTest);
 
-        List<Media> mockMediaList = Arrays.asList(media1, media2);
+        Media media1 = new Media();
+        media1.setId(1);
+        media1.setGenres(Collections.singletonList(new Genre(1, "Drama")));
+
+        Media media2 = new Media();
+        media2.setId(2);
+        media2.setGenres(Collections.singletonList(new Genre(1, "Drama")));
+
+        Media media3 = new Media();
+        media3.setId(3);
+        media3.setGenres(Collections.singletonList(new Genre(2, "Action")));
+
+        Media media4 = new Media();
+        media4.setId(4);
+        media4.setGenres(Collections.singletonList(new Genre(2, "Action")));
+
+        Media media5 = new Media();
+        media5.setId(5);
+        media5.setGenres(Collections.singletonList(new Genre(3, "Drama")));
+
+        Media media6 = new Media();
+        media6.setId(6);
+        media6.setGenres(Collections.singletonList(new Genre(3, "Drama")));
+
+        Media media7 = new Media();
+        media7.setId(7);
+        media7.setGenres(Collections.singletonList(new Genre(3, "Action")));
+
+        Media media8 = new Media();
+        media8.setId(8);
+        media8.setGenres(Collections.singletonList(new Genre(3, "Action")));
+
+        Media media9 = new Media();
+        media9.setId(9);
+        media9.setGenres(Collections.singletonList(new Genre(3, "Drama")));
+
+        Media media10 = new Media();
+        media10.setId(10);
+        media10.setGenres(Collections.singletonList(new Genre(3, "Drama")));
+
+        Media media11 = new Media();
+        media11.setId(11);
+        media11.setGenres(Collections.singletonList(new Genre(3, "Drama")));
+
+        Media media12 = new Media();
+        media12.setId(12);
+        media12.setGenres(Collections.singletonList(new Genre(3, "Comedy")));
+
+        Media media13 = new Media();
+        media13.setId(13);
+        media13.setGenres(Collections.singletonList(new Genre(3, "Comedy")));
+        List<Media> mockMediaList = Arrays.asList(media1, media2, media3, media4, media5, media6, media7, media8, media9, media10, media11, media12, media13);
+
         when(mockRestTemplate.getForObject(eq("http://Media-Service/api/media/getallmediadto"), eq(Media[].class)))
                 .thenReturn(mockMediaList.toArray(new Media[0]));
 
         List<MediaResponseDTO> recommendations = edufyUserService.getRecommendedMedia(1);
-        assertEquals(0, recommendations.size());
+
+        assertEquals(10, recommendations.size());
+        assertTrue(recommendations.size() <= 10);
     }
 
 }

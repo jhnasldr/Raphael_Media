@@ -45,7 +45,6 @@ public class EdufyUserController {
     @PreAuthorize("hasRole('user')")
     @GetMapping("/recommendations/{customerId}")
     public ResponseEntity<List<MediaResponseDTO>> getRecommendedMedia(@PathVariable int customerId) {
-        //Customer customer = edufyUserService.getCustomerData(customerId);
         List<MediaResponseDTO> recommendations = edufyUserService.getRecommendedMedia(customerId);
         return ResponseEntity.ok(recommendations);
     }
