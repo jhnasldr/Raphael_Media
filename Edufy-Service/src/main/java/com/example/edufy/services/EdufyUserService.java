@@ -168,12 +168,9 @@ public class EdufyUserService implements EdufyServiceInterface {
 
     @Override
     public List<MediaResponseDTO> getRecommendedMedia(int customerId) {
-        // Hämta kundens interaktioner
         Customer customer = getCustomerData(customerId);
         List<Media> recommendedMedia = new ArrayList<>();
-        // Skapa en set för att undvika dubbletter
         Set<Integer> usedMediaIds = new HashSet<>();
-        // Hämta alla Media från Media-tjänsten
         List<Media> allMediaDTO = getAllMediaDTO();
 
         // Filtrera bort media som användaren markerat som "dislike" och media de redan lyssnat på
@@ -183,56 +180,66 @@ public class EdufyUserService implements EdufyServiceInterface {
                 .collect(Collectors.toSet());
 
         // Hämta användarens topp 3 genrer baserat på timesListenedTo
-        Map<Genre, Integer> genreListenCount = new HashMap<>();
+        Map<String, Integer> genreListenCount = new HashMap<>();
         for (MediaInteractions interaction : customer.getMediaInteractions()) {
             Media mediaDTO = allMediaDTO.stream()
                     .filter(media -> media.getId() == interaction.getMediaId())
                     .findFirst()
                     .orElse(null);
 
-            if (mediaDTO != null && !interactedMediaIds.contains(mediaDTO.getId())) {
+            if (mediaDTO != null) {
                 for (Genre genre : mediaDTO.getGenres()) {
-                    genreListenCount.put(genre, genreListenCount.getOrDefault(genre, 0) + interaction.getTimesListenedTo());
+                    String genreName = genre.getGenre();
+                    genreListenCount.put(genreName, genreListenCount.getOrDefault(genreName, 0) + interaction.getTimesListenedTo());
                 }
             }
         }
+
         // Sortera genrer efter antal lyssningar och hämta topp 3
-        List<Genre> topGenres = genreListenCount.entrySet().stream()
-                .sorted(Map.Entry.<Genre, Integer>comparingByValue().reversed())
+        List<String> topGenres = genreListenCount.entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                 .limit(3)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
 
-        // Hämta rekommendationer från topp 3 genrer
-        List<Media> topGenreRecommendations = allMediaDTO.stream()
-                .filter(media -> !interactedMediaIds.contains(media.getId()))  // Uteslut media som användaren inte gillar och redan lyssnat på
-                .filter(media -> media.getGenres().stream().anyMatch(topGenres::contains))  // Filtrera för topp 3 genrer
-                .filter(media -> !usedMediaIds.contains(media.getId()))  // Undvik dubbletter
-                .limit(8)  // Försök att rekommendera 80% från topp 3 genrer (8 av 10)
-                .collect(Collectors.toList());
-
-        recommendedMedia.addAll(topGenreRecommendations);
-        topGenreRecommendations.forEach(media -> usedMediaIds.add(media.getId()));  // Lägg till i usedMediaIds
-
-        // Kolla om vi har mindre än 10 rekommendationer
-        int remainingSlots = 10 - recommendedMedia.size();
-
-        // Om det finns färre än 8 rekommendationer från toppgenrerna, fyll på med andra genrer tills vi når 10
-        if (remainingSlots > 0) {
-            List<Media> otherGenreRecommendations = allMediaDTO.stream()
-                    .filter(media -> !interactedMediaIds.contains(media.getId()))  // Uteslut media som användaren inte gillar och redan lyssnat på
-                    .filter(media -> media.getGenres().stream().noneMatch(topGenres::contains))  // Filtrera bort topp 3 genrer
-                    .filter(media -> !usedMediaIds.contains(media.getId()))  // Undvik dubbletter
+        // Rekommendera media från topp 3 genrer
+        for (String genre : topGenres) {
+            List<Media> genreRecommendations = allMediaDTO.stream()
+                    .filter(media -> !interactedMediaIds.contains(media.getId()))
+                    .filter(media -> media.getGenres().stream().anyMatch(g -> g.getGenre().equalsIgnoreCase(genre)))
+                    .filter(media -> !usedMediaIds.contains(media.getId()))
                     .collect(Collectors.toList());
 
-            // Slumpa ordningen på media från andra genrer
+            for (Media media : genreRecommendations) {
+                if (recommendedMedia.size() < 8) {
+                    recommendedMedia.add(media);
+                    usedMediaIds.add(media.getId());
+                } else {
+                    break;
+                }
+            }
+            if (recommendedMedia.size() >= 8) {
+                break;
+            }
+        }
+
+        int remainingSlots = 10 - recommendedMedia.size();
+
+        if (remainingSlots > 0) {
+            List<Media> otherGenreRecommendations = allMediaDTO.stream()
+                    .filter(media -> !interactedMediaIds.contains(media.getId()))
+                    .filter(media -> media.getGenres().stream().noneMatch(g -> topGenres.contains(g.getGenre())))
+                    .filter(media -> !usedMediaIds.contains(media.getId()))
+                    .collect(Collectors.toList());
+
             Collections.shuffle(otherGenreRecommendations);
 
-            // Lägg till upp till de återstående platserna
-            recommendedMedia.addAll(otherGenreRecommendations.stream()
-                    .limit(remainingSlots)
-                    .collect(Collectors.toList()));
+            for (Media media : otherGenreRecommendations.stream().limit(remainingSlots).collect(Collectors.toList())) {
+                recommendedMedia.add(media);
+                usedMediaIds.add(media.getId());
+            }
         }
+
         return recommendedMedia.stream()
                 .map(media -> new MediaResponseDTO(
                         media.getId(),
