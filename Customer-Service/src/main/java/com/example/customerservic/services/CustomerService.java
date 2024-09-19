@@ -72,4 +72,21 @@ public class CustomerService implements CustomerServiceInterface {
         logger.log(Level.WARN,"Updated customer with id: "+customer);
         return customerToUpdate;
     }
+
+
+    public void setLogger(Logger logger) {
+        this.logger = logger;
+    }
+
+
+
+    public void setCustomerRepository(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
+    }
+
+
+
+    public void setMediaInteractionsService(MediaInteractionsService mediaInteractionsService) {
+        this.mediaInteractionsService = mediaInteractionsService;
+    }
 }
