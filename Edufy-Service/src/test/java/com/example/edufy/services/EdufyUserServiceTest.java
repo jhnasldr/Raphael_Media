@@ -118,6 +118,23 @@ class EdufyUserServiceTest {
     }
 
 
+//    @Test
+//    void getMostPlayedMediaForUserById_ShouldReturnListOf3() {
+//        when(mockRestTemplate.getForObject("http://customer-service/api/customer/" + 1, Customer.class))
+//                .thenReturn(mockCustomer);
+//
+//        when(mockCustomer.getMediaInteractions()).thenReturn(mediaInteractionsList);
+//
+//        Media[] mediaArraySortedByTimesListenedTo = {media2, media1, media3};
+//
+//        when(mockRestTemplate.postForObject("http://Media-Service/api/media/getlistofmediadtofromlistofid", Arrays.asList(2, 1, 3), Media[].class))
+//                .thenReturn(mediaArraySortedByTimesListenedTo);
+//
+//        List<MediaResponseDTO> sortedListOfMedia = edufyUserService.getMostPlayedMediaForUserById(1,10);
+//
+//        assertEquals(3, sortedListOfMedia.size());
+//    }
+
     @Test
     void getMostPlayedMediaForUserById_ShouldReturnListOf3() {
         when(mockRestTemplate.getForObject("http://customer-service/api/customer/" + 1, Customer.class))
@@ -130,7 +147,7 @@ class EdufyUserServiceTest {
         when(mockRestTemplate.postForObject("http://Media-Service/api/media/getlistofmediadtofromlistofid", Arrays.asList(2, 1, 3), Media[].class))
                 .thenReturn(mediaArraySortedByTimesListenedTo);
 
-        List<MediaResponseDTO> sortedListOfMedia = edufyUserService.getMostPlayedMediaForUserById(1);
+        List<MediaResponseDTO> sortedListOfMedia = edufyUserService.getMostPlayedMediaForUserById(1,3);
 
         assertEquals(3, sortedListOfMedia.size());
     }
@@ -147,7 +164,7 @@ class EdufyUserServiceTest {
         when(mockRestTemplate.postForObject("http://Media-Service/api/media/getlistofmediadtofromlistofid", Arrays.asList(2, 1, 3), Media[].class))
                 .thenReturn(mediaArraySortedByTimesListenedTo);
 
-        List<MediaResponseDTO> sortedListOfMedia = edufyUserService.getMostPlayedMediaForUserById(1);
+        List<MediaResponseDTO> sortedListOfMedia = edufyUserService.getMostPlayedMediaForUserById(1,3);
         assertEquals("testmusic1",sortedListOfMedia.get(2).getTitle());
 //        assertEquals(3, sortedListOfMedia.get(0).getId());
 //        assertEquals(1, sortedListOfMedia.get(1).getId());
@@ -171,7 +188,7 @@ class EdufyUserServiceTest {
 
         when(mockRestTemplate.postForObject(any(String.class), any(List.class), any(Class.class))).thenReturn(mediaArray);
 
-        edufyUserService.getMostPlayedMediaForUserById(userId);
+        edufyUserService.getMostPlayedMediaForUserById(userId,4);
 
         //Få fram den sorterade listan med mediaIdn
         ArgumentCaptor<List<Integer>> captor = ArgumentCaptor.forClass(List.class);
@@ -184,6 +201,40 @@ class EdufyUserServiceTest {
         List<Integer> capturedListOfIds = captor.getValue();
         // Kollar att lista med mediaId ifrån metoden är samma som den faktiska ordningen som det skulle vara
         assertEquals(Arrays.asList(2, 1, 3), capturedListOfIds); // Media ID 2 (10 listens), 1 (5 listens), 3 (3 listens)
+    }
+
+    @Test
+    void getMostPlayedMediaForUserById_shouldReturnListOfSize2() {
+
+        int userId = 1;
+        int listSize=2;
+
+        MediaInteractions mediaInteractions1 = new MediaInteractions(1, 1, "liked", 5); // Media ID 1, 5 listens
+        MediaInteractions mediaInteractions2 = new MediaInteractions(2, 2, "liked", 10); // Media ID 2, 10 listens
+        MediaInteractions mediaInteractions3 = new MediaInteractions(3, 3, "liked", 3); // Media ID 3, 3 listens
+        List<MediaInteractions> mediaInteractionsList = Arrays.asList(mediaInteractions1, mediaInteractions2, mediaInteractions3);
+
+        when(mockCustomer.getMediaInteractions()).thenReturn(mediaInteractionsList);
+        when(mockRestTemplate.getForObject("http://customer-service/api/customer/" + userId, Customer.class)).thenReturn(mockCustomer);
+
+        Media[] mediaArray = {media1, media3, media2};
+
+        when(mockRestTemplate.postForObject(any(String.class), any(List.class), any(Class.class))).thenReturn(mediaArray);
+
+        edufyUserService.getMostPlayedMediaForUserById(userId,listSize);
+
+        //Få fram den sorterade listan med mediaIdn
+        ArgumentCaptor<List<Integer>> captor = ArgumentCaptor.forClass(List.class);
+        verify(mockRestTemplate).postForObject(
+                Mockito.eq("http://Media-Service/api/media/getlistofmediadtofromlistofid"),
+                captor.capture(),
+                Mockito.eq(Media[].class)
+        );
+
+        List<Integer> capturedListOfIds = captor.getValue();
+        // Kollar att lista med mediaId ifrån metoden är samma som den faktiska ordningen som det skulle vara
+        assertEquals(2, capturedListOfIds.size()); // Media ID 2 (10 listens), 1 (5 listens), 3 (3 listens)
+//        assertEquals(Arrays.asList(2, 1, 3), capturedListOfIds); // Media ID 2 (10 listens), 1 (5 listens), 3 (3 listens)
     }
 
     //Validation of customerId

@@ -57,9 +57,9 @@ public class EdufyUserController {
     }
 
     @PreAuthorize("hasRole('user')")
-    @GetMapping("/getmostplayedmedia/{customerId}")
-    public ResponseEntity<List<MediaResponseDTO>> getMostPlayedMedia(@PathVariable  int customerId) {
-        return ResponseEntity.ok(edufyUserService.getMostPlayedMediaForUserById(customerId));
+    @GetMapping("/getmostplayedmedia/{customerId}/{listSize}")
+    public ResponseEntity<List<MediaResponseDTO>> getMostPlayedMedia(@PathVariable  int customerId,  @PathVariable int listSize) {
+        return ResponseEntity.ok(edufyUserService.getMostPlayedMediaForUserById(customerId, listSize ));
     }
 
     @PreAuthorize("hasRole('user')")
