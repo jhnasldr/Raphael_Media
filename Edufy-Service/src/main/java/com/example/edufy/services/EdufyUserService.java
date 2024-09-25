@@ -116,7 +116,7 @@ public class EdufyUserService implements EdufyServiceInterface {
     }
 
     @Override
-    public List<MediaResponseDTO> getMostPlayedMediaForUserById(int userId) {
+    public List<MediaResponseDTO> getMostPlayedMediaForUserById(int userId, int listSize) {
         Customer customer;
         List<MediaInteractions> mediaInteractions;
         List<MediaInteractions> mediaInteractionsSortedByTimesListenedTo;
@@ -128,7 +128,7 @@ public class EdufyUserService implements EdufyServiceInterface {
 
         mediaInteractions = customer.getMediaInteractions();
 
-        mediaInteractionsSortedByTimesListenedTo = mediaInteractions.stream().sorted(Comparator.comparingInt(MediaInteractions::getTimesListenedTo).reversed()).limit(10).collect(Collectors.toList());
+        mediaInteractionsSortedByTimesListenedTo = mediaInteractions.stream().sorted(Comparator.comparingInt(MediaInteractions::getTimesListenedTo).reversed()).limit(listSize).collect(Collectors.toList());
 
 
         idsOfMostPlayedMediaSorted = mediaInteractionsSortedByTimesListenedTo.stream()

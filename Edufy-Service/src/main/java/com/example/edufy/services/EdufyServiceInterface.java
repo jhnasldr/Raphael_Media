@@ -12,7 +12,7 @@ public interface EdufyServiceInterface {
 
     MediaInteractions rateMedia(int customerId, int mediaId, String likeStatus);
 
-    List<MediaResponseDTO> getMostPlayedMediaForUserById(int userId);
+    List<MediaResponseDTO> getMostPlayedMediaForUserById(int userId, int listSize);
 
     List<MediaResponseDTO> getRecommendedMedia(int customerId);
 }
