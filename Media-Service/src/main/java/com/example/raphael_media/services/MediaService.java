@@ -51,7 +51,6 @@ public class MediaService implements MediaServiceInterface {
         return mediaRepository.findAll();
     }
 
-
     @Override
     public void addNewMedia(Media media) {
         if (media.getMediaType().equalsIgnoreCase("video")) {
