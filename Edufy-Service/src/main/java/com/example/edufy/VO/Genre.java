@@ -3,7 +3,6 @@ package com.example.edufy.VO;
 import java.util.List;
 
 public class Genre {
-
     private int genreId;
     private String genre;
     private List<Media> mediaList;

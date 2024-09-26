@@ -7,7 +7,6 @@ import com.example.edufy.VO.MediaInteractions;
 import java.util.List;
 
 public interface EdufyServiceInterface {
-
     Media playAndUpdateListedToInCustomer(int idCustomer, int idMedia);
 
     MediaInteractions rateMedia(int customerId, int mediaId, String likeStatus);

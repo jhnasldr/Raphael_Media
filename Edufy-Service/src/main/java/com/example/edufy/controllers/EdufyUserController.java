@@ -16,31 +16,15 @@ import java.util.List;
 public class EdufyUserController {
 
     @Autowired
-    EdufyUserService edufyUserService;
-
-
-
-    //Bara test här, ska göras riktigt med responseEntity, testning, namngivning mm
-    //får fram kund ett anna
-//    @PreAuthorize("hasRole('user')")
-//    @GetMapping("/getcustomervo")
-//    public Customer getVo(){
-//        return edufyUserService.getCustomerVO();
-//    }
-
-
+    private EdufyUserService edufyUserService;
+/*
     @PreAuthorize("hasRole('user')") //Finns inte i Postman
     @GetMapping("/getallmediadto")
     public ResponseEntity<List<Media>> getAllmediaDTO() {
         return ResponseEntity.ok(edufyUserService.getAllMediaDTO());
     }
 
-    @PreAuthorize("hasRole('user')") //Finns inte i Postman (jag förstår att de är ett test men ändå)
-
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("Test");
-    }
+ */
 
     @PreAuthorize("hasRole('user')")
     @GetMapping("/recommendations/{customerId}")
@@ -51,7 +35,7 @@ public class EdufyUserController {
 
     @PreAuthorize("hasRole('user')")
     @PutMapping("/playmedia")
-    public ResponseEntity<String> playMediaAndIncreaseTimesListenedTo(@RequestBody MediaRequstBody mediaRequstBody) {
+    public ResponseEntity<String> playMediaAndIncreaseTimesListenedTo(@RequestBody CustomerMediaRequestBody mediaRequstBody){
         Media playMedia = edufyUserService.playAndUpdateListedToInCustomer(mediaRequstBody.getCustomerId(), mediaRequstBody.getMediaId());
         return new ResponseEntity<>("This " + playMedia.getMediaType() + " is playing \n" + playMedia.getURL(), HttpStatus.OK);
     }
@@ -65,7 +49,7 @@ public class EdufyUserController {
     @PreAuthorize("hasRole('user')")
     @PostMapping("/ratemedia")
     public ResponseEntity<String> rateMedia(@RequestBody CustomerMediaRequestBody requestBody){
-        MediaInteractions result = edufyUserService.rateMedia(requestBody.getCustomerId(), requestBody.getMediaId(), requestBody.getLikeStatus());
+        edufyUserService.rateMedia(requestBody.getCustomerId(), requestBody.getMediaId(), requestBody.getLikeStatus());
         String message = "Customer with id: " + requestBody.getCustomerId() + " set " + requestBody.getLikeStatus() + " on media with id: " + requestBody.getMediaId();
         return ResponseEntity.ok(message);
     }

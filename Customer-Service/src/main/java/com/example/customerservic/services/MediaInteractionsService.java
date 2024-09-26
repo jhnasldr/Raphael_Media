@@ -22,12 +22,9 @@ public class MediaInteractionsService implements MediaInteractionsInterface {
         return mediaInteractions;
     }
 
-
     public void setLogger(Logger logger) {
         this.logger = logger;
     }
-
-
 
     public void setMediaInteractionsRepository(MediaInteractionsRepository mediaInteractionsRepository) {
         this.mediaInteractionsRepository = mediaInteractionsRepository;

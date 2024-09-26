@@ -4,6 +4,14 @@ public class MediaRequstBody {
     private Integer customerId;
     private Integer mediaId;
 
+    public MediaRequstBody() {
+    }
+
+    public MediaRequstBody(Integer customerId, Integer mediaId) {
+        this.customerId = customerId;
+        this.mediaId = mediaId;
+    }
+
     public Integer getCustomerId() {
         return customerId;
     }

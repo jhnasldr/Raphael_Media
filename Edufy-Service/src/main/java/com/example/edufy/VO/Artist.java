@@ -5,9 +5,6 @@ import jakarta.persistence.*;
 import java.util.List;
 
 public class Artist {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int artistId;
 
     private String artistName;
@@ -16,6 +13,13 @@ public class Artist {
     private List<Media> mediaList;
 
     public Artist() {
+    }
+
+    public Artist(int artistId, String artistName, List<Album> albums, List<Media> mediaList) {
+        this.artistId = artistId;
+        this.artistName = artistName;
+        this.albums = albums;
+        this.mediaList = mediaList;
     }
 
     public int getArtistId() {

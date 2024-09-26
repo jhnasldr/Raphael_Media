@@ -15,30 +15,17 @@ import java.util.stream.Collectors;
 
 @Service
 public class EdufyUserService implements EdufyServiceInterface {
-
     @Autowired
     private RestTemplate restTemplate;
 
     Logger logger = Logger.getLogger(EdufyUserService.class);
 
-    //Test för forskning, det saknas enhetstestning för den här mm
-//    public Customer getCustomerVO() {
-//        //Har man med loadbalanced letar den inom sina services och man kan inte köra med localhost utan måste använda servicenamnet
-//        //    Customer customerVO = restTemplate.getForObject("http://127.0.0.1:6060/api/customer/1", Customer.class);
-//        //    Customer customerVO = restTemplate.getForObject("localhost:6060/api/customer/1", Customer.class);
-//        Customer customerVO = restTemplate.getForObject("http://customer-service/api/customer/1", Customer.class);
-//
-//        // restTemplate och getForObject för att köra get, verkar finnas metoder för alla crud operationer med restTemplate
-//        return customerVO;
-//    }
-
     @Override
     public Media playAndUpdateListedToInCustomer(int idCustomer, int idMedia) {
-        String customerGetURL = "http://customer-service/api/customer/" + idCustomer;
         String mediaGetURL = "http://media-service/api/media/" + idMedia;
         String customerPutURl = "http://customer-service/api/customer/updatecustomer/" + idCustomer;
 
-        Customer customerVO = restTemplate.getForObject(customerGetURL, Customer.class);
+        Customer customerVO = getCustomerData(idCustomer);
         Media mediaVO = restTemplate.getForObject(mediaGetURL, Media.class);
 
         for (MediaInteractions m : customerVO.getMediaInteractions()) {
@@ -68,13 +55,12 @@ public class EdufyUserService implements EdufyServiceInterface {
             throw new IllegalArgumentException("customerId must be greater than 0");
         }
 
-        String getCustomerURL = "http://customer-service/api/customer/" + customerId;
         String getMediaURL = "http://media-service/api/media/" + mediaId;
         String customerPutURl = "http://customer-service/api/customer/updatecustomer/" + customerId;
         String mediaInteractionsURL = "http://customer-service/api/customer/addmediainteractions";
 
         try {
-            Customer customerVO = restTemplate.getForObject(getCustomerURL, Customer.class);
+            Customer customerVO = getCustomerData(customerId);
             if (customerVO == null) {
                 throw new RuntimeException("Customer not found");
             }
@@ -111,25 +97,17 @@ public class EdufyUserService implements EdufyServiceInterface {
         }
     }
 
-    public void setRestTemplate(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-
     @Override
     public List<MediaResponseDTO> getMostPlayedMediaForUserById(int userId, int listSize) {
-        Customer customer;
+        Customer customer = getCustomerData(userId);
         List<MediaInteractions> mediaInteractions;
         List<MediaInteractions> mediaInteractionsSortedByTimesListenedTo;
         List<Integer> idsOfMostPlayedMediaSorted;
         List<Media> mostPlayedMedia;
         List<MediaResponseDTO> mostPlayedMediaDTO;
 
-        customer = restTemplate.getForObject("http://customer-service/api/customer/" + userId, Customer.class);
-
         mediaInteractions = customer.getMediaInteractions();
-
         mediaInteractionsSortedByTimesListenedTo = mediaInteractions.stream().sorted(Comparator.comparingInt(MediaInteractions::getTimesListenedTo).reversed()).limit(listSize).collect(Collectors.toList());
-
 
         idsOfMostPlayedMediaSorted = mediaInteractionsSortedByTimesListenedTo.stream()
                 .map(MediaInteractions::getMediaId)
@@ -153,17 +131,6 @@ public class EdufyUserService implements EdufyServiceInterface {
                 .collect(Collectors.toList());
 
         return mostPlayedMediaDTO;
-    }
-
-    public Customer getCustomerData(int customerId) {
-        String url = "http://customer-service/api/customer/" + customerId;
-        return restTemplate.getForObject(url, Customer.class);
-    }
-
-    public List<Media> getAllMediaDTO() {
-        List<Media> mediaDTO;
-        mediaDTO = Arrays.asList(Objects.requireNonNull(restTemplate.getForObject("http://Media-Service/api/media/getallmediadto", Media[].class)));
-        return mediaDTO;
     }
 
     @Override
@@ -251,5 +218,19 @@ public class EdufyUserService implements EdufyServiceInterface {
                 .collect(Collectors.toList());
     }
 
+    public Customer getCustomerData(int customerId) {
+        String url = "http://customer-service/api/customer/" + customerId;
+        return restTemplate.getForObject(url, Customer.class);
+    }
+
+    public List<Media> getAllMediaDTO() {
+        List<Media> mediaDTO;
+        mediaDTO = Arrays.asList(Objects.requireNonNull(restTemplate.getForObject("http://Media-Service/api/media/getallmediadto", Media[].class)));
+        return mediaDTO;
+    }
+
+    public void setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 }
 

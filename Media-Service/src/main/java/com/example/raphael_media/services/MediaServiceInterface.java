@@ -7,14 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MediaServiceInterface {
-
-
     Optional<Media> getMediaById(int mediaId);
 
     List<Media> getAllMedia();
 
     void addNewMedia(Media media);
-
 
     Media updateMedia(int mediaId, Media media);
 

@@ -8,9 +8,9 @@ public interface AlbumServiceInterface {
 
     Album addAlbum(Album album);
 
-    List<Album> fetchAllAlbums();
+    List<Album> getAllAlbums();
 
-    Album fetchAlbum(int albumId);
+    Album getAlbum(int albumId);
 
     Album updateAlbum(int albumId, Album album);
 

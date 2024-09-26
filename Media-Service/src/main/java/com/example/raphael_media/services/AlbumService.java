@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
 import java.util.List;
 
 
 @Service
 public class AlbumService implements AlbumServiceInterface {
-
     @Autowired
     private AlbumRepository albumRepository;
 
@@ -24,8 +24,8 @@ public class AlbumService implements AlbumServiceInterface {
 
     @Autowired
     private ArtistRepository artistRepository;
-    Logger logger = Logger.getLogger(AlbumService.class);
 
+    Logger logger = Logger.getLogger(AlbumService.class);
 
     @Override
     public Album addAlbum(Album album) {
@@ -33,17 +33,17 @@ public class AlbumService implements AlbumServiceInterface {
             throw new ResourceNotFoundException("artist", "id", album.getArtist().getArtistId());
         }
         albumRepository.save(album);
-        logger.log(Level.WARN, "New album with id: "+album.getAlbumId()+" created");
+        logger.log(Level.WARN, "New album with id: " + album.getAlbumId() + " created");
         return album;
     }
 
     @Override
-    public List<Album> fetchAllAlbums() {
+    public List<Album> getAllAlbums() {
         return albumRepository.findAll();
     }
 
     @Override
-    public Album fetchAlbum(int albumId) {
+    public Album getAlbum(int albumId) {
         return albumRepository.findById(albumId).orElseThrow(() -> new ResourceNotFoundException("album", "id", albumId));
     }
 
@@ -60,7 +60,7 @@ public class AlbumService implements AlbumServiceInterface {
         }
 
         albumRepository.save(existingAlbum);
-        logger.log(Level.WARN,"Updated album with id: "+albumId);
+        logger.log(Level.WARN, "Updated album with id: " + albumId);
         return existingAlbum;
     }
 
@@ -74,7 +74,7 @@ public class AlbumService implements AlbumServiceInterface {
         }
 
         albumRepository.delete(album);
-        logger.log(Level.WARN, "Deleted album with id: "+albumId);
+        logger.log(Level.WARN, "Deleted album with id: " + albumId);
     }
 
     public void setMediaRepository(MediaRepository mediaRepository) {
@@ -84,7 +84,6 @@ public class AlbumService implements AlbumServiceInterface {
     public void setAlbumRepository(AlbumRepository albumRepository) {
         this.albumRepository = albumRepository;
     }
-
 
     public void setArtistRepository(ArtistRepository artistRepository) {
         this.artistRepository = artistRepository;

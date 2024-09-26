@@ -6,7 +6,6 @@ import com.example.raphael_media.entities.Genre;
 import java.util.List;
 
 public class MediaDTO {
-
     private int id;
     private String title;
     private List<Genre> genres;

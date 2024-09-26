@@ -27,6 +27,12 @@ public class Album {
     public Album() {
     }
 
+    public Album(String albumName, Artist artist, List<Media> mediaList) {
+        this.albumName = albumName;
+        this.artist = artist;
+        this.mediaList = mediaList;
+    }
+
     public int getAlbumId() {
         return albumId;
     }

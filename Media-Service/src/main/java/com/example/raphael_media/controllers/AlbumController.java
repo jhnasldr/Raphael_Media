@@ -20,12 +20,12 @@ public class AlbumController {
     @PreAuthorize("hasRole('user')")
     @GetMapping("album/{albumId}")
     public ResponseEntity<Album> getAlbum(@PathVariable int albumId) {
-        return new ResponseEntity<>(albumService.fetchAlbum(albumId), HttpStatus.OK);
+        return new ResponseEntity<>(albumService.getAlbum(albumId), HttpStatus.OK);
     }
     @PreAuthorize("hasRole('user')")
     @GetMapping("album/getallalbums")
     public ResponseEntity<List<Album>> getAllAlbums() {
-        return new ResponseEntity<>(albumService.fetchAllAlbums(), HttpStatus.OK);
+        return new ResponseEntity<>(albumService.getAllAlbums(), HttpStatus.OK);
     }
     @PreAuthorize("hasRole('admin')")
     @PostMapping("album/addalbum")
@@ -33,7 +33,7 @@ public class AlbumController {
         return new ResponseEntity<>(albumService.addAlbum(album), HttpStatus.OK);
     }
     @PreAuthorize("hasRole('admin')")
-    @PutMapping("album/updatealbum/{albumId}") // funkar inte
+    @PutMapping("album/updatealbum/{albumId}")
     public ResponseEntity<Album> updateAlbum(@PathVariable int albumId, @RequestBody Album album) {
         return new ResponseEntity<>(albumService.updateAlbum(albumId, album), HttpStatus.OK);
     }

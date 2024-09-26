@@ -126,7 +126,7 @@ class ArtistServiceTest {
         artistList.add(artist);
         when(mockedArtistRepository.findAll()).thenReturn(artistList);
         //When
-        artistService.fetchAllArtist();
+        artistService.getAllArtists();
         //Then
         verify(mockedArtistRepository).findAll();
     }
@@ -136,7 +136,7 @@ class ArtistServiceTest {
         //Given
         when(mockedArtistRepository.findById(1)).thenReturn(Optional.ofNullable(artist));
         //When
-        Artist resultArtist = artistService.fetchArtist(1);
+        Artist resultArtist = artistService.getArtist(1);
         //Then
         assertTrue(artist ==resultArtist);
         verify(mockedArtistRepository).findById(1);
@@ -148,7 +148,7 @@ class ArtistServiceTest {
         when(mockedArtistRepository.findById(1)).thenReturn(Optional.empty());
         //When
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
-            artistService.fetchArtist(2);
+            artistService.getArtist(2);
         });
         //Then
         assertEquals("artist with id '2' was not found", exception.getMessage());

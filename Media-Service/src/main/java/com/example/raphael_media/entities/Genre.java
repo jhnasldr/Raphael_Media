@@ -21,6 +21,11 @@ public class Genre {
     public Genre() {
     }
 
+    public Genre(String genre, List<Media> mediaList) {
+        this.genre = genre;
+        this.mediaList = mediaList;
+    }
+
     public int getGenreId() {
         return genreId;
     }

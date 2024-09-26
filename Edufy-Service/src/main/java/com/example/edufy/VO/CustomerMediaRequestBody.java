@@ -1,10 +1,18 @@
 package com.example.edufy.VO;
 
 public class CustomerMediaRequestBody {
-
     private int customerId;
     private int mediaId;
     private String likeStatus;
+
+    public CustomerMediaRequestBody() {
+    }
+
+    public CustomerMediaRequestBody(int customerId, int mediaId, String likeStatus) {
+        this.customerId = customerId;
+        this.mediaId = mediaId;
+        this.likeStatus = likeStatus;
+    }
 
     public int getCustomerId() {
         return customerId;

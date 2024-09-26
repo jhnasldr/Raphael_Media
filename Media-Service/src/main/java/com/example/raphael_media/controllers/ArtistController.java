@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/media/")
 public class ArtistController {
-
     @Autowired
     private ArtistService artistService;
 
@@ -34,13 +33,13 @@ public class ArtistController {
     @PreAuthorize("hasRole('user')")
     @GetMapping("artist/{artistId}")
     public ResponseEntity<Artist> getArtistById(@PathVariable int artistId) {
-        return new ResponseEntity<>(artistService.fetchArtist(artistId), HttpStatus.OK);
+        return new ResponseEntity<>(artistService.getArtist(artistId), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('user')")
     @GetMapping("getallartist")
     public ResponseEntity<List<Artist>> getAllArtist() {
-        return ResponseEntity.ok(artistService.fetchAllArtist());
+        return ResponseEntity.ok(artistService.getAllArtists());
     }
 
     @PreAuthorize("hasRole('admin')")
@@ -61,6 +60,4 @@ public class ArtistController {
         artistService.deleteArtist(artistId);
         return new ResponseEntity<>("Artist is deleted", HttpStatus.OK);
     }
-
-
 }

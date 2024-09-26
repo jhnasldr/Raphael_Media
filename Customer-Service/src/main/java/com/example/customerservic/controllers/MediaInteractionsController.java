@@ -1,5 +1,5 @@
 package com.example.customerservic.controllers;
-
+/*
 import com.example.customerservic.entities.MediaInteractions;
 import com.example.customerservic.services.MediaInteractionsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,4 +22,7 @@ public class MediaInteractionsController {
         mediaInteractionsService.addMediaInteraction(mediaInteractions);
         return new ResponseEntity<>("MediaInteractions is added", HttpStatus.OK);
     }
+
+
 }
+ */

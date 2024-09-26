@@ -5,12 +5,11 @@ import jakarta.persistence.*;
 
 @Entity
 public class MediaInteractions {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int mediaInteractionId;
 
-    @Column(name = "media_id", length = 20)
+    @Column(name = "media_id", length = 20, nullable = false)
     private int mediaId;
 
     @Column(name = "like_status", length = 20)
@@ -25,6 +24,13 @@ public class MediaInteractions {
     private Customer customer;
 
     public MediaInteractions() {
+    }
+
+    public MediaInteractions(int mediaId, String likeStatus, int timesListenedTo, Customer customer) {
+        this.mediaId = mediaId;
+        this.likeStatus = likeStatus;
+        this.timesListenedTo = timesListenedTo;
+        this.customer = customer;
     }
 
     public String getLikeStatus() {

@@ -17,10 +17,16 @@ public class Customer {
     private String emailAdress;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER, mappedBy = "customer")
-   @JsonManagedReference
+    @JsonManagedReference
     private List<MediaInteractions> mediaInteractions;
 
     public Customer() {
+    }
+
+    public Customer(String userName, String emailAdress, List<MediaInteractions> mediaInteractions) {
+        this.userName = userName;
+        this.emailAdress = emailAdress;
+        this.mediaInteractions = mediaInteractions;
     }
 
     public int getCustomerId() {
@@ -54,4 +60,5 @@ public class Customer {
     public void setMediaInteractions(List<MediaInteractions> mediaInteractions) {
         this.mediaInteractions = mediaInteractions;
     }
+
 }

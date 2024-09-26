@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 public class JwtTokenFilter extends OncePerRequestFilter{
-
     private final String SECRET_KEY = "your-secret-key";
 
     @Override
@@ -38,9 +37,8 @@ public class JwtTokenFilter extends OncePerRequestFilter{
                 String username = claims.getSubject();
 
                 List<SimpleGrantedAuthority> authorities = ((List<Map<String, String>>) claims.get("roles")).stream()
-                        .map(role -> new SimpleGrantedAuthority(role.get("authority"))) // Extract the authority
+                        .map(role -> new SimpleGrantedAuthority(role.get("authority")))
                         .collect(Collectors.toList());
-
 
                 Authentication auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(auth);
@@ -48,8 +46,6 @@ public class JwtTokenFilter extends OncePerRequestFilter{
                 SecurityContextHolder.clearContext();
             }
         }
-
         filterChain.doFilter(request, response);
     }
-
 }
