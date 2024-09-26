@@ -1,7 +1,7 @@
 package com.example.customerservic.services;
+
 import com.example.customerservic.entities.MediaInteractions;
 import com.example.customerservic.repositories.MediaInteractionsRepository;
-import com.mysql.cj.xdevapi.Warning;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,14 +10,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-
 class MediaInteractionsServiceTest {
-
     private MediaInteractionsRepository mockMediaInteractionsRepository;
     private MediaInteractionsService mockMediaInteractionsService;
     private org.apache.log4j.Logger mockLogger;
     private MediaInteractions mockMediaInteraction;
-
 
     @BeforeEach
     void setUp() {
@@ -26,9 +23,7 @@ class MediaInteractionsServiceTest {
         mockMediaInteractionsService = new MediaInteractionsService();
         mockMediaInteractionsService.setMediaInteractionsRepository(mockMediaInteractionsRepository);
         mockMediaInteractionsService.setLogger(mockLogger);
-
         mockMediaInteraction = mock(MediaInteractions.class);
-
     }
 
     @Test
@@ -36,7 +31,6 @@ class MediaInteractionsServiceTest {
         mockMediaInteractionsService.addMediaInteraction(mockMediaInteraction);
 
         verify(mockMediaInteractionsRepository).save(mockMediaInteraction);
-
     }
 
     @Test
@@ -54,6 +48,5 @@ class MediaInteractionsServiceTest {
 
         assertEquals(mockMediaInteraction, result);
     }
-
 
 }

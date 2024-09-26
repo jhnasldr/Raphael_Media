@@ -10,8 +10,6 @@ import com.example.raphael_media.repositores.PodcastRepository;
 import com.example.raphael_media.repositores.VideoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -21,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class MediaServiceTest {
-
     Media mockMedia;
     MediaService mediaService;
     MediaRepository mockedMediaRepository;
@@ -29,7 +26,6 @@ class MediaServiceTest {
     PodcastRepository mockedPodcastRepository;
     VideoRepository mockedVideoRepository;
     List<Media> mockedMediaList;
-
     private List<MediaDTO> mockedMediaDTOList;
     private Music musicMedia;
     private Podcast podcastMedia;
@@ -37,10 +33,8 @@ class MediaServiceTest {
     private List<Genre> genreList = new ArrayList<>();
     private List<Artist> artistList = new ArrayList<>();
     private List<Album> albumsList = new ArrayList<>();
-
     private ResourceNotFoundException exception;
     private String expectation;
-
 
     @BeforeEach
     void setUp() {
@@ -66,8 +60,6 @@ class MediaServiceTest {
         musicMedia = new Music("titelMusic", "www.url.com", LocalDate.now());
         podcastMedia = new Podcast("titelPodcast", "www.url.com", LocalDate.now());
         videoMedia = new Video("titelVideo", "www.url.com", LocalDate.now());
-
-
     }
 
     @Test
@@ -109,150 +101,146 @@ class MediaServiceTest {
 
     @Test
     void getListOfMediaDTOFromListOfIds_ShouldReturnListOfSizeTwo() {
-        //mockedMediaList.add(new Music("Music", "songTitle", LocalDate.now()));
         mockedMediaList.get(0).setId(1);
         mockedMediaList.get(1).setId(2);
-        //mockedMediaList.get(2).setId(3);
+
         List<Integer> listOfId = List.of(1, 2);
         when(mockedMediaRepository.findAllById(listOfId)).thenReturn(mockedMediaList);
         List<MediaDTO> actualMediaDTOs = mediaService.getListOfMediaDTOFromListOfIds(listOfId);
         assertEquals(2, actualMediaDTOs.size());
     }
 
-
     @Test
     void addNewMedia_ShouldVerifyThatMusicWasSaved() {
         mediaService.addNewMedia(musicMedia);
         verify(mockedMusicRepository).save(musicMedia);
     }
+
     @Test
     void addNewMedia_ShouldVerifyThatVideoWasSaved() {
         mediaService.addNewMedia(podcastMedia);
         verify(mockedPodcastRepository).save(podcastMedia);
     }
+
     @Test
     void addNewMedia_ShouldVerifyThatPodcastWasSaved() {
         mediaService.addNewMedia(videoMedia);
         verify(mockedVideoRepository).save(videoMedia);
     }
+
     @Test
     void addNewMedia_ShouldThrowExeptionResourceNotFoundWhenMediaNotFound() {
-        //given
         Media media = new Music();
         media.setMediaType("Sko");
         expectation = "Unknown media type: Sko";
-        //when
+
         IllegalArgumentException exceptiontwo = assertThrows(IllegalArgumentException.class, () -> {
             mediaService.addNewMedia(media);
         });
-        //then
+
         assertEquals(expectation, exceptiontwo.getMessage());
     }
 
     @Test
     void updateMedia_ShouldThrowExeptionResourceNotFoundWhenMediaNotFound() {
-        //given
         Media media = new Music();
         media.setMediaType("Sko");
         expectation = "Unknown media type: Sko";
 
-        //when
         IllegalArgumentException exceptiontwo = assertThrows(IllegalArgumentException.class, () -> {
-            mediaService.updateMedia(1,media);
+            mediaService.updateMedia(1, media);
         });
-        //then
+
         assertEquals(expectation, exceptiontwo.getMessage());
     }
+
     @Test
     void updateMedia_ShouldReturnTrueWhenUpdateAndSavedPodcast() {
-        //given
         podcastMedia.setGenres(genreList);
         podcastMedia.setAlbums(albumsList);
         podcastMedia.setArtists(artistList);
         Podcast existningPodcast;
 
         when(mockedPodcastRepository.findById(1)).thenReturn(Optional.ofNullable(podcastMedia));
-        //when
+
         existningPodcast = (Podcast) mediaService.updateMedia(1, podcastMedia);
-        //then
+
         verify(mockedPodcastRepository).save(existningPodcast);
     }
+
     @Test
     void updateMedia_ShouldReturnTrueWhenUpdateAndSavedMusic() {
-        //given
         musicMedia.setGenres(genreList);
         musicMedia.setAlbums(albumsList);
         musicMedia.setArtists(artistList);
         Music existningMusic;
 
         when(mockedMusicRepository.findById(1)).thenReturn(Optional.ofNullable(musicMedia));
-        //when
+
         existningMusic = (Music) mediaService.updateMedia(1, musicMedia);
-        //then
+
         verify(mockedMusicRepository).save(existningMusic);
     }
 
     @Test
     void updateMedia_ShouldReturnTrueWhenUpdateAndSavedVideo() {
-        //given
         videoMedia.setGenres(genreList);
         videoMedia.setAlbums(albumsList);
         videoMedia.setArtists(artistList);
         Video existningVideo;
 
         when(mockedVideoRepository.findById(1)).thenReturn(Optional.ofNullable(videoMedia));
-        //when
+
         existningVideo = (Video) mediaService.updateMedia(1, videoMedia);
-        //then
+
         verify(mockedVideoRepository).save(existningVideo);
     }
 
     @Test
     void updateMedia_ShouldThrowExeptionResourceNotFoundWhenMusicNotFound() {
-        //given
         musicMedia.setGenres(genreList);
         musicMedia.setAlbums(albumsList);
         musicMedia.setArtists(artistList);
         expectation = "Music with id '3' was not found";
 
         when(mockedMediaRepository.findById(1)).thenReturn(Optional.ofNullable(musicMedia));
-        //when
+
         exception = assertThrows(ResourceNotFoundException.class, () -> {
             mediaService.updateMedia(3, musicMedia);
         });
-        //then
+
         assertEquals(expectation, exception.getMessage());
     }
+
     @Test
     void updateMedia_ShouldThrowExeptionResourceNotFoundWhenPodcastNotFound() {
-        //given
         podcastMedia.setGenres(genreList);
         podcastMedia.setAlbums(albumsList);
         podcastMedia.setArtists(artistList);
         expectation = "Podcast with id '3' was not found";
 
         when(mockedPodcastRepository.findById(1)).thenReturn(Optional.ofNullable(podcastMedia));
-        //when
+
         exception = assertThrows(ResourceNotFoundException.class, () -> {
             mediaService.updateMedia(3, podcastMedia);
         });
-        //then
+
         assertEquals(expectation, exception.getMessage());
     }
+
     @Test
     void updateMedia_ShouldThrowExeptionResourceNotFoundWhenVideoNotFound() {
-        //given
         videoMedia.setGenres(genreList);
         videoMedia.setAlbums(albumsList);
         videoMedia.setArtists(artistList);
         expectation = "Video with id '3' was not found";
 
         when(mockedVideoRepository.findById(1)).thenReturn(Optional.ofNullable(videoMedia));
-        //when
+
         exception = assertThrows(ResourceNotFoundException.class, () -> {
             mediaService.updateMedia(3, videoMedia);
         });
-        //then
+
         assertEquals(expectation, exception.getMessage());
     }
 
@@ -260,7 +248,6 @@ class MediaServiceTest {
     void deleteMediaShouldRemoveMediaWhenIdExists() {
         int mediaId = 1;
 
-        // Mocka media med relationer till genre, artist och album
         Genre mockGenre = mock(Genre.class);
         Artist mockArtist = mock(Artist.class);
         Album mockAlbum = mock(Album.class);
@@ -274,7 +261,6 @@ class MediaServiceTest {
         mediaService.deleteMediaById(mediaId);
 
         verify(mockedMediaRepository).delete(mockMedia);
-
     }
 
     @Test
@@ -316,23 +302,23 @@ class MediaServiceTest {
 
     @Test
     void getMediaByTypeWhenMediaExistsShouldReturnMusic() {
-       String mediaType = "Music";
+        String mediaType = "Music";
 
-       when(mockedMediaRepository.findByMediaType(mediaType)).thenReturn(
-               Arrays.asList(new Music("Music", "songTitle", LocalDate.now())
-       ));
+        when(mockedMediaRepository.findByMediaType(mediaType)).thenReturn(
+                Arrays.asList(new Music("Music", "songTitle", LocalDate.now())
+                ));
 
-       Media expectedMedia = new Music("Music", "songTitle", LocalDate.now());
+        Media expectedMedia = new Music("Music", "songTitle", LocalDate.now());
 
-       List<Media> result = mediaService.getMediaByType(mediaType);
+        List<Media> result = mediaService.getMediaByType(mediaType);
 
-       assertNotNull(result);
-       assertEquals(1, result.size());
-       Media actualMedia = result.get(0);
-       assertEquals(expectedMedia.getTitle(), actualMedia.getTitle());
-       assertEquals(expectedMedia.getURL(), actualMedia.getURL());
-       assertEquals(expectedMedia.getMediaType(), actualMedia.getMediaType());
-       verify(mockedMediaRepository, times(1)).findByMediaType(mediaType);
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        Media actualMedia = result.get(0);
+        assertEquals(expectedMedia.getTitle(), actualMedia.getTitle());
+        assertEquals(expectedMedia.getURL(), actualMedia.getURL());
+        assertEquals(expectedMedia.getMediaType(), actualMedia.getMediaType());
+        verify(mockedMediaRepository, times(1)).findByMediaType(mediaType);
     }
 
     @Test

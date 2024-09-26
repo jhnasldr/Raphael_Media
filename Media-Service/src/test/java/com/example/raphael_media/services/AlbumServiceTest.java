@@ -10,7 +10,6 @@ import com.example.raphael_media.repositores.ArtistRepository;
 import com.example.raphael_media.repositores.MediaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +21,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class AlbumServiceTest {
-
     private AlbumRepository mockedAlbumRepository = mock(AlbumRepository.class);
     private MediaRepository mockedMediaRepository = mock(MediaRepository.class);
     private ArtistRepository mockedArtistRepository = mock(ArtistRepository.class);
@@ -51,7 +49,6 @@ class AlbumServiceTest {
         newAlbum2.setAlbumName("New album 2");
         newAlbum2.setArtist(artist);
         newAlbum2.setMediaList(new ArrayList<>());
-
 
         albumList.add(newAlbum1);
         albumList.add(newAlbum2);
@@ -105,7 +102,6 @@ class AlbumServiceTest {
             albumService.getAlbum(1);
         });
     }
-
 
     @Test
     void testUpdateAlbum_Success() {

@@ -8,6 +8,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class CustomerServiceTest {
-
     private CustomerRepository mockCustomerRepository;
     private MediaInteractionsService mockMediaInteractionsService;
     private Logger mockLogger;
@@ -48,28 +48,21 @@ class CustomerServiceTest {
         customer.setMediaInteractions(mediaInteractionsList);
     }
 
-
-
     @Test
-    void findCustomerById_ShouldFindCustomer(){
-        //give
+    void findCustomerById_ShouldFindCustomer() {
         int customerId = 1;
         List<MediaInteractions> list = new ArrayList<>();
         list.add(new MediaInteractions());
         customer.setMediaInteractions(list);
         when(mockCustomerRepository.findById(customerId)).thenReturn(Optional.of(customer));
 
-        //when
         Optional<Customer> fundCustomer = customerService.findCustomerById(customerId);
 
-
-        //then
         assertEquals(1, fundCustomer.get().getMediaInteractions().size());
-
     }
+
     @Test
     void TestFindCustomerByIdIfCustomerExists() {
-
         int customerId = 1;
         when(mockCustomerRepository.findById(customerId)).thenReturn(Optional.of(customer));
 
@@ -98,17 +91,13 @@ class CustomerServiceTest {
 
     @Test
     void addCustomer_ShouldAddCustomer() {
-        //given
-        //when
         customerService.addCustomer(customer);
-        //then
         verify(mockCustomerRepository).save(customer);
         verify(mockLogger).log(eq(Level.WARN), contains("New customer created with id:"));
     }
 
     @Test
     void addCustomer_shouldThrowExceptionIfUsernameExists() {
-
         when(mockCustomerRepository.existsByUserName(customer.getUserName())).thenReturn(true);
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
@@ -123,7 +112,6 @@ class CustomerServiceTest {
 
     @Test
     void addCustomer_shouldThrowExceptionIfEmailAddressExists() {
-
         when(mockCustomerRepository.existsByUserName(customer.getUserName())).thenReturn(false);
         when(mockCustomerRepository.existsByEmailAdress(customer.getEmailAdress())).thenReturn(true);
 
@@ -139,25 +127,19 @@ class CustomerServiceTest {
 
     @Test
     void deleteCustomerById_ShouldDeleteCustomer() {
-        //give
         when(mockCustomerRepository.findById(1)).thenReturn(Optional.ofNullable(customer));
-        //when
         customerService.deleteCustomerById(1);
-        //the
         verify(mockCustomerRepository).delete(customer);
     }
 
     @Test
     void deleteCustomerById_ThrowExceptionWhenCustomerNotFound() {
-        //give
         when(mockCustomerRepository.findById(1)).thenReturn(Optional.empty());
         String expectation = "Customer with id '1' was not found";
 
-        //when
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
             customerService.deleteCustomerById(1);
         });
-        //then
         assertEquals(expectation, exception.getMessage());
     }
 
@@ -190,7 +172,7 @@ class CustomerServiceTest {
 
         when(mockCustomerRepository.findById(1)).thenReturn(Optional.of(updatedCustomer));
 
-        Customer result = customerService.updateCustomer(1, updatedCustomer);
+        customerService.updateCustomer(1, updatedCustomer);
 
         verify(mockCustomerRepository).save(updatedCustomer);
         verify(mockLogger).log(eq(Level.WARN), contains("Updated customer with id:"));
@@ -214,14 +196,10 @@ class CustomerServiceTest {
         list.add(mediaInteractions);
         updatedCustomer.setMediaInteractions(list);
 
-
-
         when(mockCustomerRepository.findById(1)).thenReturn(Optional.of(customer));
-        //when(mockMediaInteractionsService).addMediaInteraction(mediaInteractions)).thenReturn(mediaInteractions);
         when(mockMediaInteractionsService.addMediaInteraction(mediaInteractions)).thenReturn(mediaInteractions);
-        Customer result = customerService.updateCustomer(1, updatedCustomer);
+        customerService.updateCustomer(1, updatedCustomer);
 
-        //assertEquals("New Name", result.getUserName()
         verify(mockMediaInteractionsService).addMediaInteraction(mediaInteractions);
         verify(mockLogger).log(eq(Level.WARN), contains("Updated customer with id:"));
     }

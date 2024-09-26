@@ -17,14 +17,6 @@ public class EdufyUserController {
 
     @Autowired
     private EdufyUserService edufyUserService;
-/*
-    @PreAuthorize("hasRole('user')") //Finns inte i Postman
-    @GetMapping("/getallmediadto")
-    public ResponseEntity<List<Media>> getAllmediaDTO() {
-        return ResponseEntity.ok(edufyUserService.getAllMediaDTO());
-    }
-
- */
 
     @PreAuthorize("hasRole('user')")
     @GetMapping("/recommendations/{customerId}")

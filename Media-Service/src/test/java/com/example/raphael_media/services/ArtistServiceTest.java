@@ -16,13 +16,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ArtistServiceTest {
-
     ArtistService artistService;
     private MediaRepository mockMediaRepository = mock(MediaRepository.class);
     ArtistRepository mockedArtistRepository;
-
     private Artist artist = new Artist();
-
     private List<Album> albumList = new ArrayList<>();
     private List<Media> mediaList = new ArrayList<>();
 
@@ -52,6 +49,7 @@ class ArtistServiceTest {
         assertEquals(albums.size(), result.size());
         assertEquals(albums, result);
     }
+
     @Test
     void testGetAllAlbumsByArtistIdWhenArtistDoesNotExist() {
         when(mockedArtistRepository.findById(1)).thenReturn(Optional.empty());
@@ -63,7 +61,6 @@ class ArtistServiceTest {
         assertEquals("Artist with id 1 not found", exception.getMessage());
     }
 
-    //Hjälpmetod för att skapa en lista med albums
     private List<Album> createListOfAlbums() {
         Album album1 = new Album();
         album1.setAlbumId(1);
@@ -108,55 +105,48 @@ class ArtistServiceTest {
 
     @Test
     void addArtist_ShouldReturnTrueWhenAddArtist() {
-        //Given
         when(mockedArtistRepository.save(artist)).thenReturn(artist);
 
-        //When
         Artist reusltuArtist = artistService.addArtist(artist);
 
-        //Then
         verify(mockedArtistRepository).save(artist);
         assertTrue(reusltuArtist == artist);
     }
 
     @Test
     void fetchAllArtist_ShouldReturnAListOfArtist() {
-        //Given
         List<Artist> artistList = new ArrayList<>();
         artistList.add(artist);
         when(mockedArtistRepository.findAll()).thenReturn(artistList);
-        //When
+
         artistService.getAllArtists();
-        //Then
+
         verify(mockedArtistRepository).findAll();
     }
 
     @Test
     void fetchArtist_ShouldReturnTureWhenFindByIdOne() {
-        //Given
         when(mockedArtistRepository.findById(1)).thenReturn(Optional.ofNullable(artist));
-        //When
+
         Artist resultArtist = artistService.getArtist(1);
-        //Then
-        assertTrue(artist ==resultArtist);
+
+        assertTrue(artist == resultArtist);
         verify(mockedArtistRepository).findById(1);
     }
+
     @Test
     void fetchArtist_ShouldThrowExceptionWhenArtistNotFind() {
-        //Given
-
         when(mockedArtistRepository.findById(1)).thenReturn(Optional.empty());
-        //When
+
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
             artistService.getArtist(2);
         });
-        //Then
+
         assertEquals("artist with id '2' was not found", exception.getMessage());
     }
 
     @Test
     void updateArtist_ShouldReturnTrueSaveWhenUpdateIsDone() {
-        //Given
         artist.setArtistId(1);
 
         Media media1 = new Music();
@@ -167,30 +157,29 @@ class ArtistServiceTest {
         artist.setAlbums(albumList);
 
         when(mockedArtistRepository.findById(1)).thenReturn(Optional.ofNullable(artist));
-        //When
+
         artistService.updateArtist(1, artist);
-        //Then
+
         verify(mockedArtistRepository).save(artist);
     }
 
     @Test
     void updateArtist_ShouldThrowExceptionWhenArtisteNotFind() {
-        //Given
         when(mockedArtistRepository.findById(1)).thenReturn(Optional.empty());
-        //When
+
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
             artistService.updateArtist(2, artist);
         });
-        //Then
+
         assertEquals("artist with id '2' was not found", exception.getMessage());
     }
+
     @Test
     void deleteArtist_ShouldRemoveGenreFromMediaAndDeleteArtist() {
         Artist artist2 = new Artist();
         artist2.setArtistId(1);
 
         Media media1 = new Music();
-
         Media media2 = new Music();
 
         List<Artist> artistList = new ArrayList<>();
@@ -205,28 +194,21 @@ class ArtistServiceTest {
 
         when(mockedArtistRepository.findById(1)).thenReturn(Optional.of(artist2));
 
-        // When
         artistService.deleteArtist(1);
-
-        // Then
 
         verify(mockMediaRepository).save(media1);
         verify(mockMediaRepository).save(media2);
-
         verify(mockedArtistRepository).delete(artist2);
-
     }
 
     @Test
     void deleteArtist_ShouldThrowExceptionWhenArtistNotFind() {
-        //Given
-
         when(mockedArtistRepository.findById(1)).thenReturn(Optional.empty());
-        //When
+
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
             artistService.deleteArtist(2);
         });
-        //Then
+
         assertEquals("Artist with id '2' was not found", exception.getMessage());
     }
 }
