@@ -10,6 +10,7 @@ import com.example.raphael_media.repositores.ArtistRepository;
 import com.example.raphael_media.repositores.MediaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +22,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class AlbumServiceTest {
-
 
     private AlbumRepository mockedAlbumRepository = mock(AlbumRepository.class);
     private MediaRepository mockedMediaRepository = mock(MediaRepository.class);
@@ -81,7 +81,7 @@ class AlbumServiceTest {
     void testFetchAllAlbums() {
         when(mockedAlbumRepository.findAll()).thenReturn(albumList);
 
-        List<Album> result = albumService.fetchAllAlbums();
+        List<Album> result = albumService.getAllAlbums();
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -91,7 +91,7 @@ class AlbumServiceTest {
     void testFetchAlbum_Success() {
         when(mockedAlbumRepository.findById(any(Integer.class))).thenReturn(Optional.of(newAlbum1));
 
-        Album result = albumService.fetchAlbum(1);
+        Album result = albumService.getAlbum(1);
 
         assertNotNull(result);
         assertEquals("New album 1", result.getAlbumName());
@@ -102,7 +102,7 @@ class AlbumServiceTest {
         when(mockedAlbumRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> {
-            albumService.fetchAlbum(1);
+            albumService.getAlbum(1);
         });
     }
 

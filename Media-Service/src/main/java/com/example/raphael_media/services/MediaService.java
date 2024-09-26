@@ -16,28 +16,26 @@ import java.util.stream.Collectors;
 
 @Service
 public class MediaService implements MediaServiceInterface {
-
+    @Autowired
+    private MediaRepository mediaRepository;
 
     @Autowired
-    MediaRepository mediaRepository;
+    private MusicRepository musicRepository;
 
     @Autowired
-    MusicRepository musicRepository;
+    private VideoRepository videoRepository;
 
     @Autowired
-    VideoRepository videoRepository;
+    private PodcastRepository podcastRepository;
 
     @Autowired
-    PodcastRepository podcastRepository;
+    private GenreRepository genreRepository;
 
     @Autowired
-    GenreRepository genreRepository;
+    private AlbumRepository albumRepository;
 
     @Autowired
-    AlbumRepository albumRepository;
-
-    @Autowired
-    ArtistRepository artistRepository;
+    private ArtistRepository artistRepository;
 
     Logger logger = Logger.getLogger(MediaService.class);
 
@@ -68,7 +66,6 @@ public class MediaService implements MediaServiceInterface {
 
         logger.log(Level.WARN, "New " + media.getMediaType() + " with id: " + media.getId() + " created");
     }
-
 
     @Override
     public Media updateMedia(int mediaId, Media media) {
@@ -122,18 +119,18 @@ public class MediaService implements MediaServiceInterface {
     }
 
     @Override
-    public void deleteMediaById(int mediaId) {
-        Media media = mediaRepository.findById(mediaId).orElseThrow(()->new ResourceNotFoundException("Media", "id", mediaId));
+    public void deleteMediaById(int mediaId) { //Todo X
+        Media media = mediaRepository.findById(mediaId).orElseThrow(() -> new ResourceNotFoundException("Media", "id", mediaId));
 
-        for (Genre genre: media.getGenres()) {
+        for (Genre genre : media.getGenres()) {
             genre.getMediaList().remove(media);
             genreRepository.save(genre);
         }
-        for (Artist artist: media.getArtists()) {
+        for (Artist artist : media.getArtists()) {
             artist.getMediaList().remove(media);
             artistRepository.save(artist);
         }
-        for (Album album: media.getAlbums()) {
+        for (Album album : media.getAlbums()) {
             album.getMediaList().remove(media);
             albumRepository.save(album);
         }
@@ -160,7 +157,6 @@ public class MediaService implements MediaServiceInterface {
         return new MediaDTO(media.getId(), media.getTitle(), media.getGenres(), media.getArtists(), media.getMediaType());
     }
 
-
     public List<Media> getMediaByType(String mediaType) {
         List<Media> mediaList = mediaRepository.findByMediaType(mediaType);
         if (mediaList.isEmpty()) {
@@ -169,4 +165,31 @@ public class MediaService implements MediaServiceInterface {
         return mediaList;
     }
 
+    public void setMediaRepository(MediaRepository mediaRepository) {
+        this.mediaRepository = mediaRepository;
+    }
+
+    public void setMusicRepository(MusicRepository musicRepository) {
+        this.musicRepository = musicRepository;
+    }
+
+    public void setVideoRepository(VideoRepository videoRepository) {
+        this.videoRepository = videoRepository;
+    }
+
+    public void setPodcastRepository(PodcastRepository podcastRepository) {
+        this.podcastRepository = podcastRepository;
+    }
+
+    public void setGenreRepository(GenreRepository genreRepository) {
+        this.genreRepository = genreRepository;
+    }
+
+    public void setAlbumRepository(AlbumRepository albumRepository) {
+        this.albumRepository = albumRepository;
+    }
+
+    public void setArtistRepository(ArtistRepository artistRepository) {
+        this.artistRepository = artistRepository;
+    }
 }

@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CustomerServicApplication {
 
     public static void main(String[] args) {
-        BasicConfigurator.configure();  // Behövs för loggning, tror det är för att vi har lagt alla projekt i en och samma mapp
+        BasicConfigurator.configure();
         SpringApplication.run(CustomerServicApplication.class, args);
     }
 

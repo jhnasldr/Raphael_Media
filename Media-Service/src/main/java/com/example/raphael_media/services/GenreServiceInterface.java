@@ -8,9 +8,9 @@ public interface GenreServiceInterface {
 
     Genre addGenre(Genre genre);
 
-    List<Genre> fetchAllGenre();
+    List<Genre> getAllGenres();
 
-    Genre fetchGenre(int genreId);
+    Genre getGenre(int genreId);
 
     Genre updateGenre(int genreId, Genre genre);
 

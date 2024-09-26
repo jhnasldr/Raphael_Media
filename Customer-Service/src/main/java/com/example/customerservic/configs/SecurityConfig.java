@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // spar ingen info mellan request i ex cookies,  all info finns i jwt
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

@@ -20,12 +20,12 @@ public class AlbumController {
     @PreAuthorize("hasRole('user')")
     @GetMapping("album/{albumId}")
     public ResponseEntity<Album> getAlbum(@PathVariable int albumId) {
-        return new ResponseEntity<>(albumService.fetchAlbum(albumId), HttpStatus.OK);
+        return new ResponseEntity<>(albumService.getAlbum(albumId), HttpStatus.OK);
     }
     @PreAuthorize("hasRole('user')")
     @GetMapping("album/getallalbums")
     public ResponseEntity<List<Album>> getAllAlbums() {
-        return new ResponseEntity<>(albumService.fetchAllAlbums(), HttpStatus.OK);
+        return new ResponseEntity<>(albumService.getAllAlbums(), HttpStatus.OK);
     }
     @PreAuthorize("hasRole('admin')")
     @PostMapping("album/addalbum")

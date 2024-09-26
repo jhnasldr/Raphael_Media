@@ -23,7 +23,6 @@ public class ArtistService implements ArtistServiceInterface {
     @Autowired
     private MediaRepository mediaRepository;
 
-
     Logger logger = Logger.getLogger(ArtistService.class);
 
     @Override
@@ -48,12 +47,12 @@ public class ArtistService implements ArtistServiceInterface {
     }
 
     @Override
-    public List<Artist> fetchAllArtist() {
+    public List<Artist> getAllArtists() {
         return artistRepository.findAll();
     }
 
     @Override
-    public Artist fetchArtist(int artistId) {
+    public Artist getArtist(int artistId) {
         return artistRepository.findById(artistId).orElseThrow(() -> new ResourceNotFoundException("artist", "id", artistId));
     }
 

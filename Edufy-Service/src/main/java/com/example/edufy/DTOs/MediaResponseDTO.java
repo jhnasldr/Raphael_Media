@@ -7,6 +7,9 @@ public class MediaResponseDTO {
     private String genre;
     private String artist;
 
+    public MediaResponseDTO() {
+    }
+
     public MediaResponseDTO(int id, String mediaType, String title, String genre, String artist) {
         this.id = id;
         this.mediaType = mediaType;

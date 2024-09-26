@@ -1,6 +1,5 @@
 package com.example.raphael_media.services;
 
-
 import com.example.raphael_media.entities.*;
 import com.example.raphael_media.exceptions.ResourceNotFoundException;
 import com.example.raphael_media.repositores.GenreRepository;
@@ -12,9 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
 @Service
-public class GenreService implements GenreServiceInterface{
+public class GenreService implements GenreServiceInterface {
     @Autowired
     private GenreRepository genreRepository;
 
@@ -31,22 +29,22 @@ public class GenreService implements GenreServiceInterface{
     }
 
     @Override
-    public List<Genre> fetchAllGenre() {
+    public List<Genre> getAllGenres() {
         return genreRepository.findAll();
     }
 
     @Override
-    public Genre fetchGenre(int genreId) {
-        return genreRepository.findById(genreId).orElseThrow(()->new ResourceNotFoundException("genre", "id", genreId));
+    public Genre getGenre(int genreId) {
+        return genreRepository.findById(genreId).orElseThrow(() -> new ResourceNotFoundException("genre", "id", genreId));
     }
 
     @Override
     public Genre updateGenre(int genreId, Genre genre) {
-        Genre existingGenre = genreRepository.findById(genreId).orElseThrow(()->new ResourceNotFoundException("genre", "id", genreId));
-        if(genre.getGenre() != null){
+        Genre existingGenre = genreRepository.findById(genreId).orElseThrow(() -> new ResourceNotFoundException("genre", "id", genreId));
+        if (genre.getGenre() != null) {
             existingGenre.setGenre(genre.getGenre());
         }
-        if(genre.getMediaList() != null){
+        if (genre.getMediaList() != null) {
             existingGenre.setMediaList(genre.getMediaList());
         }
 
@@ -57,7 +55,7 @@ public class GenreService implements GenreServiceInterface{
 
     @Override
     public void deleteGenre(int genreId) {
-        Genre genre = genreRepository.findById(genreId).orElseThrow(()->new ResourceNotFoundException("genre", "id", genreId));
+        Genre genre = genreRepository.findById(genreId).orElseThrow(() -> new ResourceNotFoundException("genre", "id", genreId));
 
         for (Media media : genre.getMediaList()) {
             media.getGenres().remove(genre);

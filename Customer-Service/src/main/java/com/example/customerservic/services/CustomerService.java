@@ -14,12 +14,12 @@ import org.apache.log4j.Logger;
 @Service
 public class CustomerService implements CustomerServiceInterface {
     Logger logger = Logger.getLogger(CustomerService.class);
+
     @Autowired
     private CustomerRepository customerRepository;
 
     @Autowired
     private MediaInteractionsService mediaInteractionsService;
-
 
     @Override
     public Optional<Customer> findCustomerById(int customerId) {
@@ -58,13 +58,11 @@ public class CustomerService implements CustomerServiceInterface {
         }
         if (customer.getMediaInteractions() != null) {
             if (customer.getMediaInteractions().size() > customerToUpdate.getMediaInteractions().size()) {
-                System.out.println("Jag inne i storlek");
                 for (int i = customerToUpdate.getMediaInteractions().size(); i < customer.getMediaInteractions().size(); i++) {
                     System.out.println("index " + i);
                     mediaInteractionsService.addMediaInteraction(customer.getMediaInteractions().get(i));
                 }
             } else {
-                System.out.println("Jag är lika stor");
                 customerToUpdate.setMediaInteractions(customer.getMediaInteractions());
             }
         }
@@ -73,18 +71,13 @@ public class CustomerService implements CustomerServiceInterface {
         return customerToUpdate;
     }
 
-
     public void setLogger(Logger logger) {
         this.logger = logger;
     }
 
-
-
     public void setCustomerRepository(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
-
-
 
     public void setMediaInteractionsService(MediaInteractionsService mediaInteractionsService) {
         this.mediaInteractionsService = mediaInteractionsService;

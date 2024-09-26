@@ -36,7 +36,6 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!--loggning -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -52,27 +51,23 @@
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
         </dependency>
-        <!--        loggning-->
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-                <dependency>
+        <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-
-<!--     security added 25/9-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
-            <version>0.9.1</version> <!-- Or the latest version -->
+            <version>0.9.1</version>
         </dependency>
-<!--        -->
-
 
         <dependency>
             <groupId>org.mockito</groupId>
@@ -88,7 +83,6 @@
             <scope>test</scope>
         </dependency>
 
-
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -97,13 +91,6 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>0.9.1</version> <!-- Or the latest version -->
-        </dependency>
-
-<!--för inloggning...-->
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
@@ -114,7 +101,6 @@
             <artifactId>jaxb-runtime</artifactId>
             <version>2.3.1</version>
         </dependency>
-        <!--för inloggning...-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -134,10 +120,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
     </dependencies>

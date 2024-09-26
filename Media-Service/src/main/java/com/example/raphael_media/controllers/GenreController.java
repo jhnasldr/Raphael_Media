@@ -13,20 +13,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/media/")
 public class GenreController {
-
     @Autowired
     private GenreService genreService;
 
     @PreAuthorize("hasRole('user')")
     @GetMapping("genre/{genreid}")
     public ResponseEntity<Genre> getGenreById(@PathVariable int genreid) {
-        return new ResponseEntity<>(genreService.fetchGenre(genreid), HttpStatus.OK);
+        return new ResponseEntity<>(genreService.getGenre(genreid), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('user')")
     @GetMapping("getallgenre")
     public ResponseEntity<List<Genre>> getAllGenre() {
-        return ResponseEntity.ok(genreService.fetchAllGenre());
+        return ResponseEntity.ok(genreService.getAllGenres());
     }
 
     @PreAuthorize("hasRole('admin')")

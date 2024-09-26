@@ -18,7 +18,6 @@ import java.util.List;
         @JsonSubTypes.Type(value = Podcast.class, name = "Podcast")
 })
 public abstract class Media {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -66,7 +65,6 @@ public abstract class Media {
     }
 
     public Media(String mediaType, String title, String URL, LocalDate releaseDate, List<Artist> artists, List<Album> albums, List<Genre> genres) {
-
         this.mediaType = mediaType;
         this.title = title;
         this.URL = URL;

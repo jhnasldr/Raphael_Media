@@ -50,7 +50,7 @@ class GenreServiceTest {
         //Given
         when(mockGenreRepository.findAll()).thenReturn(genreList);
         //When
-        genreService.fetchAllGenre();
+        genreService.getAllGenres();
         //Then
         verify(mockGenreRepository).findAll();
     }
@@ -60,7 +60,7 @@ class GenreServiceTest {
         //Given
         when(mockGenreRepository.findById(1)).thenReturn(Optional.ofNullable(genreRock));
         //When
-        Genre resultGenre = genreService.fetchGenre(1);
+        Genre resultGenre = genreService.getGenre(1);
         //Then
         assertTrue(genreRock==resultGenre);
         verify(mockGenreRepository).findById(1);
@@ -72,7 +72,7 @@ class GenreServiceTest {
         when(mockGenreRepository.findById(1)).thenReturn(Optional.empty());
         //When
         ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
-            genreService.fetchGenre(2);
+            genreService.getGenre(2);
         });
         //Then
         assertEquals("genre with id '2' was not found", exception.getMessage());

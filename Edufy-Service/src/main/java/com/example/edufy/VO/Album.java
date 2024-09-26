@@ -3,7 +3,6 @@ package com.example.edufy.VO;
 import java.util.List;
 
 public class Album {
-
     private int albumId;
 
     private String albumName;
@@ -13,6 +12,13 @@ public class Album {
     private List<Media> mediaList;
 
     public Album() {
+    }
+
+    public Album(int albumId, String albumName, Artist artist, List<Media> mediaList) {
+        this.albumId = albumId;
+        this.albumName = albumName;
+        this.artist = artist;
+        this.mediaList = mediaList;
     }
 
     public int getAlbumId() {

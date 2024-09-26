@@ -31,7 +31,6 @@ class MediaServiceTest {
     List<Media> mockedMediaList;
 
     private List<MediaDTO> mockedMediaDTOList;
-    // private MediaRepository mockMediaRepository = mock(MediaRepository.class);
     private Music musicMedia;
     private Podcast podcastMedia;
     private Video videoMedia;
@@ -51,10 +50,10 @@ class MediaServiceTest {
         mockedPodcastRepository = mock(PodcastRepository.class);
         mockedVideoRepository = mock(VideoRepository.class);
         mediaService = new MediaService();
-        mediaService.mediaRepository = mockedMediaRepository;
-        mediaService.musicRepository = mockedMusicRepository;
-        mediaService.podcastRepository = mockedPodcastRepository;
-        mediaService.videoRepository = mockedVideoRepository;
+        mediaService.setMediaRepository(mockedMediaRepository);
+        mediaService.setMusicRepository(mockedMusicRepository);
+        mediaService.setPodcastRepository(mockedPodcastRepository);
+        mediaService.setVideoRepository(mockedVideoRepository);
 
         mockedMediaList = Arrays.asList(new Music("Music", "songTitle", LocalDate.now()),
                 new Video("Video", "videoTitle", LocalDate.now())
@@ -87,7 +86,7 @@ class MediaServiceTest {
     void getAllMediaDTO_shouldReturnMediaTypeMusic() {
         when(mockedMediaRepository.findAll()).thenReturn(mockedMediaList);
         List<MediaDTO> actualMediaDTOs = mediaService.getAllMediaDTO();
-        assertEquals("music", actualMediaDTOs.get(0).getMediaType());
+        assertEquals("Music", actualMediaDTOs.get(0).getMediaType());
     }
 
     @Test
@@ -105,7 +104,7 @@ class MediaServiceTest {
         when(mockedMediaRepository.findAllById(listOfId)).thenReturn(mockedMediaList);
         List<MediaDTO> actualMediaDTOs = mediaService.getListOfMediaDTOFromListOfIds(listOfId);
 
-        assertEquals("video", actualMediaDTOs.get(1).getMediaType());
+        assertEquals("Video", actualMediaDTOs.get(1).getMediaType());
     }
 
     @Test
@@ -214,7 +213,7 @@ class MediaServiceTest {
         musicMedia.setGenres(genreList);
         musicMedia.setAlbums(albumsList);
         musicMedia.setArtists(artistList);
-        expectation = "music with id '3' was not found";
+        expectation = "Music with id '3' was not found";
 
         when(mockedMediaRepository.findById(1)).thenReturn(Optional.ofNullable(musicMedia));
         //when
@@ -230,7 +229,7 @@ class MediaServiceTest {
         podcastMedia.setGenres(genreList);
         podcastMedia.setAlbums(albumsList);
         podcastMedia.setArtists(artistList);
-        expectation = "podcast with id '3' was not found";
+        expectation = "Podcast with id '3' was not found";
 
         when(mockedPodcastRepository.findById(1)).thenReturn(Optional.ofNullable(podcastMedia));
         //when
@@ -246,7 +245,7 @@ class MediaServiceTest {
         videoMedia.setGenres(genreList);
         videoMedia.setAlbums(albumsList);
         videoMedia.setArtists(artistList);
-        expectation = "video with id '3' was not found";
+        expectation = "Video with id '3' was not found";
 
         when(mockedVideoRepository.findById(1)).thenReturn(Optional.ofNullable(videoMedia));
         //when

@@ -19,13 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class JwtTokenFilter extends OncePerRequestFilter {
-    //Checks and validates jwt
-    //Gör den tillgänglig för resten av applikationen
-
-    // hämtar jwt från authorization header i requesten.
-    //Verifierar att jwt stämmer och är valid och "skriver in det" i securitycontext (håller info om nuvarande autentiserade user,
-    // så kan resten av applikationen nå info om kunden när som)
-    private final String SECRET_KEY = "your-secret-key"; // Replace with your actual secret key
+    private final String SECRET_KEY = "your-secret-key";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -47,15 +41,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                         .map(role -> new SimpleGrantedAuthority(role.get("authority")))
                         .collect(Collectors.toList());
 
-
                 Authentication auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (Exception e) {
                 SecurityContextHolder.clearContext();
             }
         }
-
         filterChain.doFilter(request, response);
     }
-
 }

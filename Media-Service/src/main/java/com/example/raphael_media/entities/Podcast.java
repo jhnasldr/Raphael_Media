@@ -11,7 +11,7 @@ public class Podcast extends Media{
         setTitle(title);
         setURL(url);
         setReleaseDate(releaseDate);
-        setMediaType("podcast");
+        setMediaType("Podcast");
     }
 
     public Podcast() {
