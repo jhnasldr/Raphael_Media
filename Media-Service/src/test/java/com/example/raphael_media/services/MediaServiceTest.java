@@ -3,11 +3,9 @@ package com.example.raphael_media.services;
 import com.example.raphael_media.DTOs.MediaDTO;
 import com.example.raphael_media.entities.*;
 import com.example.raphael_media.exceptions.ResourceNotFoundException;
-import com.example.raphael_media.repositores.MediaRepository;
+import com.example.raphael_media.repositores.*;
 
-import com.example.raphael_media.repositores.MusicRepository;
-import com.example.raphael_media.repositores.PodcastRepository;
-import com.example.raphael_media.repositores.VideoRepository;
+import org.apache.log4j.Level;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +23,9 @@ class MediaServiceTest {
     MusicRepository mockedMusicRepository;
     PodcastRepository mockedPodcastRepository;
     VideoRepository mockedVideoRepository;
+    GenreRepository mockedGenreRepository;
+    ArtistRepository mockedArtistRepository;
+    AlbumRepository mockedAlbumRepository;
     List<Media> mockedMediaList;
     private List<MediaDTO> mockedMediaDTOList;
     private Music musicMedia;
@@ -43,11 +44,17 @@ class MediaServiceTest {
         mockedMusicRepository = mock(MusicRepository.class);
         mockedPodcastRepository = mock(PodcastRepository.class);
         mockedVideoRepository = mock(VideoRepository.class);
+        mockedGenreRepository = mock(GenreRepository.class);
+        mockedAlbumRepository = mock(AlbumRepository.class);
+        mockedArtistRepository = mock(ArtistRepository.class);
         mediaService = new MediaService();
         mediaService.setMediaRepository(mockedMediaRepository);
         mediaService.setMusicRepository(mockedMusicRepository);
         mediaService.setPodcastRepository(mockedPodcastRepository);
         mediaService.setVideoRepository(mockedVideoRepository);
+        mediaService.setAlbumRepository(mockedAlbumRepository);
+        mediaService.setArtistRepository(mockedArtistRepository);
+        mediaService.setGenreRepository(mockedGenreRepository);
 
         mockedMediaList = Arrays.asList(new Music("Music", "songTitle", LocalDate.now()),
                 new Video("Video", "videoTitle", LocalDate.now())
@@ -244,23 +251,43 @@ class MediaServiceTest {
         assertEquals(expectation, exception.getMessage());
     }
 
+
     @Test
-    void deleteMediaShouldRemoveMediaWhenIdExists() {
-        int mediaId = 1;
+    void deleteMedia_ShouldRemoveMediaWhenIdExists() {
+        Media media = new Music();
+        List<Media> mediaList = new ArrayList<>();
+        mediaList.add(media);
 
-        Genre mockGenre = mock(Genre.class);
-        Artist mockArtist = mock(Artist.class);
-        Album mockAlbum = mock(Album.class);
+        Genre genre = new Genre();
+        List<Genre> genreList1 = new ArrayList<>();
+        genre.setMediaList(mediaList);
 
-        mockMedia.setGenres(List.of(mockGenre));
-        mockMedia.setArtists(List.of(mockArtist));
-        mockMedia.setAlbums(List.of(mockAlbum));
+        Artist artist = new Artist();
+        List<Artist> artistList1 = new ArrayList<>();
+        artist.setMediaList(mediaList);
 
-        when(mockedMediaRepository.findById(mediaId)).thenReturn(Optional.of(mockMedia));
+        Album album = new Album();
+        List<Album> albumList1 = new ArrayList<>();
+        album.setMediaList(mediaList);
 
-        mediaService.deleteMediaById(mediaId);
+        albumList1.add(album);
+        artistList1.add(artist);
+        genreList1.add(genre);
 
-        verify(mockedMediaRepository).delete(mockMedia);
+        media.setArtists(artistList1);
+        media.setAlbums(albumList1);
+        media.setGenres(genreList1);
+
+
+        when(mockedMediaRepository.findById(1)).thenReturn(Optional.of(media));
+
+        mediaService.deleteMediaById(1);
+
+        verify(mockedMediaRepository).delete(media);
+        verify(mockedGenreRepository).save(genre);
+        verify(mockedArtistRepository).save(artist);
+        verify(mockedAlbumRepository).save(album);
+
     }
 
     @Test
