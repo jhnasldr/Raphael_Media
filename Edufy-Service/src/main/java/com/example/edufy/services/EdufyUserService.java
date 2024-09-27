@@ -4,10 +4,14 @@ import com.example.edufy.DTOs.MediaResponseDTO;
 import com.example.edufy.VO.*;
 import com.example.edufy.VO.Media;
 import com.example.edufy.VO.MediaInteractions;
+import com.example.edufy.exceptions.ResourceNotFoundException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -22,16 +26,18 @@ public class EdufyUserService implements EdufyServiceInterface {
 
     @Override
     public Media playAndUpdateListedToInCustomer(int idCustomer, int idMedia) {
-        String mediaGetURL = "http://media-service/api/media/" + idMedia;
-        String customerPutURl = "http://customer-service/api/customer/updatecustomer/" + idCustomer;
+//        String mediaGetURL = "http://media-service/api/media/" + idMedia;
+//        String customerPutURl = "http://customer-service/api/customer/updatecustomer/" + idCustomer;
 
         Customer customerVO = getCustomerData(idCustomer);
-        Media mediaVO = restTemplate.getForObject(mediaGetURL, Media.class);
+//        Media mediaVO = restTemplate.getForObject(mediaGetURL, Media.class);
+        Media mediaVO = getMedia(idMedia);
 
         for (MediaInteractions m : customerVO.getMediaInteractions()) {
             if (m.getMediaId() == mediaVO.getId()) {
                 m.increasePlayCount();
-                restTemplate.put(customerPutURl, customerVO);
+//                restTemplate.put(customerPutURl, customerVO);
+                updateCustomer(idCustomer, customerVO);
                 logger.log(Level.WARN, "Customer id: " + idCustomer + " played media with id: " + idMedia);
                 return mediaVO;
             }
@@ -43,8 +49,9 @@ public class EdufyUserService implements EdufyServiceInterface {
         mediaInteractionsVO.setMediaId(mediaVO.getId());
         mediaInteractionsVO.setCustomer(customerVO);
         customerVO.getMediaInteractions().add(mediaInteractionsVO);
-        System.out.println(customerVO.getMediaInteractions().size());
-        restTemplate.put(customerPutURl, customerVO);
+//        System.out.println(customerVO.getMediaInteractions().size());
+//        restTemplate.put(customerPutURl, customerVO);
+        updateCustomer(idCustomer, customerVO);
 
         return mediaVO;
     }
@@ -59,15 +66,18 @@ public class EdufyUserService implements EdufyServiceInterface {
         String customerPutURl = "http://customer-service/api/customer/updatecustomer/" + customerId;
         String mediaInteractionsURL = "http://customer-service/api/customer/addmediainteractions";
 
+        Customer customerVO = getCustomerData(customerId);
+        Media mediaVO = getMedia(mediaId);
+        //Todo Vill vi ha kvar try catch eller struntar vi i den nu?
         try {
-            Customer customerVO = getCustomerData(customerId);
-            if (customerVO == null) {
-                throw new RuntimeException("Customer not found");
-            }
-            Media mediaVO = restTemplate.getForObject(getMediaURL, Media.class);
-            if (mediaVO == null) {
-                throw new RuntimeException("Media not found");
-            }
+//            Customer customerVO = getCustomerData(customerId);
+//            if (customerVO == null) {
+//                throw new RuntimeException("Customer not found");
+//            }
+//            Media mediaVO = restTemplate.getForObject(getMediaURL, Media.class);
+//            if (mediaVO == null) {
+//                throw new RuntimeException("Media not found");
+//            }
 
             MediaInteractions existingInteraction = customerVO.getMediaInteractions().stream()
                     .filter(m -> m.getMediaId() == mediaVO.getId())
@@ -76,7 +86,8 @@ public class EdufyUserService implements EdufyServiceInterface {
 
             if (existingInteraction != null) {
                 existingInteraction.setLikeStatus(likeStatus);
-                restTemplate.put(customerPutURl, customerVO);
+//                restTemplate.put(customerPutURl, customerVO);
+                updateCustomer(customerId, customerVO);
                 return existingInteraction;
             } else {
                 MediaInteractions newInteraction = new MediaInteractions("empty", 0, customerVO);
@@ -86,39 +97,37 @@ public class EdufyUserService implements EdufyServiceInterface {
 
                 customerVO.getMediaInteractions().add(newInteraction);
 
-                restTemplate.postForEntity(mediaInteractionsURL, newInteraction, MediaInteractions.class);
-                restTemplate.put(customerPutURl, customerVO);
-
+//                restTemplate.postForEntity(mediaInteractionsURL, newInteraction, MediaInteractions.class);
+                createNewMediaInteraction(newInteraction);
+//                restTemplate.put(customerPutURl, customerVO);
+                updateCustomer(customerId, customerVO);
                 return newInteraction;
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Error while processing media interaction", e);
         }
+
     }
 
     @Override
     public List<MediaResponseDTO> getMostPlayedMediaForUserById(int userId, int listSize) {
         Customer customer = getCustomerData(userId);
-        List<MediaInteractions> mediaInteractions;
         List<MediaInteractions> mediaInteractionsSortedByTimesListenedTo;
         List<Integer> idsOfMostPlayedMediaSorted;
         List<Media> mostPlayedMedia;
         List<MediaResponseDTO> mostPlayedMediaDTO;
 
-        mediaInteractions = customer.getMediaInteractions();
-        mediaInteractionsSortedByTimesListenedTo = mediaInteractions.stream().sorted(Comparator.comparingInt(MediaInteractions::getTimesListenedTo).reversed()).limit(listSize).collect(Collectors.toList());
+
+        mediaInteractionsSortedByTimesListenedTo = customer.getMediaInteractions().stream().sorted(Comparator.comparingInt(MediaInteractions::getTimesListenedTo).reversed()).limit(listSize).collect(Collectors.toList());
 
         idsOfMostPlayedMediaSorted = mediaInteractionsSortedByTimesListenedTo.stream()
                 .map(MediaInteractions::getMediaId)
                 .distinct()
                 .collect(Collectors.toList());
 
-        mostPlayedMedia = Arrays.stream(Objects.requireNonNull(restTemplate.postForObject(
-                        "http://Media-Service/api/media/getlistofmediadtofromlistofid",
-                        idsOfMostPlayedMediaSorted,
-                        Media[].class)))
-                .collect(Collectors.toList());
+        mostPlayedMedia = getListOfMedia(idsOfMostPlayedMediaSorted);
 
         mostPlayedMediaDTO = mostPlayedMedia.stream()
                 .map(media -> new MediaResponseDTO(
@@ -220,17 +229,81 @@ public class EdufyUserService implements EdufyServiceInterface {
 
     public Customer getCustomerData(int customerId) {
         String url = "http://customer-service/api/customer/" + customerId;
-        return restTemplate.getForObject(url, Customer.class);
+
+        try {
+            return restTemplate.getForObject(url, Customer.class);
+        } catch (HttpClientErrorException.NotFound e) {
+            throw new ResourceNotFoundException("customer", "id", customerId);
+        } catch (IllegalStateException e) {
+            throw new RuntimeException("Failed to connect to customer service");
+        }
     }
 
-    public List<Media> getAllMediaDTO() {
-        List<Media> mediaDTO;
-        mediaDTO = Arrays.asList(Objects.requireNonNull(restTemplate.getForObject("http://Media-Service/api/media/getallmediadto", Media[].class)));
-        return mediaDTO;
+
+    public Media getMedia(int mediaId) {
+        String mediaGetURL = "http://media-service/api/media/" + mediaId;
+
+        try {
+            return restTemplate.getForObject(mediaGetURL, Media.class);
+        } catch (HttpClientErrorException.NotFound e) {
+            throw new ResourceNotFoundException("Media", "id", mediaId);
+        } catch (IllegalStateException e) {
+            throw new RuntimeException("Failed to connect to media service");
+        }
     }
+
+
+    public void updateCustomer(int customerId, Customer customerVO) {
+        String customerPutURl = "http://customer-service/api/customer/updatecustomer/" + customerId;
+
+        try {
+            restTemplate.put(customerPutURl, customerVO);
+        } catch (HttpClientErrorException.NotFound e) {
+            throw new ResourceNotFoundException("Customer", "id", customerId);
+        } catch (IllegalStateException e) {
+            throw new RuntimeException("Failed to connect to Customer service");
+        }
+    }
+
+    public void createNewMediaInteraction(MediaInteractions newMediaInteraction) {
+        String mediaInteractionsURL = "http://customer-service/api/customer/addmediainteractions";
+
+        try {
+            restTemplate.postForEntity(mediaInteractionsURL, newMediaInteraction, MediaInteractions.class);
+        } catch (IllegalStateException e) {
+            throw new RuntimeException("Failed to connect to Customer service");
+        }
+
+    }
+
+    public List<Media> getListOfMedia(List<Integer> listOfMediaId) {
+        String getMediaListURL = "http://Media-Service/api/media/getlistofmediadtofromlistofid";
+
+        try {
+            return Arrays.asList(Objects.requireNonNull(restTemplate.postForObject(getMediaListURL, listOfMediaId, Media[].class)));
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get list of media from media service");
+        }
+    }
+
+
+    public List<Media> getAllMediaDTO() {
+        String getAllMediaDTOURL = "http://Media-Service/api/media/getlistofmediadtofromlistofid";
+
+        try {
+            return Arrays.asList(Objects.requireNonNull(restTemplate.getForObject(getAllMediaDTOURL, Media[].class)));
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get list of media from media service");
+        }
+//        List<Media> mediaDTO;
+//        mediaDTO = Arrays.asList(Objects.requireNonNull(restTemplate.getForObject("http://Media-Service/api/media/getallmediadto", Media[].class)));
+//        return mediaDTO;
+    }
+
 
     public void setRestTemplate(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 }
+
 

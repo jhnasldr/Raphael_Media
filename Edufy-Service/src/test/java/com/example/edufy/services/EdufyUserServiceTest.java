@@ -5,13 +5,16 @@ import com.example.edufy.VO.Customer;
 import com.example.edufy.VO.Genre;
 import com.example.edufy.VO.Media;
 import com.example.edufy.VO.MediaInteractions;
+import com.example.edufy.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -394,5 +397,53 @@ class EdufyUserServiceTest {
         assertTrue(recommendations.size() <= 10);
     }
 
+
+//    @Test
+//    void getCustomerData_ShouldThrowResourceNotFoundException() {
+//        when(mockRestTemplate.getForObject("http://customer-service/api/customer/100", Customer.class)).thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
+//
+////        ResponseStatusException exception=assertThrows(ResponseStatusException.class, () -> {
+////       RuntimeException exception=assertThrows(RuntimeException.class, () -> {
+////       HttpClientErrorException exception=assertThrows(HttpClientErrorException.class, () -> {
+//        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+//            edufyUserService.getCustomerData(100);
+//        });
+//
+//        assertEquals("Customer with id 100 was not found", exception.getMessage());
+//        //vill kolla errormessage
+//    }
+//
+//
+//    @Test
+//    void getCustomerData_ShouldThrowResourceNotFoundExceptittton() {
+//        // Mock the RestTemplate to throw HttpClientErrorException.NotFound when called
+//
+//
+//        when(mockRestTemplate.getForObject("http://customer-service/api/customer/100", Customer.class))
+////                .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
+//                .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
+//
+//        // Assert that the ResourceNotFoundException is thrown and capture it
+//        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+//            edufyUserService.getCustomerData(100);  // This will now throw the custom exception
+//        });
+//
+//        // Assert that the message matches the expected error message
+////        assertEquals("Customer with id 100 was not found", exception.getMessage());
+//
+//
+//    }
+//
+//
+//    @Test
+//    void getCustomerData_ShouldThrowResourceNotFoundExceptitttond() {
+//        when(mockRestTemplate.getForObject("http://customer-service/api/customer/100", Customer.class))
+//                .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
+//
+//        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+//            edufyUserService.getCustomerData(100);
+//        });
+//        assertEquals("Customer with id 100 was not found", exception.getMessage());
+//    }
 }
 
