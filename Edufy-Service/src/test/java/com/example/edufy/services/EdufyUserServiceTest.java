@@ -201,26 +201,6 @@ class EdufyUserServiceTest {
     }
 
     @Test
-    void rateMedia_shouldThrowExceptionForInvalidCustomerId() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            edufyUserService.rateMedia(0, 1, "like");
-        });
-
-        assertEquals("customerId must be greater than 0", exception.getMessage());
-    }
-
-    @Test
-    void rateMedia_shouldThrowExceptionWhenCustomerNotFound() {
-        when(mockRestTemplate.getForObject(any(), eq(Customer.class))).thenReturn(mockCustomer);
-
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            edufyUserService.rateMedia(1, 1, "like");
-        });
-
-        assertEquals("Error while processing media interaction", exception.getMessage());
-    }
-
-    @Test
     void rateMedia_shouldThrowExceptionWhenMediaNotFound() {
         int customerId = 1;
         int mediaId = 1;
@@ -325,6 +305,7 @@ class EdufyUserServiceTest {
         assertTrue(recommendations.stream().noneMatch(media -> media.getId() == media1.getId()));
     }
 
+
     @Test
     void testGetRecommendedMedia_ReachesMaxRecommendationsFromTopGenres_FillsTheRestWithOtherGenres() {
         MediaInteractions interaction1 = new MediaInteractions(1, 1, "like", 5);
@@ -397,53 +378,107 @@ class EdufyUserServiceTest {
         assertTrue(recommendations.size() <= 10);
     }
 
+    @Test
+    void getCustomerData_ShouldThrowResourceNotFoundExceptionWithMessageCustomerNotFound() {
+        when(mockRestTemplate.getForObject("http://customer-service/api/customer/100", Customer.class))
+                .thenThrow(HttpClientErrorException.NotFound.class);
 
-//    @Test
-//    void getCustomerData_ShouldThrowResourceNotFoundException() {
-//        when(mockRestTemplate.getForObject("http://customer-service/api/customer/100", Customer.class)).thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
-//
-////        ResponseStatusException exception=assertThrows(ResponseStatusException.class, () -> {
-////       RuntimeException exception=assertThrows(RuntimeException.class, () -> {
-////       HttpClientErrorException exception=assertThrows(HttpClientErrorException.class, () -> {
-//        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
-//            edufyUserService.getCustomerData(100);
-//        });
-//
-//        assertEquals("Customer with id 100 was not found", exception.getMessage());
-//        //vill kolla errormessage
-//    }
-//
-//
-//    @Test
-//    void getCustomerData_ShouldThrowResourceNotFoundExceptittton() {
-//        // Mock the RestTemplate to throw HttpClientErrorException.NotFound when called
-//
-//
-//        when(mockRestTemplate.getForObject("http://customer-service/api/customer/100", Customer.class))
-////                .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
-//                .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
-//
-//        // Assert that the ResourceNotFoundException is thrown and capture it
-//        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
-//            edufyUserService.getCustomerData(100);  // This will now throw the custom exception
-//        });
-//
-//        // Assert that the message matches the expected error message
-////        assertEquals("Customer with id 100 was not found", exception.getMessage());
-//
-//
-//    }
-//
-//
-//    @Test
-//    void getCustomerData_ShouldThrowResourceNotFoundExceptitttond() {
-//        when(mockRestTemplate.getForObject("http://customer-service/api/customer/100", Customer.class))
-//                .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
-//
-//        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
-//            edufyUserService.getCustomerData(100);
-//        });
-//        assertEquals("Customer with id 100 was not found", exception.getMessage());
-//    }
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            edufyUserService.getCustomerData(100);
+        });
+        assertEquals("customer with id '100' was not found", exception.getMessage());
+    }
+
+    @Test
+    void getCustomerData_ShouldThrowRuntimeExceptionWithMessageFailedToConnectToCustomerService() {
+        when(mockRestTemplate.getForObject("http://customer-service/api/customer/100", Customer.class))
+                .thenThrow(new IllegalStateException());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            edufyUserService.getCustomerData(100);
+        });
+        assertEquals("Failed to connect to customer service", exception.getMessage());
+    }
+
+    @Test
+    void getMedia_ShouldThrowResourceNotFoundExceptionWithMessageMediaNotFound() {
+        when(mockRestTemplate.getForObject("http://media-service/api/media/100", Media.class))
+                .thenThrow(HttpClientErrorException.NotFound.class);
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            edufyUserService.getMedia(100);
+        });
+        assertEquals("Media with id '100' was not found", exception.getMessage());
+    }
+
+    @Test
+    void getMedia_ShouldThrowRuntimeExceptionWithMessageFailedToConnectToMediaService() {
+        when(mockRestTemplate.getForObject("http://media-service/api/media/100", Media.class))
+                .thenThrow(new IllegalStateException());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            edufyUserService.getMedia(100);
+        });
+        assertEquals("Failed to connect to media service", exception.getMessage());
+    }
+
+    @Test
+    void updateCustomer_ShouldThrowResourceNotFoundExceptionWithMessageCustomerNotFound() {
+        Customer customer = mockCustomer;
+        doThrow(HttpClientErrorException.NotFound.class).when(mockRestTemplate).put("http://customer-service/api/customer/updatecustomer/100", customer);
+
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            edufyUserService.updateCustomer(100, customer);
+        });
+        assertEquals("customer with id '100' was not found", exception.getMessage());
+    }
+
+    @Test
+    void updateCustomer_ShouldThrowRuntimeExceptionWithMessageFailedToConnectToCustomerService() {
+        Customer customer = mockCustomer;
+        doThrow(new IllegalStateException()).when(mockRestTemplate).put("http://customer-service/api/customer/updatecustomer/100", customer);
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            edufyUserService.updateCustomer(100, customer);
+        });
+        assertEquals("Failed to connect to customer service", exception.getMessage());
+    }
+
+    @Test
+    void createNewMediaInteraction_ShouldTrowRuntimeExceptionWithMessageFailedToCreateNewMediaInteraction() {
+        MediaInteractions newMediaInteraction = mediaInteractions1;
+        doThrow(new IllegalStateException()).when(mockRestTemplate).postForEntity("http://customer-service/api/customer/addmediainteractions", newMediaInteraction, MediaInteractions.class);
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            edufyUserService.createNewMediaInteraction(newMediaInteraction);
+        });
+
+        assertEquals("Failed to create new media interaction in customer service", exception.getMessage());
+    }
+
+    @Test
+    void getListOfMedia_ShouldTrowRuntimeExceptionWithMessageFailedToGetListOfMedia() {
+        List<Integer> mediaIdList = Arrays.asList(1, 2, 3);
+        doThrow(new IllegalStateException()).when(mockRestTemplate).postForObject("http://Media-Service/api/media/getlistofmediadtofromlistofid", mediaIdList, Media[].class);
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            edufyUserService.getListOfMedia(mediaIdList);
+        });
+
+        assertEquals("Failed to get list of media from media service", exception.getMessage());
+    }
+
+    @Test
+    void getAllMediaDTO_ShouldTrowRuntimeExceptionWithMessageFailedToGetListOfMedia() {
+
+        when(mockRestTemplate.getForObject("http://Media-Service/api/media/getallmediadto", Media[].class)).
+                thenThrow(new IllegalStateException());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            edufyUserService.getAllMediaDTO();
+        });
+
+        assertEquals("Failed to get list of media from media service", exception.getMessage());
+    }
 }
 
