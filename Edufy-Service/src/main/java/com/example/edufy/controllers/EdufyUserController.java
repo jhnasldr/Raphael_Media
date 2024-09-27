@@ -18,6 +18,14 @@ public class EdufyUserController {
     @Autowired
     private EdufyUserService edufyUserService;
 
+    //test
+    @PreAuthorize("hasRole('user')")
+    @GetMapping("/edufycustomer/{customerId}")
+    public ResponseEntity<Customer> getCustomer(@PathVariable int customerId) {
+        return ResponseEntity.ok(edufyUserService.getCustomerData(customerId));
+    }
+
+
     @PreAuthorize("hasRole('user')")
     @GetMapping("/recommendations/{customerId}")
     public ResponseEntity<List<MediaResponseDTO>> getRecommendedMedia(@PathVariable int customerId) {
